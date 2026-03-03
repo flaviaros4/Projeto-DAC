@@ -1,3 +1,3 @@
-# Sistema de Internet Banking - BANDTADS
+# Sistema de Internet Banking - BANTADS
 
 ## Tecnologias utilizadas: 
