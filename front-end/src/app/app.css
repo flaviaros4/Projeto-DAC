@@ -1,0 +1,45 @@
+nav {
+    background-color: #0F1F3D;
+    display: flex;
+}
+
+.logo {
+
+    a {
+        display: flex;
+        align-items: center;
+    }
+
+    img {
+        width: 40px;
+        height: 40px;
+        padding: 0 10px;
+    }
+
+    p {
+        font-size: 28px;
+        color: white;
+        font-family: 'Arial', sans-serif;
+
+    }
+
+
+}
+
+.botao-login {
+        margin-left: auto;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+
+    .btn {
+        background-color: #D4AF37;
+        border-radius: 5px;
+        font-size: 15px;
+        padding: 15px
+    }
+}
+
+a:link {
+    text-decoration: none;
+}
