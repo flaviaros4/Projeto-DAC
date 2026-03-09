@@ -1,0 +1,103 @@
+div#espaco{
+    height: 30px;
+}
+div#container{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0);
+    gap: 70px;
+    box-sizing: border-box;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 20px;
+}
+div#logo{
+    width: 300px;
+    height: 348px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-sizing: border-box;
+    padding: 40px 20px 40px 20px;
+    font-size: 21px;
+    font-weight: 600;
+    color:  #000000;
+}
+div#logo > p{
+    text-align: center;
+}
+span{
+    color: #D4AF37;
+}
+img{
+    width: 150px;
+    display: block;
+    margin:auto;
+}
+div#bloco{
+    background-color: white;
+    height: auto;
+    width: 500px;
+    border-radius:16px;
+    padding: 40px 0px 40px 0px;
+}
+
+
+div.campo{
+    width: 70%;
+    margin:auto;
+    margin-bottom: 35px;
+}
+label{
+    font-size: 16px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    display: block;
+}
+input{
+    height: 50px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding-left: 10px ;
+    box-sizing: border-box;
+    font-size: 14px;
+    width: 100%;
+
+}
+input:focus{
+    border: 2px solid #D4AF37;
+    outline:none;
+}
+#botao{
+    width: 50%;
+    background-color: #D4AF37;
+    margin:auto;
+    display: block;
+}
+#botao:hover{
+    background-color: #ad9134;
+}
+
+@media (max-width: 970px) {
+  div#logo{
+    width: 600px;
+    height: auto;
+  }
+  div#bloco{
+    width: 600px;
+  }
+}
+@media (max-width: 580px) {
+  div#container{
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+    div#logo{
+    width: 100vw;
+  }
+  div#bloco{
+    width: 100vw;
+  }
+}
