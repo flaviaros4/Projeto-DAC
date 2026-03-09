@@ -1,0 +1,184 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0F1F3D;
+
+}
+
+.content {
+   display:grid;
+    grid-template-columns: 1fr 2fr;
+    gap:40px;
+    margin: 10px 20px 20px 20px;
+    
+
+}
+
+.card-um, .card-dois {
+    border-radius: 16px;
+    padding: 32px;
+}
+
+.card-um {
+  background-color: #E7DFC7;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  
+}
+
+.card-dois {
+  background-color: #F5F5F5;
+
+  padding:50px
+
+}
+
+.texto-banner {
+  padding-left: 30px;
+}
+
+.titulo-banner {
+  font-size: 32px;
+  font-weight: 900;
+  line-height: 40px;
+}
+
+.sub-titulo p {
+  font-size: 20px;
+   display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.card-um img {
+  width: 100%;
+
+  margin: 20px auto 0;
+  display: block;
+}
+
+
+
+.titulo p:first-child {
+  font-size: 32px;
+  margin: 10px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.subtitulo {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.formulario {
+  margin-top: 32px;
+  max-width: 900px;
+ justify-content: center;
+ padding: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-group {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.flex-1 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-2 {
+  flex: 0.5;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-3 {
+  flex: 0.25;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+label {
+  font-size: 16px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input {
+  height: 50px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 0 10px;
+  font-size: 14px;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid #D4AF37;
+}
+
+.btn {
+  margin-top: 30px;
+  width: 100%;
+  height: 46px;
+   max-width: 900px;
+  background-color: #D4AF37;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #c39f2e;
+}
+
+.btn-cep {
+  height: 50px;
+  padding: 0 16px;
+  font-size: 14px;
+  width: 120px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+
+  background-color: #0A2A43;
+  color: white;
+
+  cursor: pointer;
+}
+
+.cep-group {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+ 
+}
+
+.cep-group input{
+ flex:1;
+}
+
+@media (max-width: 900px) {
+  
+  .content {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+
+}
