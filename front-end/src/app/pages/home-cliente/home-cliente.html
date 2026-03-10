@@ -1,0 +1,38 @@
+<div class="content">
+  <input type="checkbox" id="menu-alt" class="menu">
+  
+  <label for="menu-alt" class="botao-menu">☰</label>
+
+  <aside class="barra-nav">
+    <div class="logo-barra-nav">
+      <h2>BAN<span>TADS</span></h2>
+    </div>
+    
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="#">Perfil</a></li>
+        <li><a href="#">Depositar</a></li>
+        <li><a href="#">Saques</a></li>
+        <li><a href="#">Transferências</a></li>
+        <li><a href="#">Consultar extrato</a></li>
+        <li class="espaco"></li>
+        <li><button (click)="logout()" class="botao-sair">Sair</button></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header>
+      <h1>Bem-vinda(o), <span id="cliente-nome">'Nome do Cliente'</span></h1>
+    </header>
+
+    <section class="card-saldo">
+      <h3>Saldo Atual</h3>
+      <p class="valor" [class.negativo]="saldo < 0">
+        {{ saldo < 0 ? '-' : '' }} R$ {{ absSaldo }}
+      </p>
+    </section>
+  </main>
+  
+  <label for="menu-alt" class="sobreposicao"></label>
+</div>
