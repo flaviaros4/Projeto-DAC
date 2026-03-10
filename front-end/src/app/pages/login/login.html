@@ -8,15 +8,15 @@
         <p>Faça login na <span>BANTADS</span> digitando seu E-mail e senha!</p>
     </div>
     <div id="bloco">
-        <form action="validar.ts">
+        <form (submit)="logar();">
             <div class="campo">
                 <label for="email">Email:</label>
-                <input type="email" name="email" id="email" placeholder="joao@gmail.com">
+                <input type="email" name="email" id="email" [(ngModel)]="email" placeholder="joao@gmail.com">
             </div>
     
             <div class="campo">
                 <label for="senha">Senha:</label>
-                <input type="password" name="senha" id="senha" placeholder="******">
+                <input type="password" name="senha" id="senha" [(ngModel)]="senha" placeholder="******">
             </div>
     
             <input type="submit" value="Logar" id="botao">
