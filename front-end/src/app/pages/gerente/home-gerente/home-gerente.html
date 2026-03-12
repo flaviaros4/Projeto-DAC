@@ -1,1 +1,63 @@
-<p>home-gerente works!</p>
+<div class="content">
+  <input type="checkbox" id="menu-alt" class="menu">
+
+  <label for="menu-alt" class="botao-menu">☰</label>
+
+  <aside class="barra-nav">
+    <div class="logo-barra-nav">
+      <h2>BAN<span>TADS</span></h2>
+    </div>
+
+    <nav class="nav-menu">
+      <ul>
+        <li><a href="#">Consultar Todos os Clientes</a></li>
+        <li><a href="#">Buscar Cliente</a></li>
+        <li><a href="#"> 3 Melhores Clientes</a></li>
+
+        <li class="espaco"></li>
+        <li><button (click)="logout()" class="botao-sair">Sair</button></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <h1>Solicitações Pendentes</h1>
+
+    <div class="tabela">
+       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="cpf">
+        <th mat-header-cell *matHeaderCellDef>CPF</th>
+        <td mat-cell *matCellDef="let cliente ">{{ cliente.cpf }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.nome }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="salario">
+        <th mat-header-cell *matHeaderCellDef>Salário</th>
+        <td mat-cell *matCellDef="let cliente">{{ cliente.salario }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="acoes">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let cliente">
+          <div class="botoes">
+            <button class="btn">Aprovar</button>
+            <button class="btn">Rejeitar</button>
+          </div>
+
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let cliente; columns: displayedColumns;"></tr>
+    </table>
+    </div>
+   
+
+  </main>
+
+  <label for="menu-alt" class="sobreposicao"></label>
+</div>
