@@ -24,7 +24,7 @@ import { MatDialogContent } from '@angular/material/dialog';
       padding: 1rem;    
     }
     button {
-      background-color: #D4AF37; !important;
+      background-color: #D4AF37 !important;
      
       border-radius: 8px;
       font-size: 1rem;
