@@ -1,38 +1,40 @@
-<div class="content">
-  <input type="checkbox" id="menu-alt" class="menu">
+<mat-sidenav-container class="sidenav-container">
   
-  <label for="menu-alt" class="botao-menu">☰</label>
-
-  <aside class="barra-nav">
+  <mat-sidenav #sidenav mode="over" class="barra-nav-material">
     <div class="logo-barra-nav">
-      <h2>BAN<span>TADS</span></h2>
+      <h2>BANTADS</h2>
     </div>
-    
-    <nav class="nav-menu">
-      <ul>
-        <li><a href="#">Perfil</a></li>
-        <li><a href="#">Depositar</a></li>
-        <li><a href="#">Saques</a></li>
-        <li><a href="#">Transferências</a></li>
-        <li><a href="#">Consultar extrato</a></li>
-        <li class="espaco"></li>
-        <li><button (click)="logout()" class="botao-sair">Sair</button></li>
-      </ul>
-    </nav>
-  </aside>
+    <mat-nav-list class="nav-menu-material">
+      <a mat-list-item routerLink="/perfil"> Perfil </a>
+      <a mat-list-item routerLink="/depositar"> Depositar </a>
+      <a mat-list-item routerLink="/saque"> Saque </a>
+      <a mat-list-item routerLink="/transferencia"> Transferência </a>
+      <a mat-list-item routerLink="/extrato"> Consultar extrato </a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-  <main class="main-content">
-    <header>
-      <h1>Bem-vinda(o), <span id="cliente-nome">'Nome do Cliente'</span></h1>
-    </header>
+  <mat-sidenav-content class="body-layout">
+    <mat-toolbar class="main-nav-top">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-trigger"><mat-icon>menu</mat-icon></button>
+      <span>Olá, <b id="cliente-nome">{{nomeUsuario}}</b></span>
+      <span class="sair"></span> <button (click)="logout()" class="btn-sair"> Sair <mat-icon>logout</mat-icon></button>
+    </mat-toolbar>
 
-    <section class="card-saldo">
-      <h3>Saldo Atual</h3>
-      <p class="valor" [class.negativo]="saldo < 0">
-        {{ saldo < 0 ? '-' : '' }} R$ {{ absSaldo }}
-      </p>
-    </section>
-  </main>
-  
-  <label for="menu-alt" class="sobreposicao"></label>
-</div>
+    <main class="content">
+      <section class="card-dois dashboard-card">
+        <div class="saldo-container">
+          <p class="subtitulo-saldo">SALDO DISPONÍVEL</p>
+          <h1 class="valor-saldo" [class.negativo]="saldo < 0"> {{ saldo < 0 ? '-' : '' }} R$ {{ absSaldo }}</h1>
+          <a routerLink="/extrato" class="link-extrato">Consultar extrato</a>
+        </div>
+        <div class="div-linha"></div>
+        <div class="operacoes-grid">
+          <button class="btn-operacao" routerLink="/depositar"> DEPOSITO </button>
+          <button class="btn-operacao" routerLink="/saque"> SAQUE </button>
+          <button class="btn-operacao" routerLink="/transferencia"> TRANSFERÊNCIA </button>
+          <button class="btn-operacao" routerLink="/perfil"> PERFIL </button>
+        </div>
+      </section>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

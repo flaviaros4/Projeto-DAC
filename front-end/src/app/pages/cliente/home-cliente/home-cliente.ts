@@ -1,36 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-home-cliente',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule, MatToolbarModule, MatButtonModule,MatIconModule, MatCardModule, MatSidenavModule, MatListModule],
   templateUrl: './home-cliente.html',
   styleUrl: './home-cliente.css'
 })
 export class HomeCliente implements OnInit {
-  saldo: number = -150.50;
-  absSaldo: string = "";
-  nomeUsuario: string = "cliente";
+  nomeUsuario: string = '';
+  saldo: number = 0;
+  absSaldo: string = '0,00';
 
   constructor(private router: Router) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     const logado = localStorage.getItem('usuarioLogado');
     if (logado) {
       const user = JSON.parse(logado);
-      this.nomeUsuario = user.nome || "cliente";
-      this.saldo = user.saldo !== undefined ? user.saldo : -150.50;
+      this.nomeUsuario = user.nome || 'Cliente';
+      this.saldo = user.salario || 0;
+      this.formatarSaldo();
+    } else {
+      this.router.navigate(['/login']);
     }
+  }
 
-    this.absSaldo = Math.abs(this.saldo).toLocaleString('pt-BR', { 
+  formatarSaldo(): void {
+    this.absSaldo = Math.abs(this.saldo).toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2 
+      maximumFractionDigits: 2
     });
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('usuarioLogado');
     this.router.navigate(['/login']);
   }
