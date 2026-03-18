@@ -24,7 +24,7 @@ export interface Cliente extends Usuario {
     telefone: string;
     endereco: Endereco;
     salario: number;
-    estado: "pendente" | "aprovado" | "rejeitado";
+    estado: "PENDENTE" | "APROVADO" | "REJEITADO";
 };
 
 export interface Gerente extends Usuario {

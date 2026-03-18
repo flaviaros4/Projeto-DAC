@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Cliente } from '../models/cliente.model';
+import { Cliente } from '../models/usuario.model';
 
 const LS_CHAVE = 'auth';
 

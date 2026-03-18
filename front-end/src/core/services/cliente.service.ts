@@ -1,49 +1,50 @@
 import { Injectable } from '@angular/core';
-import { Cliente } from '../models/cliente.model';
-
-const LS_CHAVE = 'clientes';
-
+import { Cliente } from '../models/usuario.model';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteService {
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  cadastrar(cliente: Cliente): boolean {
-    const listarClientes = localStorage[LS_CHAVE];
-    const clientes = listarClientes ? JSON.parse(listarClientes) : [];
+  private api = 'http://localhost:3000/clientes';
+
+ cadastrar(cliente: Cliente): Observable<Cliente> {
+
     const cpfNormalizado = this.normalizarCpf(cliente.cpf);
-    cliente.id = new Date().getTime();
-    cliente.estado = 'pendente';
-    const cpfExistente = clientes.some(
-      (c: Cliente) => this.normalizarCpf(c.cpf) === cpfNormalizado,
-    );
-    const salarioValido = cliente.salario > 0;
 
-     if (!salarioValido) {
-      alert('Salário deve ser um valor positivo.');
-      return false;
-    }
-    if (cpfExistente) {
-      alert('CPF já cadastrado. Por favor, utilize outro CPF.');
-      return false;
+    if (cliente.salario <= 0) {
+      throw new Error('Salário deve ser positivo');
     }
 
     cliente.cpf = cpfNormalizado;
-    clientes.push(cliente);
-    localStorage[LS_CHAVE] = JSON.stringify(clientes);
-    return true;
+    cliente.estado = 'PENDENTE';
+
+    return this.verificarCpf(cpfNormalizado).pipe(
+      map((clientesExistentes) => {
+
+        if (clientesExistentes.length > 0) {
+          throw new Error('CPF já cadastrado');
+        }
+
+        this.http.post<Cliente>(this.api, cliente).subscribe();
+        return cliente;
+      })
+    );
+  }
+
+
+ verificarCpf(cpf: string): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(`${this.api}?cpf=${cpf}`);
   }
 
   private normalizarCpf(cpf: string): string {
     return cpf.replace(/\D/g, '');
   }
 
-  listarSolicitacoes(): Cliente[] {
-    const listarClientes = localStorage[LS_CHAVE];
-    const clientes = listarClientes ? JSON.parse(listarClientes) : [];
-    return clientes.filter((cliente: Cliente) => cliente.estado === 'pendente');
+listarSolicitacoes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(`${this.api}?estado=PENDENTE`);
   }
-
 }

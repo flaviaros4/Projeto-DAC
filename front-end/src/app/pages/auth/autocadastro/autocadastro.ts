@@ -1,5 +1,5 @@
 import { Component, inject, ViewChild } from '@angular/core';
-import { Cliente } from '../../../../core/models/cliente.model';
+import { Cliente } from '../../../../core/models/usuario.model';
 import { FormsModule, NgForm } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
@@ -51,13 +51,19 @@ export class Autocadastro {
 
   cadastrar(): void {
     if (this.formCadastro.valid) {
-      const cadastroRealizado = this.clienteService.cadastrar(this.cliente);
-
-      if (cadastroRealizado) {
-       this.dialog.open(CadastroSucessoDialog)
-      }
-   
-    } 
+      this.clienteService.cadastrar(this.cliente).subscribe(
+        (cliente) => {
+          console.log('Cliente cadastrado com sucesso:', cliente);
+          this.formCadastro.reset();
+          this.dialog.open(CadastroSucessoDialog);
+        },
+        (error) => {
+          console.error('Erro ao cadastrar cliente:', error);
+          alert(error.message || 'Erro ao cadastrar cliente');
+        }
+      );
+    }
+    
   }
 
   buscarCep() {

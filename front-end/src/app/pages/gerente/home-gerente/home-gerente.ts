@@ -2,12 +2,14 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ClienteService } from '../../../../core/services/cliente.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Cliente } from '../../../../core/models/cliente.model';
+import { Cliente } from '../../../../core/models/usuario.model';
 import { CommonModule } from '@angular/common';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-home-gerente',
-  imports: [MatTableModule, CommonModule],
+  imports: [MatTableModule, CommonModule, MatSidenavModule, MatIcon ],
   templateUrl: './home-gerente.html',
   styleUrl: './home-gerente.css',
 })
@@ -25,10 +27,16 @@ export class HomeGerente {
     this.listarSolicitacoes();
   }
 
-  listarSolicitacoes(): Cliente[] {
-    this.clientes = this.clienteService.listarSolicitacoes();
-    this.dataSource.data = this.clientes;
-    return this.clientes;
+  listarSolicitacoes(): void {
+    this.clienteService.listarSolicitacoes().subscribe(
+      (clientes) => {
+        this.clientes = clientes;
+        this.dataSource.data = clientes;
+      },
+      (error) => {
+        console.error('Erro ao listar solicitações:', error);
+      }
+    );
   }
 
   logout() {
