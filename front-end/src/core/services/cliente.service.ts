@@ -47,4 +47,8 @@ export class ClienteService {
 listarSolicitacoes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.api}?estado=PENDENTE`);
   }
+
+  listarClientes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(`${this.api}?estado=APROVADO`);
+  }
 }

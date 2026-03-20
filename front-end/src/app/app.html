@@ -1,13 +1,16 @@
-<nav>
-    <div class="logo">
-        <a href="/"> <img src="assets/images/favicon.ico" alt="BANTADS Logo" />
-            <p><b>BANTADS</b></p>
-        </a>
-    </div>
-    <div class="botao-login">
-        <a href="/login"><button class="btn"><b>LOGIN</b></button></a>
-    </div>
-</nav>
+<div class="layout">
+    <nav>
+        <div class="logo">
+            <a href="/"> <img src="assets/images/favicon.ico" alt="BANTADS Logo" />
+                <p><b>BANTADS</b></p>
+            </a>
+        </div>
+        <div class="botao-login">
+            <a href="/login"><button class="btn"><b>LOGIN</b></button></a>
+        </div>
+    </nav>
 
-
-<router-outlet></router-outlet>
+    <main class="page">
+        <router-outlet></router-outlet>
+    </main>
+</div>

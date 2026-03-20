@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ClienteService } from '../../../../core/services/cliente.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Cliente } from '../../../../core/models/usuario.model';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIcon } from '@angular/material/icon';
+import { NgxMaskPipe } from 'ngx-mask';
 
 @Component({
   selector: 'app-home-gerente',
-  imports: [MatTableModule, CommonModule, MatSidenavModule, MatIcon ],
+  imports: [MatTableModule, CommonModule, MatSidenavModule, MatIcon, RouterLink, NgxMaskPipe ],
   templateUrl: './home-gerente.html',
   styleUrl: './home-gerente.css',
 })
@@ -18,6 +19,7 @@ export class HomeGerente {
   dataSource = new MatTableDataSource<Cliente>([]);
 
   clientes: Cliente[] = [];
+  usuarioLogado: any;
 
   constructor(private router: Router,
     private clienteService: ClienteService

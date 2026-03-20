@@ -7,4 +7,5 @@ export const routes: Routes = [
     { path: 'home-cliente', loadComponent:  () => import('./pages/cliente/home-cliente/home-cliente').then(m => m.HomeCliente)},
     { path: 'home-gerente', loadComponent:  () => import('./pages/gerente/home-gerente/home-gerente').then(m => m.HomeGerente)},
     {path: 'home-admin', loadComponent:  () => import('./pages/admin/home-admin/home-admin').then(m => m.HomeAdmin)},
+    {path: 'consultar-clientes', loadComponent:  () => import('./pages/gerente/consultar-clientes/consultar-clientes').then(m => m.ConsultarClientes)},
 ];

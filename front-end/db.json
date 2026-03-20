@@ -10,7 +10,7 @@
       "salario": 10000,
       "estado": "APROVADO",
       "perfil": "CLIENTE",
-      "endereço": {
+      "endereco": {
         "rua": "Rua 1",
         "numero": 123,
         "bairro": "Centro",
@@ -29,7 +29,7 @@
       "salario": 20000,
       "estado": "APROVADO",
       "perfil": "CLIENTE",
-      "endereço": {
+      "endereco": {
         "rua": "Rua 2",
         "numero": 456,
         "bairro": "Jardim",
@@ -48,7 +48,7 @@
       "salario": 3000,
       "estado": "APROVADO",
       "perfil": "CLIENTE",
-      "endereço": {
+      "endereco": {
         "rua": "Rua 3",
         "numero": 789,
         "bairro": "Centro",
@@ -67,7 +67,7 @@
       "salario": 500,
       "estado": "APROVADO",
       "perfil": "CLIENTE",
-      "endereço": {
+      "endereco": {
         "rua": "Rua 4",
         "numero": 101,
         "bairro": "Jardim",
@@ -86,7 +86,7 @@
       "salario": 1500,
       "estado": "APROVADO",
       "perfil": "CLIENTE",
-      "endereço": {
+      "endereco": {
         "rua": "Rua 5",
         "numero": 111,
         "bairro": "Centro",
@@ -113,6 +113,25 @@
       "perfil": "CLIENTE",
       "estado": "PENDENTE",
       "id": 6
+    },
+    {
+      "nome": "Maria dos Santos",
+      "email": "maria@bantads.com.br",
+      "cpf": "12314151251",
+      "telefone": "41987345345",
+      "salario": 10000,
+      "endereco": {
+        "cep": "81520-260",
+        "rua": "Rua Doutor Alcides Vieira Arco-Verde",
+        "numero": "1233",
+        "bairro": "Guabirotuba",
+        "cidade": "Curitiba",
+        "estado": "PR"
+      },
+      "senha": "",
+      "perfil": "CLIENTE",
+      "estado": "PENDENTE",
+      "id": 7
     }
   ],
   "gerentes": [
