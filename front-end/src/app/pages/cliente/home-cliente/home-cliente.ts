@@ -15,6 +15,7 @@ import { MatListModule } from '@angular/material/list';
   templateUrl: './home-cliente.html',
   styleUrl: './home-cliente.css'
 })
+
 export class HomeCliente implements OnInit {
   nomeUsuario: string = '';
   saldo: number = 0;

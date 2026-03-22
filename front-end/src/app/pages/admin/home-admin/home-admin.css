@@ -1,30 +1,56 @@
 .content {
-  display: flex;
   min-height: 100vh;
   background-color: #f4f4f4;
   position: relative;
 }
 
+.header{
+  background-color: #D4AF37;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sair{
+  background-color: #D4AF37;
+  border: none;
+  margin-right: 30px;
+  font-weight: 400;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  height: 40px;
+  cursor:pointer;
+}
+.sair:hover{
+  background-color: #d2bb71;
+}
 .menu {
   display: none;
 }
 
 .botao-menu {
   position: absolute;
-  top: 20px;
+  top: 5px;
   left: 20px;
   font-size: 30px;
   cursor: pointer;
   z-index: 100;
   color: #0F1F3D;
-  background: white;
+  background: rgba(255, 255, 255, 0);
   padding: 5px 12px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
+.botao-menu:hover{
+  background-color: #d2bb71;
+}
 .barra-nav {
-  position: fixed;
+  position: fixed; /**/
+  top:70px;
   left: -280px;
   width: 280px;
   height: 100%;
@@ -186,14 +212,14 @@ strong{
 }
 .negativo{
     color: black;
-    background-color: #E7DFC7;
+    background-color: #b0d0ef;
     padding: 5px;
     padding-left: 10px;
 }
 
 .positivo{
     color: black;
-    background-color: #D4AF37;
+    background-color: #6C87A2;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     padding: 5px;

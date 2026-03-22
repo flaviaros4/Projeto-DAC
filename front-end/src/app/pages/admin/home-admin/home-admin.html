@@ -1,7 +1,15 @@
 <div class="content">
   <input type="checkbox" id="menu-alt" class="menu">
   
-  <label for="menu-alt" class="botao-menu">☰</label>
+  <div class="header">
+    <label for="menu-alt" class="botao-menu">☰</label>
+    <div></div>
+    <div>Bem vinda(o),<strong style="display: inline;"> {{nomeUsuario}}</strong></div>
+    <button (click)="logout()" class="sair">
+      Sair
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
 
   <aside class="barra-nav">
     <div class="logo-barra-nav">
@@ -10,104 +18,42 @@
     
     <nav class="nav-menu">
       <ul>
-        <li><a href="#">Relatório de Clientes</a></li>
+        <li><a href="/relatorio-clientes">Relatório de Clientes</a></li>
         <li><a href="#">Adicionar Gerentes</a></li>
         <li><a href="#">Saques</a></li>
         <li><a href="#">Transferências</a></li>
         <li><a href="#">Consultar extrato</a></li>
         <li class="espaco"></li>
-        <li><button (click)="logout()" class="botao-sair">Sair</button></li>
       </ul>
     </nav>
   </aside>
 
   <main class="main-content">
-    <header>
-      <h1>Bem-vinda(o), <span id="cliente-nome">'Nome do Cliente'</span></h1>
-    </header>
-<!--
-    <table>
-        <caption>
-            Tabela de Gerentes
-        </caption>
-        <thead>
-            <th>Nome</th>
-            <th>n° Clientes</th>
-            <th>Total Saldo Negativo</th>
-            <th>Total Saldo Positivo</th>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Carlos</td>
-                <td>12</td>
-                <td>-200</td>
-                <td>200</td>
-            </tr>
-            <tr>
-                <td>Maria</td>
-                <td>13</td>
-                <td>700</td>
-                <td>-120</td>
-            </tr>
-            <tr>
-                <td>Pedrinho</td>
-                <td>56</td>
-                <td>781</td>
-                <td>-65</td>
-            </tr>
-            <tr>
-                <td>Antônia</td>
-                <td>19</td>
-                <td>987</td>
-                <td>-15</td>
-            </tr>
-        </tbody>
-    </table>
-    -->
+ 
 
     <h2 class="titulo">Gerentes</h2>
 
     <div class="container-cards">
 
-    <div class="card">
-        <h3>Carlos</h3>
+      <div class="card" *ngFor="let gerente of gerentes">
+        <h3>{{ gerente.nome }}</h3>
         
         <div class="dados">
-            <p class="clientes"><strong>Nº Clientes:</strong> 12</p>
-            <p class="negativo"><strong>Total Saldo Negativo:</strong> -200</p>
-            <p class="positivo"><strong>Total Saldo Positivo:</strong> 200</p>
-        </div>
-    </div>
+          <p class="clientes">
+            <strong>Nº Clientes:</strong> {{ gerente.numeroClientes }}
+          </p>
 
-    <div class="card">
-        <h3>Maria</h3>
-        
-        <div class="dados">
-            <p class="clientes"><strong>Nº Clientes:</strong> 18</p>
-            <p class="negativo"><strong>Total Saldo Negativo:</strong> -350</p>
-            <p class="positivo"><strong>Total Saldo Positivo:</strong> 4200</p>
-        </div>
-    </div>
+          <p class="negativo">
+            <strong>Total Saldo Negativo:</strong>
+            {{ gerente.saldoNegativo | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </p>
 
-    <div class="card">
-        <h3>João</h3>
-        
-        <div class="dados">
-            <p class="clientes"><strong>Nº Clientes:</strong> 7</p>
-            <p class="negativo"><strong>Total Saldo Negativo:</strong> -1200</p>
-            <p class="positivo"><strong>Total Saldo Positivo:</strong> 890</p>
+          <p class="positivo">
+            <strong>Total Saldo Positivo:</strong>
+            {{ gerente.saldoPositivo | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </p>
         </div>
-    </div>
-
-    <div class="card">
-        <h3>Fernanda</h3>
-        
-        <div class="dados">
-            <p class="clientes"><strong>Nº Clientes:</strong> 25</p>
-            <p class="negativo"><strong>Total Saldo Negativo:</strong> -540</p>
-            <p class="positivo"><strong>Total Saldo Positivo:</strong> 7600</p>
-        </div>
-    </div>
+      </div>
 
     </div>
   </main>

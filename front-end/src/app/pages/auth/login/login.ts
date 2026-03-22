@@ -17,7 +17,7 @@ export class Login implements OnInit {
   ngOnInit() {
     if(!localStorage.getItem('users')){
       const usuarios = [
-        { nome: 'Maria',email: 'cliente@bantads.com', cpf: '12345678900', salario: 1621.00, telefone: '22884576251', cep: '83322544', endereco: 'Rua Exemplo', numero: '321', complemento: 'Apto 101', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP', senha: '123', tipo: 'cliente' },
+        { nome: 'Maria', email: 'cliente@bantads.com', cpf: '12345678900', salario: 1621.00, telefone: '22884576251', cep: '83322544', endereco: 'Rua Exemplo', numero: '321', complemento: 'Apto 101', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP', senha: '123', tipo: 'cliente' },
         { email: 'gerente@bantads.com', senha: '123', tipo: 'gerente' },
         { email: 'admin@bantads.com', senha: '123', tipo: 'admin' }
       ];
@@ -37,9 +37,9 @@ export class Login implements OnInit {
         this.router.navigate(['/home-gerente']);
       } else if(user.tipo === 'admin'){
         this.router.navigate(['/home-admin']);
-      } else {
+      } 
+    } else {
         alert('Usuário ou senha inválidos!');
       }
-    }
   }
 }
