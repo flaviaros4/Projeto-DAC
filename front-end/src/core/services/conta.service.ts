@@ -18,4 +18,9 @@ export class ContaService {
     return this.http.get<Conta[]>(this.api);
   }
 
+  getContaPorCliente(clienteId: number): Observable<Conta | undefined> {
+  return this.http.get<Conta[]>(this.api).pipe(
+    map(contas => contas.find(c => c.clienteId === clienteId))
+  );
+}
 }

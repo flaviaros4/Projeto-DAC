@@ -1,40 +1,57 @@
-<mat-sidenav-container class="sidenav-container">
-  
-  <mat-sidenav #sidenav mode="over" class="barra-nav-material">
+<div class="content">
+  <aside class="barra-nav">
     <div class="logo-barra-nav">
-      <h2>BANTADS</h2>
+      <mat-icon fontIcon="person"></mat-icon>
+      <div *ngIf="cliente">
+  <h1>Olá, {{ cliente.nome.split(' ')[0] }}</h1>
+</div>
     </div>
-    <mat-nav-list class="nav-menu-material">
-      <a mat-list-item routerLink="/perfil"> Perfil </a>
-      <a mat-list-item routerLink="/depositar"> Depositar </a>
-      <a mat-list-item routerLink="/saque"> Saque </a>
-      <a mat-list-item routerLink="/transferencia"> Transferência </a>
-      <a mat-list-item routerLink="/extrato"> Consultar extrato </a>
-    </mat-nav-list>
-  </mat-sidenav>
 
-  <mat-sidenav-content class="body-layout">
-    <mat-toolbar class="main-nav-top">
-      <button mat-icon-button (click)="sidenav.toggle()" class="menu-trigger"><mat-icon>menu</mat-icon></button>
-      <span>Olá, <b id="cliente-nome">{{nomeUsuario}}</b></span>
-      <span class="sair"></span> <button (click)="logout()" class="btn-sair"> Sair <mat-icon>logout</mat-icon></button>
-    </mat-toolbar>
+    <div class="menu">
+      <button mat-button class="active">
+        <mat-icon>home</mat-icon>
+        Home
+      </button>
+      <button mat-button (click)="abrirModal('perfil')">
+        <mat-icon>account_circle</mat-icon>
+        Meu Perfil
+      </button>
+      <button mat-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Sair
+      </button>
+    </div>
+  </aside>
 
-    <main class="content">
-      <section class="card-dois dashboard-card">
-        <div class="saldo-container">
-          <p class="subtitulo-saldo">SALDO DISPONÍVEL</p>
-          <h1 class="valor-saldo" [class.negativo]="saldo < 0"> {{ saldo < 0 ? '-' : '' }} R$ {{ absSaldo }}</h1>
-          <a routerLink="/extrato" class="link-extrato">Consultar extrato</a>
-        </div>
-        <div class="div-linha"></div>
-        <div class="operacoes-grid">
-          <button class="btn-operacao" routerLink="/depositar"> DEPOSITO </button>
-          <button class="btn-operacao" routerLink="/saque"> SAQUE </button>
-          <button class="btn-operacao" routerLink="/transferencia"> TRANSFERÊNCIA </button>
-          <button class="btn-operacao" routerLink="/perfil"> PERFIL </button>
-        </div>
-      </section>
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+  <main class="main-content">
+    <div class="card-saldo">
+  <div class="info-conta">
+    <span class="label">Saldo disponível</span>
+    <h2>{{ conta?.saldo | currency:'BRL' }}</h2>
+  </div>
+</div>
+
+<div class="secao-acoes">
+  <div class="grid-funcionalidades">
+    
+    <div class="card-acao" (click)="abrirModal('deposito')">
+      <mat-icon>payments</mat-icon>
+      <span>Depósito</span>
+    </div>
+
+    <div class="card-acao" (click)="abrirModal('saque')">
+      <mat-icon>money_off</mat-icon>
+      <span>Saque</span>
+    </div>
+
+    <div class="card-acao" (click)="abrirModal('transferencia')">
+      <mat-icon>sync_alt</mat-icon>
+      <span>Transferir</span>
+    </div>
+
+    <div class="card-acao" (click)="abrirModal('extrato')">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Extrato</span>
+    </div>
+  </div>
+</div>

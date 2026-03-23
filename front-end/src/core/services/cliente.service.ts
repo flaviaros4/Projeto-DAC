@@ -51,4 +51,8 @@ listarSolicitacoes(): Observable<Cliente[]> {
   listarClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.api}?estado=APROVADO`);
   }
+
+  buscarPorId(id: number): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.api}/${id}`);
+  }
 }
