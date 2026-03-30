@@ -11,7 +11,7 @@ export interface Endereco {
 }
 
 export interface Usuario {
-    id?: number;
+    id: number;
     email: string;
     senha: string;
     perfil: Perfil;

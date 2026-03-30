@@ -9,18 +9,22 @@ import { Conta } from '../models/conta.model';
 })
 export class ContaService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private api = 'http://localhost:3000/contas';
 
- 
+
   listarContas(): Observable<Conta[]> {
     return this.http.get<Conta[]>(this.api);
   }
 
   getContaPorCliente(clienteId: number): Observable<Conta | undefined> {
-  return this.http.get<Conta[]>(this.api).pipe(
-    map(contas => contas.find(c => c.clienteId === clienteId))
-  );
-}
+    return this.http.get<Conta[]>(this.api).pipe(
+      map(contas => contas.find(c => c.clienteId === clienteId))
+    );
+  }
+
+  criarConta(conta: Conta): Observable<Conta> {
+    return this.http.post<Conta>(this.api, conta);
+  }
 }

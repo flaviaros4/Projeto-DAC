@@ -49,7 +49,7 @@
           <th mat-header-cell *matHeaderCellDef>Ações</th>
           <td mat-cell *matCellDef="let cliente">
             <div class="botoes">
-              <button class="btn">Aprovar</button>
+              <button class="btn" (click)="aprovarCliente(cliente)">Aprovar</button>
               <button class="btn">Rejeitar</button>
             </div>
           </td>

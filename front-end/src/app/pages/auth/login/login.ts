@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Perfil, Usuario } from '../../../../core/models/usuario.model';
 
 @Component({
   selector: 'app-login',
@@ -9,37 +11,47 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './login.css',
 })
 export class Login implements OnInit {
-  email: string = '';
-  senha: string = '';
 
-  constructor(private router: Router) {}
+  usuario: Usuario = {
+      id: 0,
+      email:'',
+      senha:'',
+      perfil: '' as Perfil
+  };
+
+  constructor(private router: Router,
+    private authService: AuthService
+  ) {
+
+  }
   
   ngOnInit() {
-    if(!localStorage.getItem('users')){
-      const usuarios = [
-        { nome: 'Maria', email: 'cliente@bantads.com', cpf: '12345678900', salario: 1621.00, telefone: '22884576251', cep: '83322544', endereco: 'Rua Exemplo', numero: '321', complemento: 'Apto 101', bairro: 'Centro', cidade: 'São Paulo', estado: 'SP', senha: '123', tipo: 'cliente' },
-        { email: 'gerente@bantads.com', senha: '123', tipo: 'gerente' },
-        { email: 'admin@bantads.com', senha: '123', tipo: 'admin' }
-      ];
-      localStorage.setItem('users', JSON.stringify(usuarios));
-  }
- }
 
-  logar(){
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find((u: any) => u.email === this.email && u.senha === this.senha);
-
-    if(user){
-      localStorage.setItem('usuarioLogado', JSON.stringify(user));
-      if(user.tipo === 'cliente'){
-        this.router.navigate(['/home-cliente']);
-      } else if(user.tipo === 'gerente'){
-        this.router.navigate(['/home-gerente']);
-      } else if(user.tipo === 'admin'){
-        this.router.navigate(['/home-admin']);
-      } 
-    } else {
-        alert('Usuário ou senha inválidos!');
+  } 
+  
+ logar() {
+  this.authService.login(this.usuario).subscribe({
+    next: (usuario) => {
+      if (!usuario) {
+        alert('Credenciais inválidas!');
+        return;
       }
-  }
+
+      localStorage.setItem('auth', JSON.stringify(usuario));
+
+      if (usuario.perfil === 'GERENTE') {
+        this.router.navigate(['/home-gerente']);
+      } else if (usuario.perfil === 'CLIENTE') {
+        this.router.navigate(['/home-cliente']);
+      } else if (usuario.perfil === 'ADMIN') {
+        this.router.navigate(['/home-admin']);
+      }
+    },
+    error: (err) => {
+      console.error('Erro ao logar:', err);
+      alert('Erro ao fazer login');
+    }
+  });
 }
+}
+

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './auth-guard';
+import { authGuard } from '../core/guards/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/autocadastro', pathMatch: 'full' },
@@ -24,7 +24,7 @@ export const routes: Routes = [
       import('./pages/cliente/home-cliente/home-cliente')
         .then(m => m.HomeCliente),
     canActivate: [authGuard],
-    data: { tipo: 'cliente' }
+    data: { perfil: 'CLIENTE' }
   },
 
   {
@@ -33,7 +33,7 @@ export const routes: Routes = [
       import('./pages/gerente/home-gerente/home-gerente')
         .then(m => m.HomeGerente),
     canActivate: [authGuard],
-    data: { tipo: 'gerente' }
+    data: { perfil: 'GERENTE' }
   },
 
   {
@@ -42,7 +42,7 @@ export const routes: Routes = [
       import('./pages/admin/home-admin/home-admin')
         .then(m => m.HomeAdmin),
     canActivate: [authGuard],
-    data: { tipo: 'admin' }
+    data: { perfil: 'ADMIN' }
   },
 
   {
@@ -51,7 +51,7 @@ export const routes: Routes = [
       import('./pages/gerente/consultar-clientes/consultar-clientes')
         .then(m => m.ConsultarClientes),
     canActivate: [authGuard],
-    data: { tipo: 'gerente' }
+    data: { perfil: 'GERENTE' }
   },
   {
     path: 'relatorio-clientes',
@@ -59,6 +59,6 @@ export const routes: Routes = [
         import('./pages/admin/relatorio-clientes/relatorio-clientes')
             .then(m => m.RelatorioClientes),
     canActivate: [authGuard],
-    data: {tipo: 'admin'}
+    data: { perfil: 'ADMIN' }
   }
 ];

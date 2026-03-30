@@ -11,12 +11,12 @@
         <form (submit)="logar();">
             <div class="campo">
                 <label for="email">Email:</label>
-                <input type="email" name="email" id="email" [(ngModel)]="email" placeholder="joao@gmail.com">
+                <input type="email" name="email" id="email" [(ngModel)]="usuario.email" placeholder="joao@gmail.com">
             </div>
     
             <div class="campo">
                 <label for="senha">Senha:</label>
-                <input type="password" name="senha" id="senha" [(ngModel)]="senha" placeholder="******">
+                <input type="password" name="senha" id="senha" [(ngModel)]="usuario.senha" placeholder="******">
             </div>
     
             <input type="submit" value="Logar" id="botao">

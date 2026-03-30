@@ -54,7 +54,7 @@ interface DetalheClienteDialogData {
 
       <div class="dados-conta">
 
-<h2 >  Conta </h2>
+<h2>  Conta </h2>
       <div class="campo">
       <span class="label"><b>Número da Conta: </b></span>
       <span class="valor">{{conta?.numeroConta}}</span>
@@ -175,7 +175,7 @@ interface DetalheClienteDialogData {
       background-color: #C9A227 !important;
     }
   `],
-  imports: [MatDialogActions, MatDialogContent, CommonModule, MatDialogModule, NgxMaskPipe]
+  imports: [MatDialogContent, CommonModule, MatDialogModule, NgxMaskPipe]
 })
 export class DetalheClienteDialog {
 

@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIcon } from '@angular/material/icon';
 import { NgxMaskPipe } from 'ngx-mask';
+import { MatDialog } from '@angular/material/dialog';
+import { AprovarCliente } from './modals/aprovar-cliente/aprovar-cliente';
 
 @Component({
   selector: 'app-home-gerente',
@@ -22,7 +24,8 @@ export class HomeGerente {
   usuarioLogado: any;
 
   constructor(private router: Router,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -39,6 +42,14 @@ export class HomeGerente {
         console.error('Erro ao listar solicitações:', error);
       }
     );
+  }
+
+  aprovarCliente(cliente: Cliente): void {
+     this.dialog.open(AprovarCliente, {
+      width: '600px',
+      backdropClass: 'blurred-backdrop',
+      data: { cliente }
+    });
   }
 
   logout() {
