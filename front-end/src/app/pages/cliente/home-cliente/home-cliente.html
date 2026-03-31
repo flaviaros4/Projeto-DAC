@@ -27,7 +27,9 @@
     <div class="card-saldo">
   <div class="info-conta">
     <span class="label">Saldo disponível</span>
-    <h2>{{ conta?.saldo | currency:'BRL' }}</h2>
+    <h2 [ngClass]="{ 'negativo': (conta?.saldo ?? 0) < 0 }">
+    {{ conta?.saldo | currency:'BRL' }}
+    </h2>
   </div>
 </div>
 

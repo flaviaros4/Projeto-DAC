@@ -28,7 +28,7 @@ import { ModalPerfil } from '../modals/modal-perfil/modal-perfil';
   styleUrl: './home-cliente.css' 
 })
 export class HomeCliente implements OnInit {
-  cliente?: Cliente;
+  cliente?: any;
   conta?: any;
 
   constructor(
@@ -39,32 +39,38 @@ export class HomeCliente implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const logado = localStorage.getItem('usuarioLogado');
+    const logado = localStorage.getItem('auth');
     if (logado) {
       const user = JSON.parse(logado);
-      this.cliente = user;
-      this.conta = {
-        numero: '12345-6',
-        saldo: user.salario ? user.salario * 2 : 0 
-      };
+      const idBusca = (user.usuarioId ?? user.id)?.toString();
 
-      if(user.id) {
-        this.carregarDados(user.id);
+      if(idBusca){
+        this.carregarDados(idBusca);
       }
+ } else {
+  this.router.navigate(['/login']);
+ }
+}
+
+carregarDados(id: string) {
+  this.clienteService.buscarPorId(id).subscribe({
+    next: (res) => {
+      this.cliente = res;
+    },
+    error: (err) => {
+      console.error("Erro ao buscar cliente:", err);
     }
-  }
+  });
 
-  carregarDados(id: number) {
-    this.clienteService.buscarPorId(id).subscribe({
-      next: (c) => this.cliente = c,
-      error: (err: HttpErrorResponse) => console.error(err)
-    });
-
-    this.contaService.getContaPorCliente(id).subscribe({
-      next: (c) => this.conta = c,
-      error: (err: HttpErrorResponse) => console.error(err)
-    });
-  }
+  this.contaService.getContaPorCliente(Number(id)).subscribe({
+    next: (res) => {
+     this.conta = res ?? {saldo: 0};
+    },
+    error: (err) => {
+      this.conta = { saldo: 0 };
+    }
+  });
+}
 
   abrirModal(tipo: string) {
     if (tipo === 'deposito') {
@@ -81,7 +87,7 @@ export class HomeCliente implements OnInit {
   }
 
   logout() {
-    localStorage.removeItem('usuarioLogado');
+    localStorage.removeItem('auth');
     this.router.navigate(['/login']);
   }
 }
