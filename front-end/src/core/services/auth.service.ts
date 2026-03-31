@@ -6,6 +6,13 @@ import { map } from 'rxjs/operators';
 
 const LS_CHAVE = 'auth';
 
+type NovoUsuarioPayload = {
+  email: string;
+  senha: string;
+  perfil: Usuario['perfil'];
+  usuarioId: number;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -22,6 +29,10 @@ export class AuthService {
     .pipe(map(usuarios => usuarios[0]));
     
 }
+
+ criarUsuario(usuario: NovoUsuarioPayload): Observable<NovoUsuarioPayload & { id: number }> {
+  return this.http.post<NovoUsuarioPayload & { id: number }>(this.api, usuario);
+ }
 
  logout() {
   localStorage.removeItem(LS_CHAVE);

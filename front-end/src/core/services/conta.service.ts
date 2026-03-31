@@ -26,6 +26,7 @@ export class ContaService {
 
   criarConta(conta: Conta): Observable<Conta> {
     return this.http.post<Conta>(this.api, conta);
+
   }
 
   atualizarSaldo(contaId: string, novoSaldo: number): Observable<Conta> {

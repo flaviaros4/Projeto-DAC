@@ -54,6 +54,22 @@ export const routes: Routes = [
     data: { perfil: 'GERENTE' }
   },
   {
+    path: 'buscar-cliente',
+    loadComponent: () =>
+      import('./pages/gerente/buscar-cliente/buscar-cliente')
+        .then(m => m.BuscarCliente),
+    canActivate: [authGuard],
+    data: { perfil: 'GERENTE' }
+  },
+  {
+    path: 'melhores-clientes',
+    loadComponent: () =>
+      import('./pages/gerente/melhores-clientes/melhores-clientes')
+        .then(m => m.MelhoresClientes),
+    canActivate: [authGuard],
+    data: { perfil: 'GERENTE' }
+  },
+  {
     path: 'relatorio-clientes',
     loadComponent: () => 
         import('./pages/admin/relatorio-clientes/relatorio-clientes')

@@ -91,9 +91,9 @@
       }
     },
     {
-      "nome": "Flavia Rosa Santos",
-      "email": "flaviarosa@ufpr.br",
-      "cpf": "00000000000",
+      "nome": "João da Silva",
+      "email": "joao@bantads.com.br",
+      "cpf": "12324151451",
       "telefone": "11111111111",
       "salario": 110000,
       "endereco": {
@@ -243,6 +243,13 @@
       "senha": "tads",
       "perfil": "ADMIN",
       "usuarioId": 1
+    },
+    {
+      "email": "maria@bantads.com.br",
+      "senha": "1002",
+      "perfil": "CLIENTE",
+      "usuarioId": 7,
+      "id": 10
     }
   ],
   "contas": [
@@ -290,6 +297,15 @@
       "limite": 0,
       "gerenteId": 2,
       "dataAbertura": "2025-01-01"
+    },
+    {
+      "clienteId": 7,
+      "numeroConta": 8326,
+      "saldo": 0,
+      "limite": 5000,
+      "gerenteId": 3,
+      "dataAbertura": "2026-03-31T12:24:59.717Z",
+      "id": 6
     }
   ],
   "transacoes": [

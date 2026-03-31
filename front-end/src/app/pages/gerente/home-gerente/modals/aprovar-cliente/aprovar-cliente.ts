@@ -5,6 +5,10 @@ import { NgxMaskPipe } from 'ngx-mask';
 import { CommonModule } from '@angular/common';
 import { Conta } from '../../../../../../core/models/conta.model';
 import { ContaService } from '../../../../../../core/services/conta.service';
+import { GerenteService } from '../../../../../../core/services/gerente.service';
+import { forkJoin, map, switchMap } from 'rxjs';
+import { ClienteService } from '../../../../../../core/services/cliente.service';
+import { AuthService } from '../../../../../../core/services/auth.service';
 
 interface AprovarClienteData {
   cliente: Cliente;
@@ -28,8 +32,8 @@ interface AprovarClienteData {
         <p>Uma senha de 4 dígitos será enviada para o e-mail <b>{{cliente.email}}</b>.</p>
       </div>
       <mat-dialog-actions align="center">
-        <button class="btn" (click)="aprovar()">Aprovar</button>
-        <button class="btn" (click)="fechar()">Fechar</button>
+        <button class="btn-aprovar" (click)="aprovar()">Aprovar</button>
+        <button class="btn-fechar" (click)="fechar()">Fechar</button>
 </mat-dialog-actions>
   
 
@@ -37,7 +41,7 @@ interface AprovarClienteData {
   </mat-dialog-content>`,
   styles: [`
   h1{
-      color: #C9A227;
+      color: #0F1F3D;;
       text-align: center;
       padding: 10px;
   }
@@ -61,8 +65,8 @@ interface AprovarClienteData {
      gap: 40px;
   
     }
-    .btn {
-      background-color: #C9A227;
+    button {
+ 
       color: white;
       border: none;
       padding: 10px 30px; 
@@ -70,12 +74,19 @@ interface AprovarClienteData {
       font-weight: bold;
       cursor: pointer;
     }
-    .btn:hover {
-      background-color: #A67C1B !important;
+    .btn-aprovar {
+      background-color: #4CAF50;
     }
-    .btn:active {
-      background-color: #8B5E0B !important;
+    .btn-fechar {
+      background-color: #0F1F3D;
     }
+    .btn-aprovar:hover {
+      background-color: #2d6330 !important;
+    }
+    .btn-fechar:hover {
+      background-color: #000000 !important;
+    }
+   
     
     `],
 })
@@ -83,11 +94,15 @@ export class AprovarCliente {
   cliente: Cliente;
   gerente: Gerente;
   limite: number;
+  contas: Conta[] = [];
 
 
   constructor(
     private dialogRef: MatDialogRef<AprovarCliente>,
     private contaService: ContaService,
+    private gerenteService: GerenteService,
+    private clienteService: ClienteService,
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: AprovarClienteData
   ) {
     this.cliente = data.cliente;
@@ -97,9 +112,9 @@ export class AprovarCliente {
   }
 
   ngOnInit() {
-  console.log(this.gerente);
-   console.log(this.cliente);
-  
+    console.log(this.gerente);
+    console.log(this.cliente);
+
   }
 
   gerarNumeroConta(): number {
@@ -110,30 +125,73 @@ export class AprovarCliente {
     return Math.floor(1000 + Math.random() * 9000).toString();
   }
 
+  getGerenteComMenosClientes() {
+    return forkJoin({
+      gerentes: this.gerenteService.getGerentes(),
+      contas: this.contaService.listarContas()
+    }).pipe(
+      map(({ gerentes, contas }) => {
+
+        let gerenteEscolhido = gerentes[0];
+
+        for (let gerente of gerentes) {
+          let quantidade = contas.filter(c => c.gerenteId === gerente.id).length;
+          let quantidadeAtual = contas.filter(c => c.gerenteId === gerenteEscolhido.id).length;
+
+          if (quantidade < quantidadeAtual) {
+            gerenteEscolhido = gerente;
+          }
+        }
+        return gerenteEscolhido;
+      }))
+  }
+
   aprovar() {
-    const numeroConta = this.gerarNumeroConta();
-    const senha = this.gerarSenha();
+    this.getGerenteComMenosClientes().subscribe(gerente => {
+      const numeroConta = this.gerarNumeroConta();
+      const senha = this.gerarSenha();
+      const gerenteId = gerente.id;
+      console.log('Gerente selecionado:', gerente.id);
 
-    const novaConta = {
-      clienteId: this.cliente.id,
-      numeroConta: numeroConta,
-      saldo: 0,
-      limite: this.limite,
-      gerenteId: this.gerente.id,
-      dataAbertura: new Date()
-    };
+      const novaConta: Conta = {
+        clienteId: this.cliente.id,
+        numeroConta,
+        saldo: 0,
+        limite: this.limite,
+        gerenteId,
+        dataAbertura: new Date()
+      };
 
-    this.cliente.estado = 'APROVADO';
-    this.cliente.senha = senha;
 
-    this.contaService.criarConta(novaConta);
 
-    console.log(`
+
+      this.cliente.estado = 'APROVADO';
+      this.cliente.senha = senha;
+
+      this.contaService.criarConta(novaConta).pipe(
+        switchMap((contaCriada) => {
+          console.log('Conta criada com sucesso:', contaCriada);
+          return this.clienteService.atualizarStatus(this.cliente.id, 'APROVADO').pipe(
+            switchMap(() => this.authService.criarUsuario({
+              email: this.cliente.email,
+              senha,
+              perfil: 'CLIENTE',
+              usuarioId: this.cliente.id
+            })),
+            map((usuarioCriado) => ({ contaCriada, usuarioCriado }))
+          );
+        })
+      ).subscribe({
+        next: ({ contaCriada, usuarioCriado }) => {
+          console.log('Cliente aprovado com sucesso.');
+          console.log('Usuario criado com sucesso:', usuarioCriado);
+
+          console.log(`
     Email enviado para: ${this.cliente.email}
 
-    Olá, ${this.cliente.nome}!
+    Ola, ${this.cliente.nome}!
 
-    Sua conta foi aprovada com sucesso
+    Sua conta foi aprovada com sucesso.
 
     Número da conta: ${numeroConta}
     Senha de acesso: ${senha}
@@ -141,8 +199,22 @@ export class AprovarCliente {
     Acesse o sistema para começar a usar sua conta.
   `);
 
-    this.dialogRef.close();
+          this.dialogRef.close(contaCriada);
+        },
+        error: (err) => {
+          console.error('Erro ao aprovar cliente:', err);
+        }
+      });
+
+    });
+
   }
+
+
+
+
+
+
 
   fechar(): void {
     this.dialogRef.close();
