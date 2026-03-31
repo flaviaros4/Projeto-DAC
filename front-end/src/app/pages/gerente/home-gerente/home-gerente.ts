@@ -9,10 +9,14 @@ import { MatIcon } from '@angular/material/icon';
 import { NgxMaskPipe } from 'ngx-mask';
 import { MatDialog } from '@angular/material/dialog';
 import { AprovarCliente } from './modals/aprovar-cliente/aprovar-cliente';
+import { GerenteService } from '../../../../core/services/gerente.service';
+import { ContaService } from '../../../../core/services/conta.service';
+import { forkJoin, map } from 'rxjs';
+import { RejeitarCliente } from './modals/rejeitar-cliente/rejeitar-cliente';
 
 @Component({
   selector: 'app-home-gerente',
-  imports: [MatTableModule, CommonModule, MatSidenavModule, MatIcon, RouterLink, NgxMaskPipe ],
+  imports: [MatTableModule, CommonModule, MatSidenavModule, MatIcon, RouterLink, NgxMaskPipe],
   templateUrl: './home-gerente.html',
   styleUrl: './home-gerente.css',
 })
@@ -25,8 +29,10 @@ export class HomeGerente {
 
   constructor(private router: Router,
     private clienteService: ClienteService,
+    private gerenteService: GerenteService,
+    private contaService: ContaService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.listarSolicitacoes();
@@ -44,11 +50,25 @@ export class HomeGerente {
     );
   }
 
+  
+
   aprovarCliente(cliente: Cliente): void {
-     this.dialog.open(AprovarCliente, {
+    this.dialog.open(AprovarCliente, {
       width: '600px',
       backdropClass: 'blurred-backdrop',
       data: { cliente }
+    }).afterClosed().subscribe(() => {
+      this.listarSolicitacoes();
+    });
+  }
+
+  rejeitarCliente(cliente: Cliente): void {
+    this.dialog.open(RejeitarCliente, {
+      width: '600px',
+      backdropClass: 'blurred-backdrop',
+      data: { cliente }
+    }).afterClosed().subscribe(() => {
+      this.listarSolicitacoes();
     });
   }
 

@@ -1,1 +1,81 @@
-<p>buscar-cliente works!</p>
+<div class="content">
+  <aside class="barra-nav">
+    <div class="logo-barra-nav">
+      <mat-icon fontIcon="person"></mat-icon>
+      <h1>Olá, Gerente</h1>
+    </div>
+
+    <div class="menu">
+      <button mat-button [routerLink]="['/home-gerente']">
+        <mat-icon>home</mat-icon> Home
+      </button>
+      <button mat-button [routerLink]="['/consultar-clientes']">
+        <mat-icon>people</mat-icon> Consultar Todos os Clientes
+      </button>
+      <button mat-button [routerLink]="['/buscar-cliente']">
+        <mat-icon>search</mat-icon> Buscar Cliente
+      </button>
+      <button mat-button [routerLink]="['/melhores-clientes']">
+        <mat-icon>star</mat-icon> 3 Melhores Clientes
+      </button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+
+    <div class="pesquisa">
+      <h1>Buscar Cliente</h1>
+      <p>Digite o CPF ou Nome do cliente.</p>
+
+      <input 
+        type="text"
+        placeholder="CPF ou Nome..."
+        [(ngModel)]="cpfBusca"
+      >
+
+      <button (click)="buscarCliente()">Buscar</button>
+    </div>
+
+
+
+
+    <div class="info" *ngIf="clienteSelecionado">
+
+
+      <div class="card">
+        <h2>Dados do Cliente</h2>
+
+        <p><span>Nome</span> {{clienteSelecionado.nome}}</p>
+        <p><span>CPF</span> {{clienteSelecionado.cpf | mask:'000.000.000-00'}}</p>
+        <p><span>Email</span> {{clienteSelecionado.email}}</p>
+        <p><span>Salário</span> {{clienteSelecionado.salario | currency:'BRL'}}</p>
+        <p><span>Telefone</span> {{clienteSelecionado.telefone}}</p>
+
+        <h3>Endereço</h3>
+        <p><span>Rua</span> {{clienteSelecionado.endereco?.rua}}</p>
+        <p><span>Número</span> {{clienteSelecionado.endereco?.numero}}</p>
+        <p><span>Bairro</span> {{clienteSelecionado.endereco?.bairro}}</p>
+        <p><span>Cidade</span> {{clienteSelecionado.endereco?.cidade}}</p>
+        <p><span>Estado</span> {{clienteSelecionado.endereco?.estado}}</p>
+      </div>
+
+  
+      <div class="card">
+        <h2>Dados da Conta</h2>
+
+        <p><span>Número</span> {{clienteSelecionado.conta?.numeroConta}}</p>
+
+        <p 
+          class="saldo"
+          [ngClass]="{'negativo': clienteSelecionado.saldo < 0}"
+        >
+          <span>Saldo</span> {{clienteSelecionado.saldo | currency:'BRL'}}
+        </p>
+
+        <p><span>Limite</span> {{clienteSelecionado.limite | currency:'BRL'}}</p>
+        <p><span>Data</span> {{clienteSelecionado.conta?.dataAbertura | date:'dd/MM/yyyy'}}</p>
+      </div>
+
+    </div>
+  </div>
+</div>

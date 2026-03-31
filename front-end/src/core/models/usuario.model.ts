@@ -13,7 +13,7 @@ export interface Endereco {
 export interface Usuario {
     id: number;
     email: string;
-    senha: string;
+    senha?: string;
     perfil: Perfil;
     status?: boolean;
 }
@@ -25,6 +25,8 @@ export interface Cliente extends Usuario {
     endereco: Endereco;
     salario: number;
     estado: "PENDENTE" | "APROVADO" | "REJEITADO";
+    dataRejeicao?: Date;
+    motivoRejeicao?: string;
 };
 
 export interface Gerente extends Usuario {

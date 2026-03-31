@@ -5,6 +5,7 @@
       <h1>Olá, Gerente</h1>
     </div>
 
+    
     <div class="menu">
       <button mat-button [routerLink]="['/home-gerente']">
         <mat-icon>home</mat-icon>
@@ -14,11 +15,11 @@
         <mat-icon>people</mat-icon>
         Consultar Todos os Clientes
       </button>
-      <button mat-button>
+      <button mat-button [routerLink]="['/buscar-cliente']">
         <mat-icon>search</mat-icon>
         Buscar Cliente
       </button>
-      <button mat-button>
+      <button mat-button [routerLink]="['/melhores-clientes']">
         <mat-icon>star</mat-icon>
         3 Melhores Clientes
       </button>
