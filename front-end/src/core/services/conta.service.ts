@@ -20,7 +20,7 @@ export class ContaService {
 
   getContaPorCliente(clienteId: number): Observable<Conta | undefined> {
     return this.http.get<Conta[]>(this.api).pipe(
-      map(contas => contas.find(c => Number(c.clienteId) === Number(clienteId)))
+      map(contas => contas.find(c => c.clienteId === clienteId))
     );
   }
 

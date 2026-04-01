@@ -12,14 +12,15 @@ export interface Endereco {
 
 export interface Usuario {
     id: number;
+    nome: string;
     email: string;
     senha?: string;
     perfil: Perfil;
     status?: boolean;
+    usuarioId: number;
 }
 
 export interface Cliente extends Usuario {
-    nome: string;
     cpf: string;
     telefone: string;
     endereco: Endereco;

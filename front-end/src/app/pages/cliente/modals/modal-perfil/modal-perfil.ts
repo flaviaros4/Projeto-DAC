@@ -85,7 +85,7 @@ export class ModalPerfil implements OnInit {
   erro = '';
   salvoComSucesso = false;
   resumo: any = null;
-  private clienteId = '';
+  clienteId: any;
   private conta: any;
 
   constructor(
@@ -99,7 +99,7 @@ export class ModalPerfil implements OnInit {
     const logado = localStorage.getItem('auth');
     if (!logado) return;
     const user = JSON.parse(logado);
-    this.clienteId = user.usuarioId?.toString();
+    this.clienteId = user.usuarioId;
 
     this.clienteService.buscarPorId(this.clienteId).subscribe({
       next: (cliente) => {

@@ -173,6 +173,7 @@ export class AprovarCliente {
           console.log('Conta criada com sucesso:', contaCriada);
           return this.clienteService.atualizarStatus(this.cliente.id, 'APROVADO').pipe(
             switchMap(() => this.authService.criarUsuario({
+              nome: this.cliente.nome,
               email: this.cliente.email,
               senha,
               perfil: 'CLIENTE',

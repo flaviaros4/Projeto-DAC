@@ -183,6 +183,7 @@
   "usuarios": [
     {
       "id": 1,
+      "nome": "Catharyna",
       "email": "cli1@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -190,6 +191,7 @@
     },
     {
       "id": 2,
+      "nome": "Cleuddônio",
       "email": "cli2@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -197,6 +199,7 @@
     },
     {
       "id": 3,
+      "nome": "Catianna",
       "email": "cli3@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -204,6 +207,7 @@
     },
     {
       "id": 4,
+      "nome": "Cutardo",
       "email": "cli4@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -211,6 +215,7 @@
     },
     {
       "id": 5,
+      "nome": "Coândrya",
       "email": "cli5@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -218,6 +223,7 @@
     },
     {
       "id": 6,
+      "nome": "Geniéve",
       "email": "ger1@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
@@ -225,6 +231,7 @@
     },
     {
       "id": 7,
+      "nome": "Godophredo",
       "email": "ger2@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
@@ -232,6 +239,7 @@
     },
     {
       "id": 8,
+      "nome": "Gyândula",
       "email": "ger3@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
@@ -239,17 +247,19 @@
     },
     {
       "id": 9,
+      "nome": "Adamântio",
       "email": "adm1@bantads.com.br",
       "senha": "tads",
       "perfil": "ADMIN",
       "usuarioId": 1
     },
     {
+      "id": 10,
+      "nome": "Maria dos Santos",
       "email": "maria@bantads.com.br",
       "senha": "1002",
       "perfil": "CLIENTE",
-      "usuarioId": 7,
-      "id": 10
+      "usuarioId": 7
     }
   ],
   "contas": [
@@ -267,7 +277,7 @@
       "clienteId": 2,
       "numeroConta": "0950",
       "saldo": -10000,
-      "limite": 10000,
+      "limite": 20000,
       "gerenteId": 2,
       "dataAbertura": "1990-10-10"
     },

@@ -52,7 +52,7 @@ listarSolicitacoes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(`${this.api}?estado=APROVADO`);
   }
 
-  buscarPorId(id: string): Observable<Cliente> {
+  buscarPorId(id: number): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.api}/${id}`);
   }
 
@@ -60,7 +60,7 @@ listarSolicitacoes(): Observable<Cliente[]> {
     return this.http.patch<Cliente>(`${this.api}/${id}`, { estado });
   }
 
-  atualizar(id: string, cliente: Partial<Cliente>): Observable<Cliente> {
+  atualizar(id: number, cliente: Partial<Cliente>): Observable<Cliente> {
   return this.http.put<Cliente>(`${this.api}/${id}`, cliente);
   }
 }

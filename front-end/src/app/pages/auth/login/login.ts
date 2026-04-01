@@ -14,9 +14,11 @@ export class Login implements OnInit {
 
   usuario: Usuario = {
       id: 0,
+      nome: '',
       email:'',
       senha:'',
-      perfil: '' as Perfil
+      perfil: '' as Perfil,
+      usuarioId: 0
   };
 
   constructor(private router: Router,

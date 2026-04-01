@@ -11,8 +11,6 @@ import { NgxMaskPipe } from 'ngx-mask';
 import { forkJoin } from 'rxjs';
 
 type ClienteComConta = Cliente & {
-  saldo: number;
-  limite: number;
   conta?: Conta;
 };
 
@@ -24,48 +22,56 @@ type ClienteComConta = Cliente & {
 })
 export class BuscarCliente {
 
+  clientes: Cliente[] = [];
+  contas: Conta[] = [];
+
   cpfBusca: string = '';
   clienteSelecionado?: ClienteComConta;
-  
+
 
   constructor(
     private clienteService: ClienteService,
     private contaService: ContaService
-  ) {}
+  ) { }
 
-  buscarCliente(): void {
-
-    const termoCpf = this.cpfBusca.replace(/\D/g, '');
-
-    this.clienteSelecionado = undefined;
-
+  ngOnInit() {
     forkJoin([
       this.clienteService.listarClientes(),
       this.contaService.listarContas()
     ]).subscribe(([clientes, contas]) => {
-
-      const resultado = clientes
-        .map(cliente => {
-          const conta = contas.find(c => c.clienteId === cliente.id);
-
-          return {
-            ...cliente,
-            saldo: conta?.saldo ?? 0,
-            limite: conta?.limite ?? 0,
-            conta
-          };
-        })
-        .filter(cliente =>
-          cliente.cpf.replace(/\D/g, '').includes(termoCpf)
-        );
-
-  
-
-      if (resultado.length > 0) {
-        this.clienteSelecionado = resultado[0];
-      } else {
-        this.clienteSelecionado = undefined;
-      }
+      this.clientes = clientes;
+      this.contas = contas;
     });
+  }
+
+  buscarCliente(): void {
+
+    if (!this.cpfBusca.trim()) return;
+
+    const termo = this.cpfBusca.toLowerCase().trim();
+    const termoCpf = this.cpfBusca.replace(/\D/g, '');
+
+    const resultado = this.clientes
+      .map(cliente => {
+        const conta = this.contas.find(c => c.clienteId === cliente.id);
+
+        return {
+          ...cliente,
+          saldo: conta?.saldo ?? 0,
+          limite: conta?.limite ?? 0,
+          conta
+        };
+      })
+      .filter(cliente =>
+        cliente.cpf.replace(/\D/g, '').includes(termoCpf)
+      );
+
+
+
+    if (resultado.length > 0) {
+      this.clienteSelecionado = resultado[0];
+    } else {
+      this.clienteSelecionado = undefined;
+    }
   }
 }

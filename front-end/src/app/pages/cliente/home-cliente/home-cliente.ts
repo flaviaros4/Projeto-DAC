@@ -14,6 +14,8 @@ import { ModalSaque } from '../modals/modal-saque/modal-saque';
 import { ModalTransferencia } from '../modals/modal-transferencia/modal-transferencia';
 import { ModalExtrato } from '../modals/modal-extrato/modal-extrato';
 import { ModalPerfil } from '../modals/modal-perfil/modal-perfil';
+import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-home-cliente',
@@ -34,42 +36,35 @@ export class HomeCliente implements OnInit {
   constructor(
     private clienteService: ClienteService,
     private contaService: ContaService,
+    private authService: AuthService,
     private dialog: MatDialog,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    const logado = localStorage.getItem('auth');
-    if (logado) {
-      const user = JSON.parse(logado);
-      const idBusca = (user.usuarioId ?? user.id)?.toString();
+  get logado() {
+    return this.authService.usuarioLogado;
+  }
 
-      if(idBusca){
-        this.carregarDados(idBusca);
-      }
- } else {
-  this.router.navigate(['/login']);
- }
-}
 
-carregarDados(id: string) {
-  this.clienteService.buscarPorId(id).subscribe({
-    next: (res) => {
-      this.cliente = res;
-    },
-    error: (err) => {
-      console.error("Erro ao buscar cliente:", err);
-    }
-  });
+  ngOnInit(){
+  
+   if (this.logado) {
+     this.carregarDados(this.logado.usuarioId);
+   }
+  }
 
-  this.contaService.getContaPorCliente(Number(id)).subscribe({
-    next: (res) => {
-     this.conta = res ?? {saldo: 0};
-    },
-    error: (err) => {
-      this.conta = { saldo: 0 };
-    }
-  });
+carregarDados(id: number) {
+this.contaService.getContaPorCliente(id).subscribe({
+  next: (conta) => {
+    this.conta = conta ?? { saldo: 0 };
+  },
+  error: (err) => {
+    console.error("Erro ao buscar conta:", err);
+  }
+});
+
+   
+ 
 }
 
   abrirModal(tipo: string) {

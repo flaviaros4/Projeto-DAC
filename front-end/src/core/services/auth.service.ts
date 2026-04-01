@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 const LS_CHAVE = 'auth';
 
 type NovoUsuarioPayload = {
+  nome: string;
   email: string;
   senha: string;
   perfil: Usuario['perfil'];
@@ -23,10 +24,18 @@ export class AuthService {
    private api = 'http://localhost:3000/usuarios';
 
  login(usuario: Usuario): Observable<Usuario | undefined> {
-
-  return this.http
-    .get<Usuario[]>(`${this.api}?email=${usuario.email}&senha=${usuario.senha}`)
-    .pipe(map(usuarios => usuarios[0]));
+  return this.http.get<Usuario[]>(this.api).pipe(
+    map((usuarios) => {
+      const usuarioEncontrado = usuarios.find(
+        (u) => u.email === usuario.email && u.senha === usuario.senha
+      );
+      if (usuarioEncontrado) {
+        localStorage.setItem(LS_CHAVE, JSON.stringify(usuarioEncontrado));
+      }
+      return usuarioEncontrado;
+    })
+  );
+ 
     
 }
 
@@ -34,7 +43,19 @@ export class AuthService {
   return this.http.post<NovoUsuarioPayload & { id: number }>(this.api, usuario);
  }
 
- logout() {
+ get usuarioLogado(): Usuario | null {
+  const authData = localStorage.getItem(LS_CHAVE);
+  if(authData) {
+    try {
+      return JSON.parse(authData) as Usuario;
+    } catch (error) {
+      return null;
+    }
+  }
+  return null;
+ }
+
+ logout(): void{
   localStorage.removeItem(LS_CHAVE);
  }
 
