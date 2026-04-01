@@ -1,17 +1,17 @@
 {
   "clientes": [
     {
-      "id": "1",
+      "id": 1,
       "cpf": "12912861012",
       "nome": "Catharyna",
       "email": "cli1@bantads.com.br",
       "telefone": "11999999999",
-      "salario": 12000,
+      "salario": 10000,
       "estado": "APROVADO",
       "perfil": "CLIENTE",
       "endereco": {
         "rua": "Rua 1",
-        "numero": "1234",
+        "numero": 123,
         "bairro": "Centro",
         "cidade": "São Paulo",
         "estado": "SP",
@@ -19,7 +19,7 @@
       }
     },
     {
-      "id": "2",
+      "id": 2,
       "cpf": "09506382000",
       "nome": "Cleuddônio",
       "email": "cli2@bantads.com.br",
@@ -37,7 +37,7 @@
       }
     },
     {
-      "id": "3",
+      "id": 3,
       "cpf": "85733854057",
       "nome": "Catianna",
       "email": "cli3@bantads.com.br",
@@ -55,7 +55,7 @@
       }
     },
     {
-      "id": "4",
+      "id": 4,
       "cpf": "58872160006",
       "nome": "Cutardo",
       "email": "cli4@bantads.com.br",
@@ -73,7 +73,7 @@
       }
     },
     {
-      "id": "5",
+      "id": 5,
       "cpf": "76179646090",
       "nome": "Coândrya",
       "email": "cli5@bantads.com.br",
@@ -105,8 +105,8 @@
         "estado": "PR"
       },
       "perfil": "CLIENTE",
-      "estado": "PENDENTE",
-      "id": "6"
+      "estado": "REJEITADO",
+      "id": 6
     },
     {
       "nome": "Maria dos Santos",
@@ -123,33 +123,33 @@
         "estado": "PR"
       },
       "perfil": "CLIENTE",
-      "estado": "PENDENTE",
-      "id": "7"
+      "estado": "APROVADO",
+      "id": 7
     },
     {
-      "nome": "Carlos Bonifácio Bento",
-      "email": "carlosbb@bantads.com.br",
-      "cpf": "22222222222",
-      "telefone": "41885456987",
-      "salario": 13225.6,
+      "nome": "José Pereira",
+      "email": "jose@bantads.com.br",
+      "cpf": "09506412142",
+      "telefone": "51924771920",
+      "salario": 10000,
       "endereco": {
-        "cep": "83322-170",
-        "rua": "Rua Rio Tocantins",
-        "numero": "55",
-        "bairro": "Weissópolis",
-        "cidade": "Pinhais",
+        "cep": "83203-450",
+        "rua": "Rua Theodorico dos Santos",
+        "numero": "123",
+        "bairro": "Costeira",
+        "cidade": "Paranaguá",
         "estado": "PR",
-        "complemento": "Casa"
+        "complemento": "Apto"
       },
       "senha": "",
       "perfil": "CLIENTE",
       "estado": "PENDENTE",
-      "id": "bRBkckso7IE"
+      "id": 8
     }
   ],
   "gerentes": [
     {
-      "id": "1",
+      "id": 1,
       "cpf": "98574307084",
       "nome": "Geniéve",
       "email": "ger1@bantads.com.br",
@@ -157,7 +157,7 @@
       "perfil": "GERENTE"
     },
     {
-      "id": "2",
+      "id": 2,
       "cpf": "64065268052",
       "nome": "Godophredo",
       "email": "ger2@bantads.com.br",
@@ -165,7 +165,7 @@
       "perfil": "GERENTE"
     },
     {
-      "id": "3",
+      "id": 3,
       "cpf": "23862179060",
       "nome": "Gyândula",
       "email": "ger3@bantads.com.br",
@@ -182,63 +182,63 @@
   },
   "usuarios": [
     {
-      "id": "1",
+      "id": 1,
       "email": "cli1@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
       "usuarioId": 1
     },
     {
-      "id": "2",
+      "id": 2,
       "email": "cli2@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
       "usuarioId": 2
     },
     {
-      "id": "3",
+      "id": 3,
       "email": "cli3@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
       "usuarioId": 3
     },
     {
-      "id": "4",
+      "id": 4,
       "email": "cli4@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
       "usuarioId": 4
     },
     {
-      "id": "5",
+      "id": 5,
       "email": "cli5@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
       "usuarioId": 5
     },
     {
-      "id": "6",
+      "id": 6,
       "email": "ger1@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
       "usuarioId": 1
     },
     {
-      "id": "7",
+      "id": 7,
       "email": "ger2@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
       "usuarioId": 2
     },
     {
-      "id": "8",
+      "id": 8,
       "email": "ger3@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
       "usuarioId": 3
     },
     {
-      "id": "9",
+      "id": 9,
       "email": "adm1@bantads.com.br",
       "senha": "tads",
       "perfil": "ADMIN",
@@ -254,16 +254,16 @@
   ],
   "contas": [
     {
-      "id": "1",
+      "id": 1,
       "clienteId": 1,
       "numeroConta": "1291",
-      "saldo": 0,
-      "limite": 12000,
+      "saldo": 800,
+      "limite": 5000,
       "gerenteId": 1,
       "dataAbertura": "2000-01-01"
     },
     {
-      "id": "2",
+      "id": 2,
       "clienteId": 2,
       "numeroConta": "0950",
       "saldo": -10000,
@@ -272,7 +272,7 @@
       "dataAbertura": "1990-10-10"
     },
     {
-      "id": "3",
+      "id": 3,
       "clienteId": 3,
       "numeroConta": "8573",
       "saldo": -1000,
@@ -281,7 +281,7 @@
       "dataAbertura": "2012-12-12"
     },
     {
-      "id": "4",
+      "id": 4,
       "clienteId": 4,
       "numeroConta": "5887",
       "saldo": 150000,
@@ -290,7 +290,7 @@
       "dataAbertura": "2022-02-22"
     },
     {
-      "id": "5",
+      "id": 5,
       "clienteId": 5,
       "numeroConta": "7617",
       "saldo": 1500,
@@ -310,7 +310,7 @@
   ],
   "transacoes": [
     {
-      "id": "1",
+      "id": 1,
       "dataHora": "2020-01-01T10:00:00Z",
       "tipo": "DEPOSITO",
       "clienteORigem": 1,
@@ -318,7 +318,7 @@
       "valor": 1000
     },
     {
-      "id": "2",
+      "id": 2,
       "dataHora": "2020-01-01T11:00:00Z",
       "tipo": "DEPOSITO",
       "clienteORigem": 1,
@@ -326,7 +326,7 @@
       "valor": 900
     },
     {
-      "id": "3",
+      "id": 3,
       "dataHora": "2020-01-01T12:00:00Z",
       "tipo": "SAQUE",
       "clienteORigem": 1,
@@ -334,7 +334,7 @@
       "valor": 550
     },
     {
-      "id": "4",
+      "id": 4,
       "dataHora": "2020-01-01T13:00:00Z",
       "tipo": "SAQUE",
       "clienteORigem": 1,
@@ -342,7 +342,7 @@
       "valor": 350
     },
     {
-      "id": "5",
+      "id": 5,
       "dataHora": "2020-01-105T15:000:00Z",
       "tipo": "DEPOSITO",
       "clienteORigem": 1,
@@ -350,7 +350,7 @@
       "valor": 2000
     },
     {
-      "id": "6",
+      "id": 6,
       "dataHora": "2020-01-15T08:00:00Z",
       "tipo": "SAQUE",
       "clienteORigem": 1,
@@ -358,7 +358,7 @@
       "valor": 500
     },
     {
-      "id": "7",
+      "id": 7,
       "dataHora": "2020-01-20T12:00:00Z",
       "tipo": "TRANSFERENCIA",
       "clienteORigem": 1,
@@ -366,7 +366,7 @@
       "valor": 1700
     },
     {
-      "id": "8",
+      "id": 8,
       "dataHora": "2025-01-01T12:00:00Z",
       "tipo": "DEPOSITO",
       "clienteORigem": 2,
@@ -374,7 +374,7 @@
       "valor": 1000
     },
     {
-      "id": "9",
+      "id": 9,
       "dataHora": "2025-01-02T10:00:00Z",
       "tipo": "DEPOSITO",
       "clienteORigem": 2,
@@ -382,7 +382,7 @@
       "valor": 5000
     },
     {
-      "id": "10",
+      "id": 10,
       "dataHora": "2025-01-10T10:00:00Z",
       "tipo": "SAQUE",
       "clienteORigem": 2,
@@ -390,7 +390,7 @@
       "valor": 200
     },
     {
-      "id": "11",
+      "id": 11,
       "dataHora": "2025-02-05T10:00:00Z",
       "tipo": "DEPOSITO",
       "clienteORigem": 2,
@@ -398,7 +398,7 @@
       "valor": 7000
     },
     {
-      "id": "12",
+      "id": 12,
       "dataHora": "2025-05-05",
       "tipo": "DEPOSITO",
       "clienteORigem": 3,
@@ -406,7 +406,7 @@
       "valor": 1000
     },
     {
-      "id": "13",
+      "id": 13,
       "dataHora": "2025-05-06",
       "tipo": "SAQUE",
       "clienteORigem": 3,
@@ -414,7 +414,7 @@
       "valor": 2000
     },
     {
-      "id": "14",
+      "id": 14,
       "dataHora": "2025-06-01",
       "tipo": "DEPOSITO",
       "clienteORigem": 4,
@@ -422,77 +422,12 @@
       "valor": 150000
     },
     {
-      "id": "15",
+      "id": 15,
       "dataHora": "2025-07-01",
       "tipo": "DEPOSITO",
       "clienteORigem": 5,
       "clienteDestino": null,
       "valor": 1500
-    },
-    {
-      "tipo": "DEPOSITO",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 1000,
-      "dataHora": "2026-03-31T14:33:18.498Z",
-      "id": "Ed8d0wjUC1w"
-    },
-    {
-      "tipo": "DEPOSITO",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 100,
-      "dataHora": "2026-03-31T14:33:34.794Z",
-      "id": "Ao-SeJzqdG0"
-    },
-    {
-      "tipo": "DEPOSITO",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 100,
-      "dataHora": "2026-03-31T14:33:35.204Z",
-      "id": "ZA73wnVWgdc"
-    },
-    {
-      "tipo": "DEPOSITO",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 100,
-      "dataHora": "2026-03-31T14:33:48.099Z",
-      "id": "Vhv41iIk2sM"
-    },
-    {
-      "tipo": "DEPOSITO",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 100,
-      "dataHora": "2026-03-31T14:33:53.520Z",
-      "id": "vWi-qpawL0k"
-    },
-    {
-      "tipo": "SAQUE",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 300,
-      "dataHora": "2026-03-31T14:34:03.402Z",
-      "id": "N0kI8fGyeeE"
-    },
-    {
-      "tipo": "SAQUE",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 13800,
-      "dataHora": "2026-03-31T14:38:52.917Z",
-      "id": "ayHw9XlFTAg"
-    },
-    {
-      "tipo": "DEPOSITO",
-      "clienteORigem": 1,
-      "clienteDestino": null,
-      "valor": 12000,
-      "dataHora": "2026-03-31T15:41:30.498Z",
-      "id": "rkRqTn7wJsA"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

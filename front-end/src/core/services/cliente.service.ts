@@ -56,6 +56,10 @@ listarSolicitacoes(): Observable<Cliente[]> {
     return this.http.get<Cliente>(`${this.api}/${id}`);
   }
 
+  atualizarStatus(id: number, estado: 'APROVADO' | 'REJEITADO'): Observable<Cliente> {
+    return this.http.patch<Cliente>(`${this.api}/${id}`, { estado });
+  }
+
   atualizar(id: string, cliente: Partial<Cliente>): Observable<Cliente> {
   return this.http.put<Cliente>(`${this.api}/${id}`, cliente);
   }

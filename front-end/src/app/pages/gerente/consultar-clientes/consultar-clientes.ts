@@ -32,7 +32,6 @@ export class ConsultarClientes {
   clientes: ClienteComConta[] = [];
   clientesFiltrados: ClienteComConta[] = [];
 
-  usuarioLogado: any;
 
   constructor(private router: Router,
     private clienteService: ClienteService,
