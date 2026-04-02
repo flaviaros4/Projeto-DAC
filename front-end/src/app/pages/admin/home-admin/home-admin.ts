@@ -1,13 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterModule } from '@angular/router';
 
 import localePt from '@angular/common/locales/pt';
+import { Gerente } from '../../../../core/models/usuario.model';
+import { ClienteService } from '../../../../core/services/cliente.service';
+import { GerenteService } from '../../../../core/services/gerente.service';
+import { ContaService } from '../../../../core/services/conta.service';
+import { forkJoin } from 'rxjs';
 registerLocaleData(localePt);
 
-interface Gerente {
-  nome: string;
+type Gerentes = Gerente &{
   numeroClientes: number;
   saldoNegativo: number;
   saldoPositivo: number;
@@ -21,44 +25,45 @@ interface Gerente {
   styleUrl: './home-admin.css',
 })
 export class HomeAdmin implements OnInit {
+ gerentes: Gerentes[] = [];
 
-  nomeUsuario: string = '';
-
-  gerentes: Gerente[] = [];
-
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+    private cd: ChangeDetectorRef,
+    private gerenteService: GerenteService,
+    private contaService: ContaService
+  ) {}
 
   ngOnInit() {
-    //os dados não persistem pq o local storage sempre atualiza pq não tem condição de existência prévia de dados em gerente
-      const dadosIniciais: Gerente[] = [
-        { nome: "Ricardo", numeroClientes: 30, saldoNegativo: -800, saldoPositivo: 15000 },
-        { nome: "Carlos", numeroClientes: 12, saldoNegativo: -200, saldoPositivo: 10000 },
-        { nome: "Fernanda", numeroClientes: 25, saldoNegativo: -540, saldoPositivo: 7600 },
-        { nome: "Patrícia", numeroClientes: 22, saldoNegativo: -300, saldoPositivo: 6800 },
-        { nome: "Lucas", numeroClientes: 15, saldoNegativo: -150, saldoPositivo: 5500 },
-        { nome: "Maria", numeroClientes: 18, saldoNegativo: -350, saldoPositivo: 4200 },
-        { nome: "Juliana", numeroClientes: 10, saldoNegativo: -90, saldoPositivo: 3100 },
-        { nome: "Roberto", numeroClientes: 8, saldoNegativo: -600, saldoPositivo: 2100 },
-        { nome: "Ana", numeroClientes: 14, saldoNegativo: -250, saldoPositivo: 1500 },
-        { nome: "João", numeroClientes: 7, saldoNegativo: -1200, saldoPositivo: 890 }
-      ];
+  this.listarClientesPorGerente(); 
 
-      localStorage.setItem('gerentes', JSON.stringify(dadosIniciais));
+  
+   
+   
     
-
-    this.gerentes = JSON.parse(localStorage.getItem('gerentes') || '[]');
-
-    const logado = localStorage.getItem('usuarioLogado');
-
-    if (logado) {
-      const user = JSON.parse(logado);
-      this.nomeUsuario = user.nome || 'Administrador';
-    }
   }
 
+  
 
-  logout(): void {
-    localStorage.removeItem('usuarioLogado');
-    this.router.navigate(['/login']);
+   listarClientesPorGerente(): void  {
+    forkJoin({
+      gerente: this.gerenteService.listarGerentes(),
+      conta: this.contaService.listarContas()
+    }).subscribe(({ gerente, conta }) => {
+      this.gerentes = gerente.map(g => {
+        const clientesGerente = conta.filter(c => c.gerenteId === g.id);
+        const totalClientes = clientesGerente.length;
+        const saldoPositivo = clientesGerente.reduce((acc, c) =>  acc + (c.saldo > 0 ? c.saldo : 0), 0);
+        const saldoNegativo = clientesGerente.reduce((acc, c) =>  acc + (c.saldo < 0 ? c.saldo : 0), 0);
+        return {
+          ...g,
+          numeroClientes: totalClientes,
+          saldoPositivo,
+          saldoNegativo
+        };
+      }).sort((a, b) => b.saldoPositivo - a.saldoPositivo); 
+    this.cd.detectChanges();
+    }); 
+  
   }
+
 }

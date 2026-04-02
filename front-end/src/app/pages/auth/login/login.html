@@ -8,10 +8,11 @@
         <p>Faça login na <span>BANTADS</span> digitando seu E-mail e senha!</p>
     </div>
     <div id="bloco">
+        <h1>LOGIN</h1>
         <form (submit)="logar();">
             <div class="campo">
                 <label for="email">Email:</label>
-                <input type="email" name="email" id="email" [(ngModel)]="usuario.email" placeholder="joao@gmail.com">
+                <input type="email" name="email" id="email" [(ngModel)]="usuario.email" placeholder="usuario@bantads.com.br">
             </div>
     
             <div class="campo">
@@ -20,6 +21,7 @@
             </div>
     
             <input type="submit" value="Logar" id="botao">
+            <p class="cadastro-link">Não tem uma conta? <a href="/autocadastro">Cadastre-se</a></p>
         </form>
     </div>
 </div>

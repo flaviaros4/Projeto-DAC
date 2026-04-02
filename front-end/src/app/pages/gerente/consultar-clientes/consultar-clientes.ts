@@ -93,8 +93,5 @@ export class ConsultarClientes {
     );
   }
 
-  logout() {
-    localStorage.removeItem('usuarioLogado');
-    this.router.navigate(['/login']);
-  }
+ 
 }

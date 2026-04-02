@@ -8,6 +8,7 @@ import { MatIcon } from "@angular/material/icon";
 import { MatDialog } from '@angular/material/dialog';
 import { Perfil } from '../core/models/usuario.model';
 import { ModalPerfil } from './pages/cliente/modals/modal-perfil/modal-perfil';
+import { Observable } from 'rxjs';
 
 
 @Component({
@@ -24,25 +25,35 @@ export class App {
   private authService = inject(AuthService);
   private dialog = inject(MatDialog);
 
-  get logado() {
+   isAuthenticated$!: Observable<boolean>; 
+  userProfile: Perfil | null = null;
+
+   get logado() {
     return this.authService.usuarioLogado;
   }
 
-  ngOnInit(): void {
-    if (this.logado) {
-      console.log('Usuário logado:', this.logado);
+  ngOnInit(): void { 
+    if(this.logado) {
+      console.log(this.logado);
     } else {
       console.log('Nenhum usuário logado');
     }
+    
+     this.isAuthenticated$ = this.authService.isAuthenticated$;
+    this.isAuthenticated$.subscribe(isLogado => {
+      if (isLogado) {
+        this.userProfile = this.authService.getUserProfile();
+
+        
+      } else {
+        this.userProfile = null;
+    
+      }
+    })
+   
   }
 
-  perfilLogado(perfil: Perfil) {
-    if (this.logado && this.logado.perfil === perfil) {
-      return true;
-    }
-    return false;
-  }
-
+ 
   home() {
     if(this.logado) {
       if (this.logado.perfil === 'GERENTE') {
@@ -53,13 +64,17 @@ export class App {
         this.router.navigate(['/home-admin']);
       }
     } else {
-      this.router.navigate(['/autocadastro']);
+      this.router.navigate(['/login']);
     }
   }
+  temPermissao(perfis: Perfil): boolean {
+    return this.logado ? this.logado.perfil === perfis : false;
+   }
+  
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/autocadastro']);
+    this.router.navigate(['/login']);
   }
 
   abrirModal(component: Type<unknown>, width = '400px') {

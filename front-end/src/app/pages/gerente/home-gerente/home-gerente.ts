@@ -72,9 +72,6 @@ export class HomeGerente {
     });
   }
 
-  logout() {
-    localStorage.removeItem('usuarioLogado');
-    this.router.navigate(['/login']);
-  }
+ 
 
 }

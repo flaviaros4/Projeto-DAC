@@ -39,7 +39,6 @@ export class Login implements OnInit {
         return;
       }
 
-      localStorage.setItem('auth', JSON.stringify(usuario));
 
       if (usuario.perfil === 'GERENTE') {
         this.router.navigate(['/home-gerente']);

@@ -100,19 +100,21 @@ export class RejeitarCliente {
   }
 
   rejeitar() {
-    this.clienteService.atualizarStatus(this.cliente.id, 'REJEITADO').subscribe(() => {
-      if (!this.motivo.trim()) {
-        alert('Por favor, insira o motivo da rejeição.');
-        return;
-      }
-      console.log(this.cliente);
+    if (!this.motivo.trim()) {
+      alert('Por favor, insira o motivo da rejeição.');
+      return;
+    }
 
+    const dataRejeicao = new Date();
 
-      this.cliente.estado = 'REJEITADO';
-      this.cliente.dataRejeicao = new Date();
-      this.cliente.motivoRejeicao = this.motivo;
+    this.clienteService
+      .atualizarStatus(this.cliente.id, 'REJEITADO', this.motivo, dataRejeicao)
+      .subscribe(() => {
+        this.cliente.estado = 'REJEITADO';
+        this.cliente.dataRejeicao = dataRejeicao;
+        this.cliente.motivoRejeicao = this.motivo;
 
-      console.log(`
+        console.log(`
     Email enviado para: ${this.cliente.email}
 
     Ola, ${this.cliente.nome}!
@@ -121,8 +123,8 @@ export class RejeitarCliente {
     Motivo da rejeição: ${this.motivo}
   `);
 
-      this.dialogRef.close(this.cliente);
-    });
+        this.dialogRef.close(this.cliente);
+      });
   }
 
   fechar() {

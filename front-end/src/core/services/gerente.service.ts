@@ -9,7 +9,7 @@ export class GerenteService {
   constructor(private http: HttpClient) {}
 
 
-  getGerentes(): Observable<Gerente[]> {
+  listarGerentes(): Observable<Gerente[]> {
     return this.http.get<Gerente[]>(this.api);
   }
 

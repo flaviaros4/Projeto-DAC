@@ -127,7 +127,7 @@ export class AprovarCliente {
 
   getGerenteComMenosClientes() {
     return forkJoin({
-      gerentes: this.gerenteService.getGerentes(),
+      gerentes: this.gerenteService.listarGerentes(),
       contas: this.contaService.listarContas()
     }).pipe(
       map(({ gerentes, contas }) => {

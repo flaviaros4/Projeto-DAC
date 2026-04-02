@@ -139,12 +139,33 @@
         "bairro": "Costeira",
         "cidade": "Paranaguá",
         "estado": "PR",
-        "complemento": "Apto"
+        "complemento": "apto"
+      },
+      "senha": "",
+      "perfil": "CLIENTE",
+      "estado": "REJEITADO",
+      "id": 8,
+      "motivoRejeicao": "TESTE",
+      "dataRejeicao": "2026-04-02T11:43:43.830Z"
+    },
+    {
+      "nome": "Alice Costa",
+      "email": "alice@bantads.com.br",
+      "cpf": "49821748917",
+      "telefone": "41821515151",
+      "salario": 2000,
+      "endereco": {
+        "cep": "82400-000",
+        "rua": "Avenida Manoel Ribas",
+        "numero": "124",
+        "bairro": "Santa Felicidade",
+        "cidade": "Curitiba",
+        "estado": "PR"
       },
       "senha": "",
       "perfil": "CLIENTE",
       "estado": "PENDENTE",
-      "id": 8
+      "id": 9
     }
   ],
   "gerentes": [
@@ -268,7 +289,7 @@
       "clienteId": 1,
       "numeroConta": "1291",
       "saldo": 800,
-      "limite": 5000,
+      "limite": 10000,
       "gerenteId": 1,
       "dataAbertura": "2000-01-01"
     },

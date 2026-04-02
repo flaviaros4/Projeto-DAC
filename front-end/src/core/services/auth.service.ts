@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Cliente, Usuario } from '../models/usuario.model';
+import { Cliente, Perfil, Usuario } from '../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const LS_CHAVE = 'auth';
@@ -23,6 +23,9 @@ export class AuthService {
 
    private api = 'http://localhost:3000/usuarios';
 
+   private isAuthenticated = new BehaviorSubject<boolean>(!!sessionStorage.getItem(LS_CHAVE));
+   isAuthenticated$ = this.isAuthenticated.asObservable();
+
  login(usuario: Usuario): Observable<Usuario | undefined> {
   return this.http.get<Usuario[]>(this.api).pipe(
     map((usuarios) => {
@@ -30,7 +33,8 @@ export class AuthService {
         (u) => u.email === usuario.email && u.senha === usuario.senha
       );
       if (usuarioEncontrado) {
-        localStorage.setItem(LS_CHAVE, JSON.stringify(usuarioEncontrado));
+        sessionStorage.setItem(LS_CHAVE, JSON.stringify(usuarioEncontrado));
+        this.isAuthenticated.next(true);
       }
       return usuarioEncontrado;
     })
@@ -44,7 +48,7 @@ export class AuthService {
  }
 
  get usuarioLogado(): Usuario | null {
-  const authData = localStorage.getItem(LS_CHAVE);
+  const authData =sessionStorage.getItem(LS_CHAVE);
   if(authData) {
     try {
       return JSON.parse(authData) as Usuario;
@@ -55,8 +59,13 @@ export class AuthService {
   return null;
  }
 
+ getUserProfile(): Perfil | null {
+  return this.usuarioLogado?.perfil || null;
+ }
+
  logout(): void{
-  localStorage.removeItem(LS_CHAVE);
+  sessionStorage.removeItem(LS_CHAVE);
+  this.isAuthenticated.next(false);
  }
 
 }

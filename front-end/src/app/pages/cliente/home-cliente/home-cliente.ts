@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -21,13 +21,13 @@ import { AuthService } from '../../../../core/services/auth.service';
   selector: 'app-home-cliente',
   standalone: true,
   imports: [
-    CommonModule, 
-    MatIconModule, 
-    MatButtonModule, 
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
     MatDialogModule
   ],
   templateUrl: './home-cliente.html',
-  styleUrl: './home-cliente.css' 
+  styleUrl: './home-cliente.css'
 })
 export class HomeCliente implements OnInit {
   cliente?: any;
@@ -38,34 +38,36 @@ export class HomeCliente implements OnInit {
     private contaService: ContaService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private router: Router
-  ) {}
+    private router: Router,
+    private cd: ChangeDetectorRef
+  ) { }
 
   get logado() {
     return this.authService.usuarioLogado;
   }
 
 
-  ngOnInit(){
-  
-   if (this.logado) {
-     this.carregarDados(this.logado.usuarioId);
-   }
+  ngOnInit() {
+
+    if (this.logado) {
+      this.carregarDados(this.logado.usuarioId);
+    }
   }
 
-carregarDados(id: number) {
-this.contaService.getContaPorCliente(id).subscribe({
-  next: (conta) => {
-    this.conta = conta ?? { saldo: 0 };
-  },
-  error: (err) => {
-    console.error("Erro ao buscar conta:", err);
-  }
-});
+  carregarDados(id: number) {
+    this.contaService.getContaPorCliente(id).subscribe({
+      next: (conta) => {
+        this.conta = conta ?? { saldo: 0 };
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error("Erro ao buscar conta:", err);
+      }
 
-   
- 
-}
+    });
+
+
+  }
 
   abrirModal(tipo: string) {
     if (tipo === 'deposito') {
@@ -81,8 +83,4 @@ this.contaService.getContaPorCliente(id).subscribe({
     }
   }
 
-  logout() {
-    localStorage.removeItem('auth');
-    this.router.navigate(['/login']);
-  }
 }

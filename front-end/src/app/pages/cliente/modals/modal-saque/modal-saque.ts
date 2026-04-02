@@ -41,10 +41,10 @@ export class ModalSaque implements OnInit {
     public dialogRef: MatDialogRef<ModalSaque>,
     private contaService: ContaService,
     private transacaoService: TransacaoService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    const logado = localStorage.getItem('auth');
+    const logado =localStorage.getItem('auth');
     if (logado) {
       const user = JSON.parse(logado);
       this.contaService.getContaPorCliente(Number(user.usuarioId)).subscribe({

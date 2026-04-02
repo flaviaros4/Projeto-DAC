@@ -7,54 +7,54 @@
             </a>
         </div>
         <div class="botao-login">
-            <a href="/login" *ngIf="!logado"><button class="btn"><b>LOGIN</b></button></a>
-            <a *ngIf="logado" (click)="logout()"><button class="btn"><b>SAIR</b></button></a>
+            <a href="/login" *ngIf="!(isAuthenticated$ | async)"><button class="btn"><b>LOGIN</b></button></a>
+            <a *ngIf="isAuthenticated$ | async" (click)="logout()"><button class="btn"><b>SAIR</b></button></a>
         </div>
     </nav>
 
     <div class="content">
 
-        <aside class="barra-nav" *ngIf="logado">
+        <aside class="barra-nav" *ngIf="isAuthenticated$ | async">
             <div class="logo-barra-nav">
                 <mat-icon fontIcon="person"></mat-icon>
-                <h1>Olá, {{ logado.nome }}</h1>
+                <h1>Olá, {{ logado?.nome }}</h1>
             </div>
 
             <div class="menu">
-                <button *ngIf="perfilLogado('GERENTE')" mat-button [routerLink]="['/home-gerente']">
+                <button *ngIf="temPermissao('GERENTE')" mat-button [routerLink]="['/home-gerente']">
                     <mat-icon>home</mat-icon>
                     Home
                 </button>
-                <button *ngIf="perfilLogado('CLIENTE')" mat-button [routerLink]="['/home-cliente']">
+                <button *ngIf="temPermissao('CLIENTE')" mat-button [routerLink]="['/home-cliente']">
                     <mat-icon>home</mat-icon>
                     Home
                 </button>
-                <button *ngIf="perfilLogado('ADMIN')" mat-button [routerLink]="['/home-admin']">
+                <button *ngIf="temPermissao('ADMIN')" mat-button [routerLink]="['/home-admin']">
                     <mat-icon>home</mat-icon>
                     Home
                 </button>
-                <button *ngIf="perfilLogado('GERENTE')" mat-button [routerLink]="['/consultar-clientes']">
+                <button *ngIf="temPermissao('GERENTE')" mat-button [routerLink]="['/consultar-clientes']">
                     <mat-icon>people</mat-icon>
                     Consultar Todos os Clientes
                 </button>
 
-                <button *ngIf="perfilLogado('GERENTE')" mat-button [routerLink]="['/buscar-cliente']">
+                <button *ngIf="temPermissao('GERENTE')" mat-button [routerLink]="['/buscar-cliente']">
                     <mat-icon>search</mat-icon>
                     Buscar Cliente
                 </button>
-                <button *ngIf="perfilLogado('GERENTE')" mat-button [routerLink]="['/melhores-clientes']">
+                <button *ngIf="temPermissao('GERENTE')" mat-button [routerLink]="['/melhores-clientes']">
                     <mat-icon>star</mat-icon>
                     3 Melhores Clientes
                 </button>
-                <button *ngIf="perfilLogado('CLIENTE')" mat-button (click)="abrirModal(modalPerfilComponent)">
+                <button *ngIf="temPermissao('CLIENTE')" mat-button (click)="abrirModal(modalPerfilComponent)">
                     <mat-icon>people</mat-icon>
                     Meu Perfil
                 </button>
-                <button *ngIf="perfilLogado('ADMIN')" mat-button [routerLink]="['/relatorio-clientes']">
+                <button *ngIf="temPermissao('ADMIN')" mat-button [routerLink]="['/relatorio-clientes']">
                     <mat-icon>article</mat-icon>
                     Relatório de Clientes
                 </button>
-                 <button *ngIf="perfilLogado('ADMIN')" mat-button>
+                 <button *ngIf="temPermissao('ADMIN')" mat-button>
                     <mat-icon>people</mat-icon>
                     Gerenciar Gerentes
                 </button>

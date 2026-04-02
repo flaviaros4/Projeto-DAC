@@ -21,6 +21,7 @@ export interface Usuario {
 }
 
 export interface Cliente extends Usuario {
+    nome: string;
     cpf: string;
     telefone: string;
     endereco: Endereco;
