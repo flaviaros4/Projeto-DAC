@@ -58,31 +58,26 @@ export class RelatorioClientes implements OnInit {
       console.log('=== CONTAS ===', contas);
       console.log('=== GERENTES ===', gerentes);
 
-      this.clientes = clientes.map(c => {
+      this.clientes = clientes
+  .map(c => {
+    const conta = contas.find(ct => ct.clienteId === c.id);
+    const gerente = gerentes.find(g => g.id === conta?.gerenteId);
 
-        const conta = contas.find(ct => ct.clienteId === c.id);
-        const gerente = gerentes.find(g => g.id === conta?.gerenteId);
-
-        console.log('--- PROCESSANDO CLIENTE ---');
-        console.log('Cliente:', c);
-        console.log('Conta encontrada:', conta);
-        console.log('Gerente encontrado:', gerente);
-
-        return {
-          nome: c.nome,
-          email: c.email,
-          cpf: c.cpf,
-          salario: c.salario,
-          numeroConta: String(conta?.numeroConta ?? '-'),
-          saldo: conta?.saldo ?? 0,
-          limite: conta?.limite ?? 0,
-          gerente: {
-            nome: gerente?.nome ?? 'N/A',
-            cpf: gerente?.cpf ?? 'N/A'
-          }
-        };
-      });
-
+    return {
+      nome: c.nome,
+      email: c.email,
+      cpf: c.cpf,
+      salario: c.salario,
+      numeroConta: String(conta?.numeroConta ?? '-'),
+      saldo: conta?.saldo ?? 0,
+      limite: conta?.limite ?? 0,
+      gerente: {
+        nome: gerente?.nome ?? 'N/A',
+        cpf: gerente?.cpf ?? 'N/A'
+      }
+    };
+  }).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+      
       console.log('=== RESULTADO FINAL (clientes) ===', this.clientes);
 
       this.isLoading = false;
@@ -94,5 +89,9 @@ export class RelatorioClientes implements OnInit {
       this.isLoading = false;
     }
   });
+
+
 }
+
+
 }

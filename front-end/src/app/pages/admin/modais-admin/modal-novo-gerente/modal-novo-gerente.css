@@ -50,7 +50,6 @@ h2{
   padding: 8px;
   cursor: pointer;
 }
-
 .cancelar:hover{
   background-color: rgb(110, 13, 13);
 }

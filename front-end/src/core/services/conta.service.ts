@@ -9,10 +9,9 @@ import { Conta } from '../models/conta.model';
 })
 export class ContaService {
 
-  constructor(private http: HttpClient) { }
-
   private api = 'http://localhost:3000/contas';
 
+  constructor(private http: HttpClient) { }
 
   listarContas(): Observable<Conta[]> {
     return this.http.get<Conta[]>(this.api);
@@ -26,15 +25,17 @@ export class ContaService {
 
   criarConta(conta: Conta): Observable<Conta> {
     return this.http.post<Conta>(this.api, conta);
-
   }
 
   atualizarSaldo(contaId: string, novoSaldo: number): Observable<Conta> {
-  return this.http.patch<Conta>(`${this.api}/${contaId}`, { saldo: novoSaldo });
+    return this.http.patch<Conta>(`${this.api}/${contaId}`, { saldo: novoSaldo });
   }
 
   atualizarLimite(contaId: string, novoLimite: number): Observable<Conta> {
-  return this.http.patch<Conta>(`${this.api}/${contaId}`, { limite: novoLimite });
+    return this.http.patch<Conta>(`${this.api}/${contaId}`, { limite: novoLimite });
+  }
+
+  atualizarConta(conta: any) {
+    return this.http.put(`${this.api}/${conta.id}`, conta);
   }
 }
-

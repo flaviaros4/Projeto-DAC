@@ -11,7 +11,7 @@
       "perfil": "CLIENTE",
       "endereco": {
         "rua": "Rua 1",
-        "numero": 123,
+        "numero": "1234",
         "bairro": "Centro",
         "cidade": "São Paulo",
         "estado": "SP",
@@ -21,7 +21,7 @@
     {
       "id": 2,
       "cpf": "09506382000",
-      "nome": "Cleuddônio",
+      "nome": "Cleuônio",
       "email": "cli2@bantads.com.br",
       "telefone": "13951245678",
       "salario": 20000,
@@ -109,7 +109,7 @@
       "id": 6
     },
     {
-      "nome": "Maria dos Santos",
+      "nome": "Aria dos Santos",
       "email": "maria@bantads.com.br",
       "cpf": "12314151251",
       "telefone": "41987345345",
@@ -172,10 +172,11 @@
     {
       "id": 1,
       "cpf": "98574307084",
-      "nome": "Geniéve",
+      "nome": "Zoro",
       "email": "ger1@bantads.com.br",
       "telefone": "11987654321",
-      "perfil": "GERENTE"
+      "perfil": "GERENTE",
+      "numeroClientes": 1
     },
     {
       "id": 2,
@@ -192,6 +193,47 @@
       "email": "ger3@bantads.com.br",
       "telefone": "41951335678",
       "perfil": "GERENTE"
+    },
+    {
+      "nome": "Pedro",
+      "cpf": "06456779901",
+      "telefone": "41987969296",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "perfil": "GERENTE",
+      "id": 4
+    },
+    {
+      "nome": "Quernia",
+      "cpf": "06456779901",
+      "telefone": "41987969296",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "perfil": "GERENTE",
+      "id": 6
+    },
+    {
+      "nome": "Jeronimo",
+      "cpf": "064.567.799-01",
+      "telefone": "41987969296",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "perfil": "GERENTE",
+      "id": 7
+    },
+    {
+      "nome": "Zanendrik",
+      "cpf": "064.567.799-01",
+      "telefone": "41987969296",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "perfil": "GERENTE",
+      "id": 8
+    },
+    {
+      "nome": "Zorko",
+      "cpf": "064.567.799-01",
+      "telefone": "41987969296",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "perfil": "GERENTE",
+      "id": 10,
+      "numeroClientes": 1
     }
   ],
   "administrador": {
@@ -212,7 +254,7 @@
     },
     {
       "id": 2,
-      "nome": "Cleuddônio",
+      "nome": "Cleuônio",
       "email": "cli2@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -244,7 +286,7 @@
     },
     {
       "id": 6,
-      "nome": "Geniéve",
+      "nome": "Zoro",
       "email": "ger1@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
@@ -281,6 +323,46 @@
       "senha": "1002",
       "perfil": "CLIENTE",
       "usuarioId": 7
+    },
+    {
+      "nome": "Pedro",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "senha": "lasp",
+      "perfil": "GERENTE",
+      "usuarioId": 4,
+      "id": 11
+    },
+    {
+      "nome": "Quernia",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "senha": "lasp",
+      "perfil": "GERENTE",
+      "usuarioId": 6,
+      "id": 13
+    },
+    {
+      "nome": "Jeronimo",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "senha": "lasp",
+      "perfil": "GERENTE",
+      "usuarioId": 7,
+      "id": 14
+    },
+    {
+      "nome": "Zanendrik",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "senha": "lasp",
+      "perfil": "GERENTE",
+      "usuarioId": 8,
+      "id": 15
+    },
+    {
+      "nome": "Zorko",
+      "email": "leonardoleonardoleo10nardo@gmail.com",
+      "senha": "lasp",
+      "perfil": "GERENTE",
+      "usuarioId": 10,
+      "id": 17
     }
   ],
   "contas": [
@@ -288,9 +370,9 @@
       "id": 1,
       "clienteId": 1,
       "numeroConta": "1291",
-      "saldo": 800,
+      "saldo": 4000,
       "limite": 10000,
-      "gerenteId": 1,
+      "gerenteId": 6,
       "dataAbertura": "2000-01-01"
     },
     {
@@ -299,7 +381,7 @@
       "numeroConta": "0950",
       "saldo": -10000,
       "limite": 20000,
-      "gerenteId": 2,
+      "gerenteId": 10,
       "dataAbertura": "1990-10-10"
     },
     {
@@ -308,7 +390,7 @@
       "numeroConta": "8573",
       "saldo": -1000,
       "limite": 1500,
-      "gerenteId": 3,
+      "gerenteId": 4,
       "dataAbertura": "2012-12-12"
     },
     {
@@ -332,7 +414,7 @@
     {
       "clienteId": 7,
       "numeroConta": 8326,
-      "saldo": 0,
+      "saldo": 600,
       "limite": 5000,
       "gerenteId": 3,
       "dataAbertura": "2026-03-31T12:24:59.717Z",
@@ -459,6 +541,57 @@
       "clienteORigem": 5,
       "clienteDestino": null,
       "valor": 1500
+    },
+    {
+      "tipo": "DEPOSITO",
+      "clienteORigem": 1,
+      "valor": 1200,
+      "dataHora": "2026-04-05T22:43:57.391",
+      "id": 16
+    },
+    {
+      "tipo": "SAQUE",
+      "clienteORigem": 1,
+      "valor": 500,
+      "dataHora": "2026-04-05T22:44:01.127",
+      "id": 17
+    },
+    {
+      "tipo": "TRANSFERENCIA",
+      "clienteORigem": 1,
+      "clienteDestino": 7,
+      "valor": 500,
+      "dataHora": "2026-04-05T22:44:14.951",
+      "id": 18
+    },
+    {
+      "tipo": "DEPOSITO",
+      "clienteORigem": 1,
+      "valor": 2000,
+      "dataHora": "2026-04-05T22:44:18.159",
+      "id": 19
+    },
+    {
+      "tipo": "DEPOSITO",
+      "clienteORigem": 1,
+      "valor": 1500,
+      "dataHora": "2026-04-05T22:54:36.453",
+      "id": 20
+    },
+    {
+      "tipo": "SAQUE",
+      "clienteORigem": 1,
+      "valor": 400,
+      "dataHora": "2026-04-05T22:54:40.637",
+      "id": 21
+    },
+    {
+      "tipo": "TRANSFERENCIA",
+      "clienteORigem": 1,
+      "clienteDestino": 7,
+      "valor": 100,
+      "dataHora": "2026-04-05T22:54:46.354",
+      "id": 22
     }
   ]
 }

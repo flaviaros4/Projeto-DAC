@@ -46,8 +46,8 @@
                     <mat-icon>star</mat-icon>
                     3 Melhores Clientes
                 </button>
-                <button *ngIf="temPermissao('CLIENTE')" mat-button (click)="abrirModal(modalPerfilComponent)">
-                    <mat-icon>people</mat-icon>
+                <button *ngIf="temPermissao('CLIENTE')" mat-button [routerLink]="['/perfil']" routerLinkActive="active">
+                    <mat-icon>person</mat-icon>
                     Meu Perfil
                 </button>
                 <button *ngIf="temPermissao('ADMIN')" mat-button [routerLink]="['/relatorio-clientes']">

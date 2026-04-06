@@ -16,7 +16,7 @@
                     <span>{{ gerente.cpf }}</span>
                 </p>
     
-                <p class="dado">
+                <p class="dado" style="background-color: rgba(255, 192, 203, 0);">
                     <strong>Email: </strong>
                     <span>{{ gerente.email }}</span>
                 </p>
@@ -27,11 +27,13 @@
                 </p>
             </div>
             <div class="div-botoes">
-                <button class="botao botao-deletar">
+                <button 
+                    class="botao botao-deletar"
+                    (click)="confirmarDelecao(gerente)">
                     <mat-icon>delete_forever</mat-icon>
                 </button>
                 <button class="botao botao-editar" (click)="abrirEditarGerentes(gerente)">
-                    <mat-icon> border_color</mat-icon>
+                    <mat-icon>border_color</mat-icon>
                 </button>
             </div>
         </div>
@@ -40,12 +42,30 @@
 
 <app-modal-novo-gerente 
   *ngIf="mostrarModal"
-  (fechar)="fecharModal()">
+  (fechar)="fecharModal()"
+  (atualizado)="recarregarGerentes()">
 </app-modal-novo-gerente>
 
 <app-modal-editar-gerente
 *ngIf="mostrarEditarGerente"
 [gerente]="gerenteSelecionado"
-(fechar)="fecharEditarGerentes()">
+(fechar)="fecharEditarGerentes()"
+(atualizado)="recarregarGerentes()">
 
 </app-modal-editar-gerente>
+
+<div class="modal" *ngIf="mostrarConfirmacao">
+  <div class="modal-content">
+    <p>Tem certeza que deseja deletar este gerente?</p>
+    
+    <button (click)="deletarGerenteConfirmado()">Confirmar</button>
+    <button (click)="mostrarConfirmacao = false">Cancelar</button>
+  </div>
+</div>
+
+<div class="modal" *ngIf="mostrarErro">
+  <div class="modal-content">
+    <p>{{ mensagemErro }}</p>
+    <button (click)="mostrarErro = false">OK</button>
+  </div>
+</div>

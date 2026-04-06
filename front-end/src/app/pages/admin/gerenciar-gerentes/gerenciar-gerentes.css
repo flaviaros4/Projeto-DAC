@@ -59,6 +59,15 @@
     column-gap: 20px;
 }
 
+.div-dados{
+    width: 250px;
+}
+
+.dado{
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 .div-botoes{
     display: flex;
     flex-direction: column;
@@ -75,18 +84,77 @@
 
 
 .botao-deletar{
-    background-color: green;
-}
-
-.botao-deletar:hover{
-    background-color: rgb(4, 78, 4);
-}
-
-.botao-editar{
     background-color: red;
 }
 
-.botao-editar:hover{
+.botao-deletar:hover{
     background-color: rgb(114, 4, 4);
 }
 
+.botao-editar{
+    background-color: green;
+}
+
+.botao-editar:hover{
+    background-color: rgb(4, 78, 4);
+}
+
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  text-align: center;
+}
+
+.modal-content p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.modal-content button {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+.modal-content button:first-of-type {
+  background-color: green;
+}
+
+.modal-content button:first-of-type:hover {
+  background-color: rgb(5, 89, 5);
+}
+
+.modal-content button:last-of-type {
+  background-color: red;
+}
+
+.modal-content button:last-of-type:hover {
+  background-color: rgb(110, 13, 13);
+}

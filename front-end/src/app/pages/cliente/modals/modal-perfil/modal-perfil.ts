@@ -1,174 +1,145 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ClienteService } from '../../../../../core/services/cliente.service';
-import { ContaService } from '../../../../../core/services/conta.service';
-import { GerenteService } from '../../../../../core/services/gerente.service';
 
 @Component({
-  selector: 'app-modal-perfil',
+  selector: 'app-perfil',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   template: `
-    <h2 mat-dialog-title>Meu Perfil</h2>
-    <mat-dialog-content>
-      <ng-container *ngIf="!salvoComSucesso">
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Nome</mat-label>
-          <input matInput [(ngModel)]="form.nome"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>CPF</mat-label>
-          <input matInput [value]="form.cpf" disabled/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>E-mail</mat-label>
-          <input matInput [(ngModel)]="form.email"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Telefone</mat-label>
-          <input matInput [(ngModel)]="form.telefone"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Salário</mat-label>
-          <input matInput type="number" [(ngModel)]="form.salario"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Rua</mat-label>
-          <input matInput [(ngModel)]="form.endereco.rua"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Número</mat-label>
-          <input matInput [(ngModel)]="form.endereco.numero"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Bairro</mat-label>
-          <input matInput [(ngModel)]="form.endereco.bairro"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Cidade</mat-label>
-          <input matInput [(ngModel)]="form.endereco.cidade"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>Estado</mat-label>
-          <input matInput [(ngModel)]="form.endereco.estado"/>
-        </mat-form-field>
-        <mat-form-field appearance="outline" style="width:100%">
-          <mat-label>CEP</mat-label>
-          <input matInput [(ngModel)]="form.endereco.cep"/>
-        </mat-form-field>
-        <p *ngIf="erro" style="color:red">{{ erro }}</p>
-      </ng-container>
+    <div class="perfil-bg">
+      <div class="perfil-card">
+        <h2 class="perfil-titulo">Meu Perfil</h2>
+        
+        <div class="form-grid">
+          <div class="col">
+            <h3>Dados Pessoais</h3>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nome Completo</mat-label>
+              <input matInput [(ngModel)]="form.nome">
+            </mat-form-field>
 
-      <ng-container *ngIf="salvoComSucesso && resumo">
-        <h3>Dados atualizados com sucesso!</h3>
-        <p><strong>Nome:</strong> {{ resumo.nome }}</p>
-        <p><strong>E-mail:</strong> {{ resumo.email }}</p>
-        <p><strong>Telefone:</strong> {{ resumo.telefone }}</p>
-        <p><strong>Salário:</strong> {{ resumo.salario | currency:'BRL' }}</p>
-        <p><strong>Saldo:</strong> {{ resumo.saldo | currency:'BRL' }}</p>
-        <p><strong>Gerente:</strong> {{ resumo.nomeGerente }}</p>
-      </ng-container>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="fechar()">{{ salvoComSucesso ? 'Fechar' : 'Cancelar' }}</button>
-      <button *ngIf="!salvoComSucesso" mat-raised-button color="primary" (click)="confirmar()">Salvar</button>
-    </mat-dialog-actions>
-  `
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>CPF</mat-label>
+              <input matInput [value]="form.cpf" disabled class="disabled-input">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>E-mail</mat-label>
+              <input matInput [(ngModel)]="form.email">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Salário (R$)</mat-label>
+              <input matInput type="number" [(ngModel)]="form.salario">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Telefone</mat-label>
+              <input matInput [(ngModel)]="form.telefone">
+            </mat-form-field>
+          </div>
+
+          <div class="col">
+            <h3>Endereço</h3>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>CEP</mat-label>
+              <input matInput [(ngModel)]="form.endereco.cep">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Logradouro</mat-label>
+              <input matInput [(ngModel)]="form.endereco.logradouro">
+            </mat-form-field>
+
+            <div class="row-flex">
+              <mat-form-field appearance="outline" style="flex: 1;">
+                <mat-label>Nº</mat-label>
+                <input matInput [(ngModel)]="form.endereco.numero">
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="flex: 2;">
+                <mat-label>Complemento</mat-label>
+                <input matInput [(ngModel)]="form.endereco.complemento">
+              </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Bairro</mat-label>
+              <input matInput [(ngModel)]="form.endereco.bairro">
+            </mat-form-field>
+
+            <div class="row-flex">
+              <mat-form-field appearance="outline" style="flex: 3;">
+                <mat-label>Cidade</mat-label>
+                <input matInput [(ngModel)]="form.endereco.cidade">
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="flex: 1;">
+                <mat-label>UF</mat-label>
+                <input matInput [(ngModel)]="form.endereco.estado">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-salvar" (click)="salvar()">Salvar alterações</button>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .perfil-bg { 
+      background-color: #f4f4f4; 
+      min-height: 100vh; 
+      margin-left: 0px;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      box-sizing: border-box;
+    }
+    .perfil-card { 
+      background: white; 
+      padding: 40px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+      width: 100%;
+      max-width: 1000px; 
+    }
+    .perfil-titulo { font-size: 28px; color: #0F1F3D; margin-top: 0; margin-bottom: 30px; border-bottom: 2px solid #f4f4f4; padding-bottom: 15px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .col h3 { font-size: 16px; color: #D4AF37; margin-bottom: 20px; border-left: 4px solid #D4AF37; padding-left: 10px; }
+    .full-width { width: 100%; }
+    .row-flex { display: flex; gap: 10px; }
+    .disabled-input { background-color: #f9f9f9; cursor: not-allowed; }
+    .actions { margin-top: 30px; display: flex; justify-content: flex-end; border-top: 1px solid #eee; padding-top: 20px; }
+    .btn-salvar { background-color: #D4AF37; color: white; border: none; padding: 12px 40px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+    .btn-salvar:hover { background-color: #b8962e; transform: translateY(-2px); }
+  `]
 })
 export class ModalPerfil implements OnInit {
   form: any = { endereco: {} };
-  erro = '';
-  salvoComSucesso = false;
-  resumo: any = null;
-  clienteId: any;
-  private conta: any;
 
-  constructor(
-    public dialogRef: MatDialogRef<ModalPerfil>,
-    private clienteService: ClienteService,
-    private contaService: ContaService,
-    private gerenteService: GerenteService
-  ) {}
+  constructor(private clienteService: ClienteService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    const logado = localStorage.getItem('auth');
-    if (!logado) return;
-    const user = JSON.parse(logado);
-    this.clienteId = user.usuarioId;
-
-    this.clienteService.buscarPorId(this.clienteId).subscribe({
-      next: (cliente) => {
-        this.form = { ...cliente, endereco: { ...cliente.endereco } };
-      }
-    });
-
-    this.contaService.getContaPorCliente(Number(this.clienteId)).subscribe({
-      next: (res) => this.conta = res
-    });
+    const auth = sessionStorage.getItem('auth');
+    if (auth) {
+      const user = JSON.parse(auth);
+      this.clienteService.buscarPorId(user.usuarioId).subscribe(res => {
+        this.form = res;
+        this.cdr.detectChanges();
+      });
+    }
   }
 
-  calcularNovoLimite(salario: number): number {
-    const novoLimite = salario;
-    if (this.conta && this.conta.saldo < 0) {
-      const saldoNegativo = Math.abs(this.conta.saldo);
-      return Math.max(novoLimite, saldoNegativo);
-    }
-    return novoLimite;
-  }
-
-  confirmar(): void {
-    if (!this.form.nome || !this.form.email || !this.form.salario) {
-      this.erro = 'Preencha todos os campos obrigatórios.';
-      return;
-    }
-    if (this.form.salario <= 0) {
-      this.erro = 'Salário deve ser maior que zero.';
-      return;
-    }
-
-    const novoLimite = this.calcularNovoLimite(Number(this.form.salario));
-
-    this.clienteService.atualizar(this.clienteId, this.form).subscribe({
-      next: () => {
-        if (this.conta) {
-          this.contaService.atualizarLimite(this.conta.id, novoLimite).subscribe();
-        }
-
-        this.gerenteService.buscarPorId(this.conta?.gerenteId?.toString()).subscribe({
-          next: (gerente) => {
-            this.resumo = {
-              nome: this.form.nome,
-              email: this.form.email,
-              telefone: this.form.telefone,
-              salario: this.form.salario,
-              saldo: this.conta?.saldo ?? 0,
-              nomeGerente: gerente?.nome ?? 'N/A'
-            };
-            this.salvoComSucesso = true;
-          },
-          error: () => {
-            this.resumo = {
-              nome: this.form.nome,
-              email: this.form.email,
-              telefone: this.form.telefone,
-              salario: this.form.salario,
-              saldo: this.conta?.saldo ?? 0,
-              nomeGerente: 'N/A'
-            };
-            this.salvoComSucesso = true;
-          }
-        });
-      },
-      error: () => this.erro = 'Erro ao salvar perfil.'
+  salvar(): void {
+    this.clienteService.atualizar(this.form.id, this.form).subscribe(() => {
+      alert('Perfil atualizado com sucesso!');
     });
-  }
-
-  fechar(): void {
-    this.dialogRef.close(this.salvoComSucesso);
   }
 }
