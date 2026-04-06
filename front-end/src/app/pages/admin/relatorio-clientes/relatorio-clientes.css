@@ -1,0 +1,71 @@
+.titulo{
+    background-color: #D4AF37;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    width: 50%;
+    text-align: center;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+.lista-clientes {
+    width: 70vw;
+    background-color: #eee7e7;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    box-shadow: 2px 2px 7px black;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.lista-clientes > p {
+    display: block;
+    margin: 0px;
+}
+
+.lista-clientes strong{
+    display: block;
+}
+
+.container1{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
+    row-gap: 10px;
+    margin-bottom: 20px;
+}
+.nome, .email{
+    width: auto;
+    margin: 0px;
+}
+
+
+.container2{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: center;
+    row-gap: 10px;
+    margin-bottom: 20px;
+}
+.dados-menores{
+    width: 150px;
+    background-color: rgba(192, 67, 67, 0);
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+.container3{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 100px;
+    row-gap: 10px;
+}
+.container3 > p{
+    margin: 0px;
+}

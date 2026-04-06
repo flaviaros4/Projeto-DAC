@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeAdmin } from './home-admin';
+import { ModalNovoGerente } from './modal-novo-gerente';
 
-describe('HomeAdmin', () => {
-  let component: HomeAdmin;
-  let fixture: ComponentFixture<HomeAdmin>;
+describe('ModalNovoGerente', () => {
+  let component: ModalNovoGerente;
+  let fixture: ComponentFixture<ModalNovoGerente>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeAdmin],
+      imports: [ModalNovoGerente],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HomeAdmin);
+    fixture = TestBed.createComponent(ModalNovoGerente);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

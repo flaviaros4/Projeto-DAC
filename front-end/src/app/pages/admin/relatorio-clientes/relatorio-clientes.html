@@ -1,1 +1,50 @@
-<p>relatorio-clientes works!</p>
+<h2 class="titulo">Clientes</h2>
+
+<div class="clientes">
+    <div class="lista-clientes" *ngFor="let cliente of clientes">
+        <div class="container1">
+            <p class="nome">
+                <strong>Nome Cliente:</strong>
+                <span>{{ cliente.nome }}</span>
+            </p>
+            <p class="email">
+                <strong>E-mail Cliente:</strong>
+                <span>{{ cliente.email }}</span>
+            </p>
+        </div>
+    
+        <div class="container2">
+            <p class="dados-menores">
+                <strong>CPF Cliente:</strong>
+                <span>{{ cliente.cpf }}</span>
+            </p>
+            <p class="dados-menores">
+                <strong>Salário:</strong>
+                <span>{{ cliente.salario | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+            </p>
+            <p class="dados-menores">
+                <strong>n° Conta:</strong>
+                <span>{{ cliente.numeroConta }}</span>
+            </p>
+            <p class="dados-menores">
+                <strong>Saldo:</strong>
+                <span>{{ cliente.saldo | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+            </p>
+            <p class="dados-menores">
+                <strong>Limite:</strong>
+                <span>{{ cliente.limite | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+            </p>
+        </div>
+    
+        <div class="container3">
+            <p>
+                <strong>Nome Gerente:</strong>
+                <span>{{ cliente.gerente.nome }}</span>
+            </p>
+            <p>
+                <strong>CPF Gerente:</strong>
+                <span>{{ cliente.gerente.cpf }}</span>
+            </p>
+        </div>
+    </div>
+</div>

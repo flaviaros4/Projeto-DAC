@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HomeAdmin } from './home-admin';
+import { GerenciarGerentes } from './gerenciar-gerentes';
 
-describe('HomeAdmin', () => {
-  let component: HomeAdmin;
-  let fixture: ComponentFixture<HomeAdmin>;
+describe('GerenciarGerentes', () => {
+  let component: GerenciarGerentes;
+  let fixture: ComponentFixture<GerenciarGerentes>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HomeAdmin],
+      imports: [GerenciarGerentes],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HomeAdmin);
+    fixture = TestBed.createComponent(GerenciarGerentes);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

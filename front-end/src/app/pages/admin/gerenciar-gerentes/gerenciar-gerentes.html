@@ -1,0 +1,51 @@
+<div class="div-novo-gerente">
+    <button class="novo-gerente" (click)="abrirModal()">
+        <mat-icon>queue</mat-icon>
+        <div>Novo Gerente</div>
+    </button>
+</div>
+
+<div class="lista-cards">
+    <div class="card" *ngFor="let gerente of gerentes">
+        <div class="nome">{{ gerente.nome }}</div>
+    
+        <div class="parte-inferior">
+            <div class="div-dados">
+                <p class="dado">
+                    <strong>CPF: </strong>
+                    <span>{{ gerente.cpf }}</span>
+                </p>
+    
+                <p class="dado">
+                    <strong>Email: </strong>
+                    <span>{{ gerente.email }}</span>
+                </p>
+    
+                <p class="dado">
+                    <strong>Telefone: </strong>
+                    <span>{{ gerente.telefone }}</span>
+                </p>
+            </div>
+            <div class="div-botoes">
+                <button class="botao botao-deletar">
+                    <mat-icon>delete_forever</mat-icon>
+                </button>
+                <button class="botao botao-editar" (click)="abrirEditarGerentes(gerente)">
+                    <mat-icon> border_color</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-modal-novo-gerente 
+  *ngIf="mostrarModal"
+  (fechar)="fecharModal()">
+</app-modal-novo-gerente>
+
+<app-modal-editar-gerente
+*ngIf="mostrarEditarGerente"
+[gerente]="gerenteSelecionado"
+(fechar)="fecharEditarGerentes()">
+
+</app-modal-editar-gerente>

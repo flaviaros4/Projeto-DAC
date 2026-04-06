@@ -54,7 +54,7 @@
                     <mat-icon>article</mat-icon>
                     Relatório de Clientes
                 </button>
-                 <button *ngIf="temPermissao('ADMIN')" mat-button>
+                 <button *ngIf="temPermissao('ADMIN')" mat-button [routerLink]="['/gerenciar-gerentes']">
                     <mat-icon>people</mat-icon>
                     Gerenciar Gerentes
                 </button>

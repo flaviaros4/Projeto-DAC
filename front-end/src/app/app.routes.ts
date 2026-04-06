@@ -76,5 +76,14 @@ export const routes: Routes = [
             .then(m => m.RelatorioClientes),
     canActivate: [authGuard],
     data: { perfil: 'ADMIN' }
+  },
+  {
+    path: 'gerenciar-gerentes',
+    loadComponent: () => 
+        import('./pages/admin/gerenciar-gerentes/gerenciar-gerentes')
+            .then(m => m.GerenciarGerentes),
+    canActivate: [authGuard],
+    data: { perfil: 'ADMIN' }
   }
+
 ];

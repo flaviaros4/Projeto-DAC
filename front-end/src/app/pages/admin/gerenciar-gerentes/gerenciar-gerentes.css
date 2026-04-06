@@ -1,0 +1,92 @@
+.div-novo-gerente{
+    background-color: rgba(127, 255, 212, 0);
+    margin-right: 50px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+}
+.novo-gerente{
+    display: flex;
+    align-items: center;
+    column-gap: 3px;
+    background-color: green;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    padding: 5px 7px;
+}
+.novo-gerente:hover{
+    background-color:  rgb(4, 78, 4);
+}
+.novo-gerente > div{
+    font-weight: bold;
+}
+
+
+.lista-cards{
+    background-color: rgba(255, 228, 196, 0);
+    display: flex;
+    column-gap: 40px;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.card{
+    background-color: rgb(110, 164, 212);
+    border-radius: 10px;
+    width: 300px;
+    height: auto;
+    padding: 15px 25px;
+    margin-bottom: 30px;
+}
+
+.nome{
+    width: 100%;
+    text-align: center;
+    background-color: rgba(255, 0, 0, 0);
+    font-weight: bolder;
+    font-size: 20px;
+    border-bottom-width: 1px;
+    border-bottom-color: black;
+    border-bottom-style:dashed;
+}
+
+.parte-inferior{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 20px;
+}
+
+.div-botoes{
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    background-color: rgba(255, 235, 205, 0);
+}
+
+.botao{
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+
+
+.botao-deletar{
+    background-color: green;
+}
+
+.botao-deletar:hover{
+    background-color: rgb(4, 78, 4);
+}
+
+.botao-editar{
+    background-color: red;
+}
+
+.botao-editar:hover{
+    background-color: rgb(114, 4, 4);
+}
+
