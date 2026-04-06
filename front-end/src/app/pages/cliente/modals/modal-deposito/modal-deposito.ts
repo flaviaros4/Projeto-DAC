@@ -13,25 +13,21 @@ import { TransacaoService } from '../../../../../core/services/transacao.service
   standalone: true,
   imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   template: `
-    <h2 mat-dialog-title>Efetuar Depósito</h2>
+    <h2 mat-dialog-title>Efetuar depósito</h2>
     <mat-dialog-content>
-      <mat-form-field appearance="outline" style="width:100%; margin-top:8px">
-        <mat-label>Valor</mat-label>
-        <input matInput type="number" [(ngModel)]="valor" min="0.01" placeholder="0,00"/>
+      <mat-form-field appearance="outline" style="width:100%; margin-top: 10px;">
+        <mat-label>Valor R$</mat-label>
+        <input matInput type="number" [(ngModel)]="valor" min="0.01"/>
       </mat-form-field>
-      <p *ngIf="erro" style="color:red">{{ erro }}</p>
-      <p *ngIf="sucesso" style="color:green">{{ sucesso }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-      <button mat-button (click)="fechar()">Cancelar</button>
-      <button mat-raised-button color="primary" [disabled]="!valor || valor <= 0" (click)="confirmar()">Confirmar</button>
+      <button mat-button (click)="dialogRef.close()">Cancelar</button>
+      <button mat-raised-button color="primary" (click)="confirmar()">Confirmar</button>
     </mat-dialog-actions>
   `
 })
 export class ModalDeposito implements OnInit {
   valor: number = 0;
-  erro = '';
-  sucesso = '';
   conta: any;
 
   constructor(
@@ -41,45 +37,32 @@ export class ModalDeposito implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const logado = localStorage.getItem('auth');
-    if (logado) {
-      const user = JSON.parse(logado);
-      this.contaService.getContaPorCliente(Number(user.usuarioId)).subscribe({
-        next: (res) => this.conta = res
-      });
+    const auth = sessionStorage.getItem('auth');
+    if (auth) {
+      const user = JSON.parse(auth);
+      this.contaService.getContaPorCliente(Number(user.usuarioId)).subscribe(res => this.conta = res);
     }
   }
 
   confirmar(): void {
-    if (!this.valor || this.valor <= 0) {
-      this.erro = 'Informe um valor válido.';
-      return;
-    }
-    if (!this.conta) {
-      this.erro = 'Conta não encontrada.';
-      return;
-    }
+  if (this.valor <= 0) return;
+  
+  const novoSaldo = Number(this.conta.saldo) + Number(this.valor);
+  
+  const horaAtual = new Date();
+  const dataLocal = new Date(horaAtual.getTime() - (horaAtual.getTimezoneOffset() * 60000))
+                    .toISOString()
+                    .slice(0, -1); 
 
-    const novoSaldo = this.conta.saldo + this.valor;
+  this.dialogRef.close();
 
-    this.contaService.atualizarSaldo(this.conta.id, novoSaldo).subscribe({
-      next: () => {
-        this.transacaoService.registrar({
-          tipo: 'DEPOSITO',
-          clienteORigem: this.conta.clienteId,
-          clienteDestino: null,
-          valor: this.valor,
-          dataHora: new Date().toISOString()
-        }).subscribe();
-        this.sucesso = `Depósito de ${this.valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} realizado!`;
-        this.erro = '';
-        setTimeout(() => this.dialogRef.close(true), 1500);
-      },
-      error: () => this.erro = 'Erro ao realizar depósito.'
-    });
-  }
-
-  fechar(): void {
-    this.dialogRef.close();
-  }
+  this.contaService.atualizarSaldo(this.conta.id, novoSaldo).subscribe(() => {
+    this.transacaoService.registrar({
+      tipo: 'DEPOSITO',
+      clienteORigem: this.conta.clienteId,
+      valor: Number(this.valor),
+      dataHora: dataLocal 
+    }).subscribe();
+  });
+}
 }

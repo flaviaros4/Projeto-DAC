@@ -10,4 +10,8 @@ export class TransacaoService {
   registrar(transacao: Partial<{tipo: string, clienteORigem: any, clienteDestino: any, valor: number, dataHora: string}>): Observable<any> {
     return this.http.post(this.api, transacao);
   }
+
+  listarPorCliente(clienteId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}?clienteORigem=${clienteId}`);
+  }
 }

@@ -34,12 +34,11 @@ export class HomeCliente implements OnInit {
   conta?: any;
 
   constructor(
-    private clienteService: ClienteService,
     private contaService: ContaService,
     private authService: AuthService,
     private dialog: MatDialog,
-    private router: Router,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   get logado() {
@@ -70,17 +69,28 @@ export class HomeCliente implements OnInit {
   }
 
   abrirModal(tipo: string) {
-    if (tipo === 'deposito') {
-      this.dialog.open(ModalDeposito, { width: '400px' });
-    } else if (tipo === 'saque') {
-      this.dialog.open(ModalSaque, { width: '400px' });
-    } else if (tipo === 'transferencia') {
-      this.dialog.open(ModalTransferencia, { width: '400px' });
-    } else if (tipo === 'extrato') {
-      this.dialog.open(ModalExtrato, { width: '400px' });
-    } else if (tipo === 'perfil') {
-      this.dialog.open(ModalPerfil, { width: '400px' });
-    }
+  let dialogRef;
+
+  if (tipo === 'deposito') {
+    dialogRef = this.dialog.open(ModalDeposito, { width: '400px' });
+  } else if (tipo === 'saque') {
+    dialogRef = this.dialog.open(ModalSaque, { width: '400px' });
+  } else if (tipo === 'transferencia') {
+    dialogRef = this.dialog.open(ModalTransferencia, { width: '400px' });
+  } else if (tipo === 'extrato') {
+    this.router.navigate(['/extrato']);
+    return;
+  } else if (tipo === 'perfil') {
+    this.router.navigate(['/perfil']);
+    return;
   }
 
+  if (dialogRef) {
+    dialogRef.afterClosed().subscribe(() => {
+      if (this.logado) {
+        this.carregarDados(this.logado.usuarioId);
+      }
+    });
+  }
+}
 }

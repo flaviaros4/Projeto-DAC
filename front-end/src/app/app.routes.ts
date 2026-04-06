@@ -76,5 +76,21 @@ export const routes: Routes = [
             .then(m => m.RelatorioClientes),
     canActivate: [authGuard],
     data: { perfil: 'ADMIN' }
+  },
+  {
+    path: 'extrato',
+    loadComponent: () =>
+        import('./pages/cliente/modals/modal-extrato/modal-extrato')
+            .then(m => m.ModalExtrato),
+    canActivate: [authGuard],
+    data: { perfil: 'CLIENTE' }
+  },
+  {
+    path: 'perfil',
+    loadComponent: () =>
+        import('./pages/cliente/modals/modal-perfil/modal-perfil')
+            .then(m => m.ModalPerfil),
+    canActivate: [authGuard],
+    data: { perfil: 'CLIENTE' }
   }
 ];

@@ -11,7 +11,7 @@
       "perfil": "CLIENTE",
       "endereco": {
         "rua": "Rua 1",
-        "numero": 123,
+        "numero": "1234",
         "bairro": "Centro",
         "cidade": "São Paulo",
         "estado": "SP",
@@ -288,7 +288,7 @@
       "id": 1,
       "clienteId": 1,
       "numeroConta": "1291",
-      "saldo": 800,
+      "saldo": 4000,
       "limite": 10000,
       "gerenteId": 1,
       "dataAbertura": "2000-01-01"
@@ -332,7 +332,7 @@
     {
       "clienteId": 7,
       "numeroConta": 8326,
-      "saldo": 0,
+      "saldo": 600,
       "limite": 5000,
       "gerenteId": 3,
       "dataAbertura": "2026-03-31T12:24:59.717Z",
@@ -459,6 +459,57 @@
       "clienteORigem": 5,
       "clienteDestino": null,
       "valor": 1500
+    },
+    {
+      "tipo": "DEPOSITO",
+      "clienteORigem": 1,
+      "valor": 1200,
+      "dataHora": "2026-04-05T22:43:57.391",
+      "id": 16
+    },
+    {
+      "tipo": "SAQUE",
+      "clienteORigem": 1,
+      "valor": 500,
+      "dataHora": "2026-04-05T22:44:01.127",
+      "id": 17
+    },
+    {
+      "tipo": "TRANSFERENCIA",
+      "clienteORigem": 1,
+      "clienteDestino": 7,
+      "valor": 500,
+      "dataHora": "2026-04-05T22:44:14.951",
+      "id": 18
+    },
+    {
+      "tipo": "DEPOSITO",
+      "clienteORigem": 1,
+      "valor": 2000,
+      "dataHora": "2026-04-05T22:44:18.159",
+      "id": 19
+    },
+    {
+      "tipo": "DEPOSITO",
+      "clienteORigem": 1,
+      "valor": 1500,
+      "dataHora": "2026-04-05T22:54:36.453",
+      "id": 20
+    },
+    {
+      "tipo": "SAQUE",
+      "clienteORigem": 1,
+      "valor": 400,
+      "dataHora": "2026-04-05T22:54:40.637",
+      "id": 21
+    },
+    {
+      "tipo": "TRANSFERENCIA",
+      "clienteORigem": 1,
+      "clienteDestino": 7,
+      "valor": 100,
+      "dataHora": "2026-04-05T22:54:46.354",
+      "id": 22
     }
   ]
 }
