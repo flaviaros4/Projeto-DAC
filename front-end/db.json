@@ -21,7 +21,7 @@
     {
       "id": 2,
       "cpf": "09506382000",
-      "nome": "Cleuônio",
+      "nome": "Cleuddônio",
       "email": "cli2@bantads.com.br",
       "telefone": "13951245678",
       "salario": 20000,
@@ -109,7 +109,7 @@
       "id": 6
     },
     {
-      "nome": "Aria dos Santos",
+      "nome": "Maria dos Santos",
       "email": "maria@bantads.com.br",
       "cpf": "12314151251",
       "telefone": "41987345345",
@@ -172,11 +172,10 @@
     {
       "id": 1,
       "cpf": "98574307084",
-      "nome": "Zoro",
+      "nome": "Geniéve",
       "email": "ger1@bantads.com.br",
       "telefone": "11987654321",
-      "perfil": "GERENTE",
-      "numeroClientes": 1
+      "perfil": "GERENTE"
     },
     {
       "id": 2,
@@ -193,47 +192,6 @@
       "email": "ger3@bantads.com.br",
       "telefone": "41951335678",
       "perfil": "GERENTE"
-    },
-    {
-      "nome": "Pedro",
-      "cpf": "06456779901",
-      "telefone": "41987969296",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "perfil": "GERENTE",
-      "id": 4
-    },
-    {
-      "nome": "Quernia",
-      "cpf": "06456779901",
-      "telefone": "41987969296",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "perfil": "GERENTE",
-      "id": 6
-    },
-    {
-      "nome": "Jeronimo",
-      "cpf": "064.567.799-01",
-      "telefone": "41987969296",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "perfil": "GERENTE",
-      "id": 7
-    },
-    {
-      "nome": "Zanendrik",
-      "cpf": "064.567.799-01",
-      "telefone": "41987969296",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "perfil": "GERENTE",
-      "id": 8
-    },
-    {
-      "nome": "Zorko",
-      "cpf": "064.567.799-01",
-      "telefone": "41987969296",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "perfil": "GERENTE",
-      "id": 10,
-      "numeroClientes": 1
     }
   ],
   "administrador": {
@@ -254,7 +212,7 @@
     },
     {
       "id": 2,
-      "nome": "Cleuônio",
+      "nome": "Cleuddônio",
       "email": "cli2@bantads.com.br",
       "senha": "tads",
       "perfil": "CLIENTE",
@@ -286,7 +244,7 @@
     },
     {
       "id": 6,
-      "nome": "Zoro",
+      "nome": "Geniéve",
       "email": "ger1@bantads.com.br",
       "senha": "tads",
       "perfil": "GERENTE",
@@ -323,46 +281,6 @@
       "senha": "1002",
       "perfil": "CLIENTE",
       "usuarioId": 7
-    },
-    {
-      "nome": "Pedro",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "senha": "lasp",
-      "perfil": "GERENTE",
-      "usuarioId": 4,
-      "id": 11
-    },
-    {
-      "nome": "Quernia",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "senha": "lasp",
-      "perfil": "GERENTE",
-      "usuarioId": 6,
-      "id": 13
-    },
-    {
-      "nome": "Jeronimo",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "senha": "lasp",
-      "perfil": "GERENTE",
-      "usuarioId": 7,
-      "id": 14
-    },
-    {
-      "nome": "Zanendrik",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "senha": "lasp",
-      "perfil": "GERENTE",
-      "usuarioId": 8,
-      "id": 15
-    },
-    {
-      "nome": "Zorko",
-      "email": "leonardoleonardoleo10nardo@gmail.com",
-      "senha": "lasp",
-      "perfil": "GERENTE",
-      "usuarioId": 10,
-      "id": 17
     }
   ],
   "contas": [
@@ -372,7 +290,7 @@
       "numeroConta": "1291",
       "saldo": 4000,
       "limite": 10000,
-      "gerenteId": 6,
+      "gerenteId": 1,
       "dataAbertura": "2000-01-01"
     },
     {
@@ -381,7 +299,7 @@
       "numeroConta": "0950",
       "saldo": -10000,
       "limite": 20000,
-      "gerenteId": 10,
+      "gerenteId": 2,
       "dataAbertura": "1990-10-10"
     },
     {
@@ -390,7 +308,7 @@
       "numeroConta": "8573",
       "saldo": -1000,
       "limite": 1500,
-      "gerenteId": 4,
+      "gerenteId": 3,
       "dataAbertura": "2012-12-12"
     },
     {
