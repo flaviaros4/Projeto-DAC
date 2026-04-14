@@ -14,4 +14,8 @@ export class TransacaoService {
   listarPorCliente(clienteId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.api}?clienteORigem=${clienteId}`);
   }
+
+  listarTodas(): Observable<any[]> {
+    return this.http.get<any[]>(this.api);
+  }
 }
