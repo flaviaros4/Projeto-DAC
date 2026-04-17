@@ -15,10 +15,12 @@ public class Usuario {
     private String nome;
 
     private String email;
+    
+    private String cpf;
 
     private String senha;
 
-    private Perfil perfil;
+    private Perfil tipo;
 
     private LocalDateTime dataCriacao;
 
@@ -51,6 +53,14 @@ public class Usuario {
         this.email = email;
     }
 
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public String getSenha() {
         return senha;
     }
@@ -59,12 +69,12 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public Perfil getPerfil() {
-        return perfil;
+    public Perfil getTipo() {
+        return tipo;
     }
 
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
+    public void setTipo(Perfil tipo) {
+        this.tipo = tipo;
     }
 
     public LocalDateTime getDataCriacao() {

@@ -1,23 +1,33 @@
 package br.net.bantads.auth.dto;
 
-public class LoginResponse {
-    private String token;
-    private String tipo = "Bearer";
-    private String perfil;
-    private String usuario;
 
-    public LoginResponse(String token, String perfil, String usuario) {
-        this.token = token;
-        this.perfil = perfil;
+
+public class LoginResponse {
+    private String access_token;
+    private String token_type = "bearer";
+    private String tipo;
+    private UsuarioDTO usuario;
+
+    public LoginResponse(String access_token, String tipo, UsuarioDTO usuario) {
+        this.access_token = access_token;
+        this.tipo = tipo;
         this.usuario = usuario;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccess_token() {
+        return access_token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
+    }
+
+    public String getToken_type() {
+        return token_type;
+    }
+
+    public void setToken_type(String token_type) {
+        this.token_type = token_type;
     }
 
     public String getTipo() {
@@ -28,19 +38,11 @@ public class LoginResponse {
         this.tipo = tipo;
     }
 
-    public String getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(String perfil) {
-        this.perfil = perfil;
-    }
-
-    public String getUsuario() {
+    public UsuarioDTO getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(String usuario) {
+    public void setUsuario(UsuarioDTO usuario) {
         this.usuario = usuario;
     }
 

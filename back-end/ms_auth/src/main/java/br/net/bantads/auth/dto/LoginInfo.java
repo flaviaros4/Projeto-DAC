@@ -1,18 +1,18 @@
 package br.net.bantads.auth.dto;
 
-public class LoginRequest {
-    private String email;
+public class LoginInfo {
+    private String login;
     private String senha;
 
-    public LoginRequest() {
+    public LoginInfo() {
     }
 
-    public String getEmail() {
-        return email;
+    public String getLogin() {
+        return login;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getSenha() {

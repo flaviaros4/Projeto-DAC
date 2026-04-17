@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MsAuthApplication<ms_auth>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.net.bantads.auth.MsAuthApplication",
+            "projectName": "ms_auth",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

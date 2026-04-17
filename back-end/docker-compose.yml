@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongo_db: 
+    image: mongo:latest
+    container_name: mongo_auth
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  ms_auth: 
+    build: . 
+    container_name: ms_auth
+    ports:
+      - "8080:8081"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo_db:27017/auth_db
+    depends_on:
+      - mongo_db
+  
+volumes: 
+  mongo_data:
+
+  
