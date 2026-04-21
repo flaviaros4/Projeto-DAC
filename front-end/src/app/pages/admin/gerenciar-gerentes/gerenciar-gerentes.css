@@ -27,12 +27,12 @@
     background-color: rgba(255, 228, 196, 0);
     display: flex;
     column-gap: 40px;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
 }
 
 .card{
-    background-color: rgb(110, 164, 212);
+    background-color: #eee7e7;
     border-radius: 10px;
     width: 300px;
     height: auto;

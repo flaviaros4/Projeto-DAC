@@ -23,6 +23,10 @@ public class Conta {
     
     private LocalDate criacao;
 
+    public Conta(){
+
+    }
+
     public String getId() {
         return id;
     }
