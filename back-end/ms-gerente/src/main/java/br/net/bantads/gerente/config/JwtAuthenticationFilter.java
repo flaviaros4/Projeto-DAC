@@ -1,4 +1,4 @@
-package br.net.bantads.cliente.config;
+package br.net.bantads.gerente.config;
 
 import java.io.IOException;
 

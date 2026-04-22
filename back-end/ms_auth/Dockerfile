@@ -1,6 +1,6 @@
 # Dockerfile para o microserviço de autenticação
 # Build
-FROM maven:3.8.4-openjdk-17 AS build 
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 #Imagem base para a fase de build, com Maven e JDK 17
 COPY . /app 
 #Copia o código-fonte para o diretório /app dentro do container
@@ -11,7 +11,7 @@ RUN mvn clean package -DskipTests
 
 
 #Execução
-FROM openjdk:17-jdk-slim 
+FROM eclipse-temurin:17-jre-alpine
 #Imagem base para a fase de execução, com JDK 17
 COPY --from=build /app/target/*.jar app.jar
 #Copia o arquivo JAR gerado na fase de build para o diretório raiz do container, renomeando-o para app.jar

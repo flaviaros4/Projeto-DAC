@@ -1,6 +1,8 @@
 package br.net.bantads.cliente.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import br.net.bantads.cliente.entity.Cliente;
 
 @Repository
