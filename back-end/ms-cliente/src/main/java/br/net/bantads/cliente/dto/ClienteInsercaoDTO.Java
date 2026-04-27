@@ -2,19 +2,20 @@ package br.net.bantads.cliente.dto;
 
 import java.math.BigDecimal;
 
-public class ClienteDTO {
+public class ClienteInsercaoDTO {
     private String nome;
     private String email;
     private String cpf;
     private String telefone;
     private BigDecimal salario;
-    private String cidade;
-    private String estado;
     private String cep;
     private String logradouro;
     private String numero;
     private String complemento;
-    
+    private String cidade;
+    private String estado;
+
+
     public String getNome() { 
         return nome; 
     }
@@ -46,29 +47,13 @@ public class ClienteDTO {
     public void setTelefone(String telefone) { 
         this.telefone = telefone; 
     }
-    
+
     public BigDecimal getSalario() { 
         return salario; 
     }
 
     public void setSalario(BigDecimal salario) { 
         this.salario = salario; 
-    }
-
-    public String getCidade() { 
-        return cidade; 
-    }
-
-    public void setCidade(String cidade) { 
-        this.cidade = cidade; 
-    }
-
-    public String getEstado() { 
-        return estado; 
-    }
-
-    public void setEstado(String estado) { 
-        this.estado = estado; 
     }
 
     public String getCep() { 
@@ -101,6 +86,22 @@ public class ClienteDTO {
 
     public void setComplemento(String complemento) { 
         this.complemento = complemento; 
+    }
+
+    public String getCidade() { 
+        return cidade; 
+    }
+
+    public void setCidade(String cidade) { 
+        this.cidade = cidade; 
+    }
+
+    public String getEstado() { 
+        return estado; 
+    }
+
+    public void setEstado(String estado) { 
+        this.estado = estado;
     }
 
 }
