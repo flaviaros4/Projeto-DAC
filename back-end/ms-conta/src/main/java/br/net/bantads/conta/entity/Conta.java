@@ -1,15 +1,17 @@
 package br.net.bantads.conta.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Document (collection = "contas")
-
+@Entity
+@Table(name = "contas")
 public class Conta {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String cliente;
 
@@ -21,17 +23,23 @@ public class Conta {
 
     private int gerente;
     
-    private LocalDate criacao;
+    private LocalDateTime criacao;
+
+    @OneToMany(mappedBy = "contaOrigem")
+    private List<Transacao> transacoesOrigem;
+
+    @OneToMany(mappedBy = "contaDestino")
+    private List<Transacao> transacoesDestino;
 
     public Conta(){
 
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -75,12 +83,28 @@ public class Conta {
         this.gerente = gerente;
     }
 
-    public LocalDate getCriacao() {
+    public LocalDateTime getCriacao() {
         return criacao;
     }
 
-    public void setCriacao(LocalDate criacao) {
+    public void setCriacao(LocalDateTime criacao) {
         this.criacao = criacao;
+    }
+
+    public List<Transacao> getTransacoesOrigem() {
+        return transacoesOrigem;
+    }
+
+    public void setTransacoesOrigem(List<Transacao> transacoesOrigem) {
+        this.transacoesOrigem = transacoesOrigem;
+    }
+
+    public List<Transacao> getTransacoesDestino() {
+        return transacoesDestino;
+    }
+
+    public void setTransacoesDestino(List<Transacao> transacoesDestino) {
+        this.transacoesDestino = transacoesDestino;
     }
 }
 

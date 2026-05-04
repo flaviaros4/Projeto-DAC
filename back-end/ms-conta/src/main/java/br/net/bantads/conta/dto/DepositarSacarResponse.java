@@ -1,32 +1,36 @@
 package br.net.bantads.conta.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class DepositarSacarResponse {
-    private String conta;
-    private LocalDate data;
+    private Long conta;
+    private LocalDateTime data;
     private BigDecimal saldo;
 
-    public DepositarSacarResponse(String conta, LocalDate data, BigDecimal saldo) {
+    public DepositarSacarResponse(){
+
+    }
+
+    public DepositarSacarResponse(Long conta, LocalDateTime data, BigDecimal saldo) {
         this.conta = conta;
         this.data = data;
         this.saldo = saldo;
     }
 
-    public String getConta() {
+    public Long getConta() {
         return conta;
     }
 
-    public void setConta(String conta) {
+    public void setConta(Long conta) {
         this.conta = conta;
     }
 
-    public LocalDate getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 

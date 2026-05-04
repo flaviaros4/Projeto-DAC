@@ -1,40 +1,50 @@
 package br.net.bantads.conta.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Document (collection = "transacoes")
+@Entity
+@Table(name = "transacoes")
 public class Transacao {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private LocalDate dataHora;
-    private Tipo tipo; //enum
-    private long clienteOrigem;
-    private long clienteDestino;
+    private LocalDateTime dataHora;
+
+    @Enumerated(EnumType.STRING)
+    private Tipo tipo;
+
     private BigDecimal valor;
-    private long idUsuario;
+    private Long idUsuario;
+
+    @ManyToOne
+    @JoinColumn(name = "conta_origem_id")
+    private Conta contaOrigem;
+
+    @ManyToOne
+    @JoinColumn(name = "conta_destino_id")
+    private Conta contaDestino;
 
     public Transacao(){
 
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public LocalDate getDataHora() {
+    public LocalDateTime getDataHora() {
         return dataHora;
     }
 
-    public void setDataHora(LocalDate dataHora) {
+    public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
 
@@ -46,20 +56,20 @@ public class Transacao {
         this.tipo = tipo;
     }
 
-    public long getClienteOrigem() {
-        return clienteOrigem;
+    public Conta getContaOrigem() {
+        return contaOrigem;
     }
 
-    public void setClienteOrigem(long clienteOrigem) {
-        this.clienteOrigem = clienteOrigem;
+    public void setContaOrigem(Conta contaOrigem) {
+        this.contaOrigem = contaOrigem;
     }
 
-    public long getClienteDestino() {
-        return clienteDestino;
+    public Conta getContaDestino() {
+        return contaDestino;
     }
 
-    public void setClienteDestino(long clienteDestino) {
-        this.clienteDestino = clienteDestino;
+    public void setContaDestino(Conta contaDestino) {
+        this.contaDestino = contaDestino;
     }
 
     public BigDecimal getValor() {
@@ -70,11 +80,11 @@ public class Transacao {
         this.valor = valor;
     }
 
-    public long getIdUsuario() {
+    public Long getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(long idUsuario) {
+    public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
 }
