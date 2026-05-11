@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class ExtratoResponse {
     private String conta;
     private BigDecimal saldo;
-    private ArrayList<Transacao> movimentacoes;
+    private ArrayList<Movimentacao> movimentacoes;
 
-    public ExtratoResponse(String conta, BigDecimal saldo, ArrayList<Transacao> movimentacoes) {
+    public ExtratoResponse(String conta, BigDecimal saldo, ArrayList<Movimentacao> movimentacoes) {
         this.conta = conta;
         this.saldo = saldo;
         this.movimentacoes = movimentacoes;
@@ -32,11 +32,11 @@ public class ExtratoResponse {
         this.saldo = saldo;
     }
 
-    public ArrayList<Transacao> getMovimentacoes() {
+    public ArrayList<Movimentacao> getMovimentacoes() {
         return movimentacoes;
     }
 
-    public void setMovimentacoes(ArrayList<Transacao> movimentacoes) {
+    public void setMovimentacoes(ArrayList<Movimentacao> movimentacoes) {
         this.movimentacoes = movimentacoes;
     }
 }

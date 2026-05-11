@@ -18,7 +18,6 @@ public class Transacao {
     private Tipo tipo;
 
     private BigDecimal valor;
-    private Long idUsuario;
 
     @ManyToOne
     @JoinColumn(name = "conta_origem_id")
@@ -78,13 +77,5 @@ public class Transacao {
 
     public void setValor(BigDecimal valor) {
         this.valor = valor;
-    }
-
-    public Long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
     }
 }

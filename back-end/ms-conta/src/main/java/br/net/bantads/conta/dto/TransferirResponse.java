@@ -2,15 +2,16 @@ package br.net.bantads.conta.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TransferirResponse {
     private String conta;
-    private LocalDate data;
+    private LocalDateTime data;
     private String destino;
     private BigDecimal saldo;
     private BigDecimal valor;
 
-    public TransferirResponse(String conta, LocalDate data, String destino, BigDecimal saldo, BigDecimal valor) {
+    public TransferirResponse(String conta, LocalDateTime data, String destino, BigDecimal saldo, BigDecimal valor) {
         this.conta = conta;
         this.data = data;
         this.destino = destino;
@@ -26,11 +27,11 @@ public class TransferirResponse {
         this.conta = conta;
     }
 
-    public LocalDate getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 

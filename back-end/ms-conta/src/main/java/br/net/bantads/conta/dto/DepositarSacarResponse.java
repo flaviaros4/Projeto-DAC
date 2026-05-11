@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class DepositarSacarResponse {
-    private Long conta;
+    private String conta;
     private LocalDateTime data;
     private BigDecimal saldo;
 
@@ -12,17 +12,17 @@ public class DepositarSacarResponse {
 
     }
 
-    public DepositarSacarResponse(Long conta, LocalDateTime data, BigDecimal saldo) {
+    public DepositarSacarResponse(String conta, LocalDateTime data, BigDecimal saldo) {
         this.conta = conta;
         this.data = data;
         this.saldo = saldo;
     }
 
-    public Long getConta() {
+    public String getConta() {
         return conta;
     }
 
-    public void setConta(Long conta) {
+    public void setConta(String conta) {
         this.conta = conta;
     }
 
