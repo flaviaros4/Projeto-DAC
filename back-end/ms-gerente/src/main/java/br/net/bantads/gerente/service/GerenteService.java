@@ -3,6 +3,8 @@ package br.net.bantads.gerente.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import br.net.bantads.gerente.dto.DadoGerenteAtualizacao;
 import br.net.bantads.gerente.dto.DadoGerenteInsercao;
 import br.net.bantads.gerente.entity.Gerente;
@@ -13,6 +15,10 @@ public class GerenteService {
 
     @Autowired
     private GerenteRepository gerenteRepository;
+    
+    public List<Gerente> listarTodos() {
+    return gerenteRepository.findAll();
+}
 
     public Gerente cadastrarGerente(DadoGerenteInsercao dado) {
 
