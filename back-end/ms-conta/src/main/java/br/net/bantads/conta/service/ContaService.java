@@ -4,29 +4,40 @@ import br.net.bantads.conta.dto.*;
 import br.net.bantads.conta.entity.Conta;
 import br.net.bantads.conta.entity.Tipo;
 import br.net.bantads.conta.entity.Transacao;
-import br.net.bantads.conta.repository.ContaWriteRepository;
-import br.net.bantads.conta.repository.TransacaoWriteRepository;
+import br.net.bantads.conta.event.TransacaoEvento;
+import br.net.bantads.conta.repository.write.ContaWriteRepository;
+import br.net.bantads.conta.repository.write.TransacaoWriteRepository;
+import br.net.bantads.conta.repository.read.ContaReadRepository;
+import br.net.bantads.conta.repository.read.TransacaoReadRepository;
+import br.net.bantads.conta.messaging.producer.TransacaoProducer;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ContaService {
 
     private final TransacaoWriteRepository transacaoWriteRepository;
-
     private final ContaWriteRepository contaWriteRepository;
+    private final ContaReadRepository contaReadRepository;
+    private final TransacaoReadRepository transacaoReadRepository;
+    private final TransacaoProducer transacaoProducer;
 
     public ContaService(
             TransacaoWriteRepository transacaoWriteRepository,
-            ContaWriteRepository contaWriteRepository
+            ContaWriteRepository contaWriteRepository,
+            ContaReadRepository contaReadRepository,
+            TransacaoReadRepository transacaoReadRepository,
+            TransacaoProducer transacaoProducer
     ) {
         this.transacaoWriteRepository = transacaoWriteRepository;
         this.contaWriteRepository = contaWriteRepository;
+        this.contaReadRepository = contaReadRepository;
+        this.transacaoReadRepository = transacaoReadRepository;
+        this.transacaoProducer = transacaoProducer;
     }
 
     @Transactional
@@ -62,6 +73,16 @@ public class ContaService {
 
         transacaoWriteRepository.save(transacao);
 
+        TransacaoEvento evento = new TransacaoEvento();
+
+        evento.setTipo(Tipo.DEPOSITO);
+        evento.setContaOrigem(contaDestino.getNumero());
+        evento.setContaDestino(contaDestino.getNumero());
+        evento.setValor(valor);
+        evento.setDataHora(dataHora);
+
+        transacaoProducer.enviarEvento(evento);
+
         return new DepositarSacarResponse(
                 contaDestino.getNumero(),
                 dataHora,
@@ -96,6 +117,16 @@ public class ContaService {
 
         transacaoWriteRepository.save(saque);
 
+        TransacaoEvento evento = new TransacaoEvento();
+
+        evento.setTipo(Tipo.SAQUE);
+        evento.setContaOrigem(conta.getNumero());
+        evento.setContaDestino(conta.getNumero());
+        evento.setValor(valor);
+        evento.setDataHora(dataHora);
+
+        transacaoProducer.enviarEvento(evento);
+
         return new DepositarSacarResponse(numeroContaOrigem, dataHora, conta.getSaldo());
     }
 
@@ -128,17 +159,27 @@ public class ContaService {
 
         transacaoWriteRepository.save(transferencia);
 
+        TransacaoEvento evento = new TransacaoEvento();
+
+        evento.setTipo(Tipo.TRANSFERENCIA);
+        evento.setContaOrigem(contaOrigem.getNumero());
+        evento.setContaDestino(contaDestino.getNumero());
+        evento.setValor(valor);
+        evento.setDataHora(dataHora);
+
+        transacaoProducer.enviarEvento(evento);
+
         return new TransferirResponse(contaOrigem.getNumero(), dataHora, contaDestino.getNumero(), contaOrigem.getSaldo(), valor);
     }
 
     public SaldoResponse saldo(String numeroContaOrigem){
-        Conta contaOrigem = contaWriteRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
+        Conta contaOrigem = contaReadRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
         return new SaldoResponse(contaOrigem.getCliente(), numeroContaOrigem, contaOrigem.getSaldo());
     }
 
     public ExtratoResponse extrato(String numeroContaOrigem){
-        Conta contaOrigem = contaWriteRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
-        ArrayList<Transacao> transacoes = transacaoWriteRepository.findByContaOrigem(contaOrigem);
+        Conta contaOrigem = contaReadRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
+        ArrayList<Transacao> transacoes = transacaoReadRepository.findByContaOrigem(contaOrigem);
         ArrayList<Movimentacao> movimentacoes = new ArrayList<>();
 
         for (Transacao t : transacoes){

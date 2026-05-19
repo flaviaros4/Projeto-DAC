@@ -1,13 +1,11 @@
 package br.net.bantads.conta.controller;
 
 import br.net.bantads.conta.dto.*;
-import br.net.bantads.conta.repository.ContaWriteRepository;
+import br.net.bantads.conta.repository.write.ContaWriteRepository;
 import br.net.bantads.conta.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
 
 @RestController
 @RequestMapping
