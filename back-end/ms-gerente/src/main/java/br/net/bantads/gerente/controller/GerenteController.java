@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.net.bantads.gerente.dto.DadoGerenteAtualizacao;
-import br.net.bantads.gerente.dto.DadoGerenteInsercao;
+import br.net.bantads.gerente.dto.request.DadoGerenteAtualizacao;
+import br.net.bantads.gerente.dto.request.DadoGerenteInsercao;
 import br.net.bantads.gerente.entity.Gerente;
 import br.net.bantads.gerente.service.GerenteService;
 

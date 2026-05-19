@@ -32,6 +32,13 @@ public class Gerente {
     @Column(name = "telefone")
     private String telefone;
 
+    @Column(name = "data_criacao", nullable = false)
+    private String dataCriacao;
+
+    @Column(name = "data_atualizacao")
+    private String dataAtualizacao;
+
+
     public Gerente() {
     }
 

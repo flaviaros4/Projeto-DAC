@@ -1,4 +1,4 @@
-package br.net.bantads.gerente.dto;
+package br.net.bantads.gerente.dto.request;
 
 import br.net.bantads.gerente.entity.TipoGerente;
 
@@ -9,6 +9,9 @@ public class DadoGerenteInsercao {
     private String email;
     private TipoGerente tipo;
     private String senha;
+
+    public DadoGerenteInsercao() {
+    }
 
     public String getCpf() {
         return cpf;

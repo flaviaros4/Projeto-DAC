@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import br.net.bantads.gerente.dto.DadoGerenteAtualizacao;
-import br.net.bantads.gerente.dto.DadoGerenteInsercao;
+import br.net.bantads.gerente.dto.request.DadoGerenteAtualizacao;
+import br.net.bantads.gerente.dto.request.DadoGerenteInsercao;
 import br.net.bantads.gerente.entity.Gerente;
 import br.net.bantads.gerente.repository.GerenteRepository;
 

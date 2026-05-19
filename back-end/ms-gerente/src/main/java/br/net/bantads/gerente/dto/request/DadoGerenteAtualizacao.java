@@ -1,4 +1,4 @@
-package br.net.bantads.gerente.dto;
+package br.net.bantads.gerente.dto.request;
 
 import br.net.bantads.gerente.entity.TipoGerente;
 
@@ -7,6 +7,9 @@ public class DadoGerenteAtualizacao {
     private String nome;
     private String email;
     private TipoGerente tipo;
+
+    public DadoGerenteAtualizacao() {
+    }
 
     public String getNome() {
         return nome;

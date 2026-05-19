@@ -1,4 +1,4 @@
-package br.net.bantads.gerente.dto;
+package br.net.bantads.gerente.dto.response;
 
 import br.net.bantads.gerente.entity.TipoGerente;
 
