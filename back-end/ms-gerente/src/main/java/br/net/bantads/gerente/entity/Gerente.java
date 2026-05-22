@@ -1,7 +1,11 @@
 package br.net.bantads.gerente.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +30,7 @@ public class Gerente {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
     private TipoGerente tipo;
 
@@ -33,10 +38,10 @@ public class Gerente {
     private String telefone;
 
     @Column(name = "data_criacao", nullable = false)
-    private String dataCriacao;
+    private LocalDateTime dataCriacao;
 
     @Column(name = "data_atualizacao")
-    private String dataAtualizacao;
+    private LocalDateTime dataAtualizacao;
 
 
     public Gerente() {
@@ -88,6 +93,22 @@ public class Gerente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 
 }

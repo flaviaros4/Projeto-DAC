@@ -8,6 +8,8 @@ import java.util.List;
 import br.net.bantads.gerente.dto.request.DadoGerenteAtualizacao;
 import br.net.bantads.gerente.dto.request.DadoGerenteInsercao;
 import br.net.bantads.gerente.entity.Gerente;
+import br.net.bantads.gerente.exception.RecursoDuplicadoException;
+import br.net.bantads.gerente.exception.RecursoNaoEncontradoException;
 import br.net.bantads.gerente.repository.GerenteRepository;
 
 @Service
@@ -21,9 +23,13 @@ public class GerenteService {
 }
 
     public Gerente cadastrarGerente(DadoGerenteInsercao dado) {
+        
+        if(gerenteRepository.existsByEmail(dado.getEmail())) {
+            throw new RecursoDuplicadoException("Email já cadastrado");
+        }
 
         if (gerenteRepository.existsByCpf(dado.getCpf())) {
-            throw new RuntimeException("CPF já cadastrado");
+            throw new RecursoDuplicadoException("CPF já cadastrado");
         }
 
         Gerente gerente = new Gerente();
@@ -39,7 +45,7 @@ public class GerenteService {
         if (gerenteRepository.existsByCpf(cpf)) {
             return gerenteRepository.findByCpf(cpf);
         }
-        throw new RuntimeException("Gerente não encontrado");
+        throw new RecursoNaoEncontradoException("Gerente não encontrado");
     }
 
     public Gerente atualizarGerente(String cpf, DadoGerenteAtualizacao dado) {
@@ -52,7 +58,7 @@ public class GerenteService {
 
             return gerenteRepository.save(gerente);
         }
-        throw new RuntimeException("Gerente não encontrado");
+        throw new RecursoNaoEncontradoException("Gerente não encontrado");
     }
 
     public void deletarGerente(String cpf){
@@ -60,7 +66,7 @@ public class GerenteService {
             Gerente gerente = gerenteRepository.findByCpf(cpf);
             gerenteRepository.delete(gerente);
         } else {
-            throw new RuntimeException("Gerente não encontrado");
+            throw new RecursoNaoEncontradoException("Gerente não encontrado");
         }
     }
 }

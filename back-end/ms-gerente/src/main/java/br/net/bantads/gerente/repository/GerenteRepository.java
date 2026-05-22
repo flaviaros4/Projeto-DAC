@@ -7,9 +7,7 @@ import br.net.bantads.gerente.entity.Gerente;
 
 
 public interface GerenteRepository  extends JpaRepository<Gerente, Long> {
-    Gerente findGerenteComMenosConta();
-    Gerente findGerenteComMaisConta();
-
+    boolean existsByEmail(String email);
     Gerente  findByCpf(String cpf);
     boolean existsByCpf(String cpf);
     
