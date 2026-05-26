@@ -85,5 +85,8 @@ public class TransacaoConsumer {
         transacao.setContaDestino(contaDestino);
 
         transacaoReadRepository.save(transacao);
+
+        System.out.println("EVENTO RECEBIDO");
+        System.out.println(evento.getTipo());
     }
 }

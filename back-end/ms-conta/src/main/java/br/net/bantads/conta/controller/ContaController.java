@@ -21,7 +21,6 @@ public class ContaController {
 
     @PostMapping("contas/{numero}/depositar")
     public ResponseEntity<DepositarSacarResponse> depositar(@PathVariable String numero, @RequestBody DepositarInfo  request){
-        Long idUsuario = 1L;
         try{
             DepositarSacarResponse depositarResponse = contaService.cadastrarDeposito(request.getValor(), numero);
             return ResponseEntity.ok(depositarResponse);
