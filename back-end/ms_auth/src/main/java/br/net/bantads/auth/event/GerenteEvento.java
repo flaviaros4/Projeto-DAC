@@ -1,18 +1,17 @@
-package br.net.bantads.gerente.dto.request;
+package br.net.bantads.auth.event;
 
-import br.net.bantads.gerente.entity.TipoGerente;
 
-public class DadoGerenteInsercao {
+
+public class GerenteEvento {
 
     private String cpf;
     private String nome;
-    private String email; 
+    private String email;
     private String telefone;
-    private TipoGerente tipo;
+    private String tipo;
     private String senha;
-   
 
-    public DadoGerenteInsercao() {
+    public GerenteEvento() {
     }
 
     public String getCpf() {
@@ -39,11 +38,19 @@ public class DadoGerenteInsercao {
         this.email = email;
     }
 
-    public TipoGerente getTipo() {
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoGerente tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 
@@ -54,13 +61,6 @@ public class DadoGerenteInsercao {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
+    
+    
 }

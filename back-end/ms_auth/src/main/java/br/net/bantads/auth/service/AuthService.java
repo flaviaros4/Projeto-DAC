@@ -49,9 +49,13 @@ public class AuthService {
   }
 
   public String cadastrarUsuario(String nome, String email,String cpf, Perfil perfil, String senhaInformada ) {
-    // Verificar se email existe
+    // Verificar se email ou CPF existem
     if (usuarioRepository.findByEmail(email) != null) {
       throw new RuntimeException("Email já cadastrado");
+    }
+
+    if (usuarioRepository.findByCpf(cpf) != null) {
+      throw new RuntimeException("CPF já cadastrado");
     }
 
     // Definição de senha: Se senhaInformada for nula ou vazia, gera uma senha

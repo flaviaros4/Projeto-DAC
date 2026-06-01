@@ -6,7 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import br.net.bantads.auth.entity.Usuario;
 
 public interface UsuarioRepository extends MongoRepository<Usuario, String> {
-  
      Usuario findByEmail(String email);
+
+     Usuario findByCpf(String cpf);
 
 }

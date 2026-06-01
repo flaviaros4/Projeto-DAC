@@ -1,12 +1,13 @@
 package br.net.bantads.gerente.dto.request;
 
-import br.net.bantads.gerente.entity.TipoGerente;
+
 
 public class DadoGerenteAtualizacao {
 
     private String nome;
     private String email;
-    private TipoGerente tipo;
+    private String senha;
+    private String telefone;
 
     public DadoGerenteAtualizacao() {
     }
@@ -27,12 +28,20 @@ public class DadoGerenteAtualizacao {
         this.email = email;
     }
 
-    public TipoGerente getTipo() {
-        return tipo;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setTipo(TipoGerente tipo) {
-        this.tipo = tipo;
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
 }

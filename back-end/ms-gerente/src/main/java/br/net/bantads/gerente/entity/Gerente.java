@@ -37,10 +37,10 @@ public class Gerente {
     @Column(name = "telefone")
     private String telefone;
 
-    @Column(name = "data_criacao", nullable = false)
+    @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    @Column(name = "data_atualizacao")
+    @Column(name = "data_atualizacao", nullable = false, updatable = true)
     private LocalDateTime dataAtualizacao;
 
 

@@ -8,6 +8,7 @@ public class DadoGerente {
     private String nome;
     private String email;
     private TipoGerente tipo;
+    private String telefone;
 
     public String getCpf() {
         return cpf;
@@ -39,6 +40,14 @@ public class DadoGerente {
 
     public void setTipo(TipoGerente tipo) {
         this.tipo = tipo;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
 }
