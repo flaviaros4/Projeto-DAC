@@ -7,7 +7,9 @@ public class ClienteEvent {
     private String cpf;
     private String nome;
     private String email;
+    private String motivo;
     private BigDecimal salario;
+
 
     public ClienteEvent() {}
 
@@ -17,6 +19,7 @@ public class ClienteEvent {
         this.nome = nome;
         this.email = email;
         this.salario = salario;
+        this.motivo = motivo;
     }
 
     public String getAcao() { 
@@ -56,5 +59,13 @@ public class ClienteEvent {
 
     public void setSalario(BigDecimal salario) { 
         this.salario = salario; 
+    }
+
+    public String getMotivo(String motivo) {
+        return motivo;
+    }
+
+    public void setMotivo(String motivo) { 
+        this.motivo = motivo;
     }
 }

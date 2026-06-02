@@ -3,6 +3,7 @@ package br.net.bantads.cliente.service;
 import br.net.bantads.cliente.dto.ClienteDTO;
 import br.net.bantads.cliente.dto.ClienteInsercaoDTO;
 import br.net.bantads.cliente.entity.Cliente;
+import br.net.bantads.cliente.event.ClienteEvent;
 import br.net.bantads.cliente.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class ClienteService {
 
         cliente = repository.save(cliente);
 
-        ClienteSagaEvent evento = new ClienteSagaEvent("AUTOCADASTRO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario());
+        ClienteEvent evento = new ClienteEvent("AUTOCADASTRO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
         producer.enviarEvento(evento);
 
         return converterParaDTO(cliente);
@@ -77,7 +78,7 @@ public class ClienteService {
 
         cliente = repository.save(cliente);
 
-        ClienteSagaEvent evento = new ClienteSagaEvent("ALTERACAO_PERFIL", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario());
+        ClienteEvent evento = new ClienteEvent("ALTERACAO_PERFIL", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
         producer.enviarEvento(evento);
 
         return converterParaDTO(cliente);
@@ -88,6 +89,9 @@ public class ClienteService {
         if (cliente == null) {
             throw new RuntimeException("Cliente não encontrado");
         }
+
+        ClienteEvent evento = new ClienteEvent("APROVADO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
+        producer.enviarEvento(evento);
     }
 
     public void rejeitar(String cpf, String motivo) {
@@ -95,6 +99,10 @@ public class ClienteService {
         if (cliente == null) {
             throw new RuntimeException("Cliente não encontrado");
         }
+
+        ClienteEvent evento = new ClienteEvent("REJEITADO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), motivo);
+        producer.enviarEvento(evento);
+
         repository.delete(cliente);
     }
 
@@ -113,5 +121,4 @@ public class ClienteService {
         dto.setComplemento(cliente.getComplemento());
         return dto;
     }
-  
 }

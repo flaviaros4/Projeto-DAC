@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/clientes")
@@ -19,7 +20,7 @@ public class ClienteController {
     private ClienteService service;
 
     @PostMapping
-    public ResponseEntity<?> cadastrar(@RequestBody ClienteInsercaoDTO dto) {
+    public ResponseEntity<?> cadastrar(@Valid @RequestBody ClienteInsercaoDTO dto) {
         try {
             ClienteDTO novoCliente = service.cadastrar(dto);
             return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
