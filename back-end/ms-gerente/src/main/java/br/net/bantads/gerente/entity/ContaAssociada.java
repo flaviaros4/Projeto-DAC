@@ -35,6 +35,8 @@ public class ContaAssociada {
 
     private String criacaoConta;
 
+    public ContaAssociada(){}
+
     public Long getId() {
         return id;
     }

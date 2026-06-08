@@ -9,10 +9,16 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfig {
 
     public static final String FILA_GERENTE_CRIADO = "gerente.criado";
+    public static final String FILA_DISTRIBUICAO = "gerente.distribuicao";
 
     @Bean
     public Queue filaGerenteCriado() {
         return new Queue(FILA_GERENTE_CRIADO);
+    }
+
+    @Bean
+    public Queue filaRebalanceamento() {
+        return new Queue(FILA_DISTRIBUICAO);
     }
 
     @Bean
