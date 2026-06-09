@@ -36,6 +36,7 @@ public class ClienteService {
         cliente.setComplemento(dto.getComplemento());
         cliente.setCidade(dto.getCidade());
         cliente.setEstado(dto.getEstado());
+        cliente.setSituacao("PENDENTE");
 
         cliente = repository.save(cliente);
 
@@ -53,10 +54,10 @@ public class ClienteService {
 
     public ClienteDTO buscarPorCpf(String cpf) {
         Cliente cliente = repository.findByCpf(cpf);
-        if (cliente == null) {
-            throw new RuntimeException("Cliente não encontrado");
+        if ("para_aprovar".equalsIgnoreCase(filtro)) {
+            return repository.findBySituacao("PENDENTE").stream().map(this::converterParaDTO).collect(Collectors.toList());
         }
-        return converterParaDTO(cliente);
+        return repository.findAll().stream().map(this::converterParaDTO).collect(Collectors.toList());
     }
 
     public ClienteDTO atualizarPerfil(String cpf, ClienteDTO dto) {
@@ -90,6 +91,9 @@ public class ClienteService {
             throw new RuntimeException("Cliente não encontrado");
         }
 
+        cliente.setSituacao("APROVADO");
+        repository.save(cliente);
+
         ClienteEvent evento = new ClienteEvent("APROVADO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
         producer.enviarEvento(evento);
     }
@@ -99,6 +103,9 @@ public class ClienteService {
         if (cliente == null) {
             throw new RuntimeException("Cliente não encontrado");
         }
+
+        cliente.setSituacao("REJEITADO");
+        repository.save(cliente);
 
         ClienteEvent evento = new ClienteEvent("REJEITADO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), motivo);
         producer.enviarEvento(evento);
@@ -119,6 +126,7 @@ public class ClienteService {
         dto.setLogradouro(cliente.getLogradouro());
         dto.setNumero(cliente.getNumero());
         dto.setComplemento(cliente.getComplemento());
+        dto.setSituacao(cliente.getSituacao());
         return dto;
     }
 }

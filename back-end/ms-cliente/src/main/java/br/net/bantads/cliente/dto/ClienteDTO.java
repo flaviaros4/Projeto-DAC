@@ -14,6 +14,7 @@ public class ClienteDTO {
     private String logradouro;
     private String numero;
     private String complemento;
+    private String situacao;
     
     public String getNome() { 
         return nome; 
@@ -101,6 +102,14 @@ public class ClienteDTO {
 
     public void setComplemento(String complemento) { 
         this.complemento = complemento; 
+    }
+
+    public String getSituacao() {
+    return situacao;
+    }
+
+    public void setSituacao(String situacao) {
+    this.situacao = situacao;
     }
 
 }
