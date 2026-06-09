@@ -109,8 +109,6 @@ public class GerenteService {
         evento.setEmail(novoGerente.getEmail());
         evento.setTelefone(novoGerente.getTelefone());
         evento.setTipo(novoGerente.getTipo().name());
-        // Não enviar senha explícita para ms_auth — deixar nulo para geração
-        // automática, ou enviar se informado
         evento.setSenha(dado.getSenha());
 
         gerenteProducer.enviarEvento(evento);

@@ -40,7 +40,7 @@ public class Gerente {
     @Column(name = "data_criacao", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    @Column(name = "data_atualizacao", nullable = false, updatable = true)
+    @Column(name = "data_atualizacao", updatable = true)
     private LocalDateTime dataAtualizacao;
 
 
