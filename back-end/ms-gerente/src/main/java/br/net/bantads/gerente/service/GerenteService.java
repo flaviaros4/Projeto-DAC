@@ -1,5 +1,6 @@
 package br.net.bantads.gerente.service;
 
+import br.net.bantads.gerente.messaging.producer.DistribuicaoProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,28 +8,84 @@ import java.util.List;
 
 import br.net.bantads.gerente.dto.request.DadoGerenteAtualizacao;
 import br.net.bantads.gerente.dto.request.DadoGerenteInsercao;
+import br.net.bantads.gerente.dto.response.DadoGerente;
+import br.net.bantads.gerente.dto.response.DashboardResponse;
+import br.net.bantads.gerente.dto.response.GerentesResponse;
+import br.net.bantads.gerente.dto.response.ItemDashboardResponse;
 import br.net.bantads.gerente.entity.Gerente;
 import br.net.bantads.gerente.event.GerenteEvento;
 import br.net.bantads.gerente.exception.RecursoDuplicadoException;
 import br.net.bantads.gerente.exception.RecursoNaoEncontradoException;
 import br.net.bantads.gerente.messaging.producer.GerenteProducer;
+
+import br.net.bantads.gerente.repository.ContaAssociadaRepository;
 import br.net.bantads.gerente.repository.GerenteRepository;
 
 @Service
 public class GerenteService {
 
+    private final DistribuicaoProducer distribuicaoProducer;
     @Autowired
     private GerenteRepository gerenteRepository;
     @Autowired
     private GerenteProducer gerenteProducer;
-    
-    public List<Gerente> listarTodos() {
-    return gerenteRepository.findAll();
-}
+    @Autowired
+    private ContaAssociadaRepository contaRepository;
 
-    public Gerente cadastrarGerente(DadoGerenteInsercao dado) {
-        
-        if(gerenteRepository.existsByEmail(dado.getEmail())) {
+    GerenteService(DistribuicaoProducer distribuicaoProducer) {
+        this.distribuicaoProducer = distribuicaoProducer;
+    }
+
+    private DadoGerente toDto(Gerente gerente) {
+
+        DadoGerente dto = new DadoGerente();
+
+        dto.setCpf(gerente.getCpf());
+        dto.setNome(gerente.getNome());
+        dto.setEmail(gerente.getEmail());
+        dto.setTelefone(gerente.getTelefone());
+        dto.setTipo(gerente.getTipo());
+
+        return dto;
+    }
+
+    public DashboardResponse dashboard() {
+
+        DashboardResponse response = new DashboardResponse();
+
+        ItemDashboardResponse item = new ItemDashboardResponse();
+
+        List<Gerente> gerentes = gerenteRepository.findAll();
+
+        if (gerentes.isEmpty()) {
+            return response;
+        }
+
+        Gerente gerente = gerentes.get(0);
+
+        item.setGerente(toDto(gerente));
+
+        response.setItems(item);
+
+        return response;
+    }
+
+    public GerentesResponse listarTodos() {
+
+        List<DadoGerente> lista = gerenteRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
+
+        GerentesResponse response = new GerentesResponse();
+        response.setGerentes(lista);
+
+        return response;
+    }
+
+    public DadoGerente cadastrarGerente(DadoGerenteInsercao dado) {
+
+        if (gerenteRepository.existsByEmail(dado.getEmail())) {
             throw new RecursoDuplicadoException("Email já cadastrado");
         }
 
@@ -52,41 +109,52 @@ public class GerenteService {
         evento.setEmail(novoGerente.getEmail());
         evento.setTelefone(novoGerente.getTelefone());
         evento.setTipo(novoGerente.getTipo().name());
-        // Não enviar senha explícita para ms_auth — deixar nulo para geração automática, ou enviar se informado
         evento.setSenha(dado.getSenha());
 
         gerenteProducer.enviarEvento(evento);
+        distribuicaoProducer.enviar(novoGerente.getCpf());
 
-        return novoGerente;
+        return toDto(novoGerente);
     }
 
-    public Gerente buscarPorCpf(String cpf) {
-        if (gerenteRepository.existsByCpf(cpf)) {
-            return gerenteRepository.findByCpf(cpf);
-        }
-        throw new RecursoNaoEncontradoException("Gerente não encontrado");
-    }
+    public DadoGerente buscarPorCpf(String cpf) {
 
-    public Gerente atualizarGerente(String cpf, DadoGerenteAtualizacao dado) {
+        Gerente gerente = gerenteRepository.findByCpf(cpf);
 
-        if (gerenteRepository.existsByCpf(cpf)) {
-            Gerente gerente = gerenteRepository.findByCpf(cpf);
-            gerente.setNome(dado.getNome());
-            gerente.setEmail(dado.getEmail());
-            gerente.setTelefone(dado.getTelefone());
-            gerente.setDataAtualizacao(java.time.LocalDateTime.now());
-
-            return gerenteRepository.save(gerente);
-        }
-        throw new RecursoNaoEncontradoException("Gerente não encontrado");
-    }
-
-    public void deletarGerente(String cpf){
-        if(gerenteRepository.existsByCpf(cpf)){
-            Gerente gerente = gerenteRepository.findByCpf(cpf);
-            gerenteRepository.delete(gerente);
-        } else {
+        if (gerente == null) {
             throw new RecursoNaoEncontradoException("Gerente não encontrado");
         }
+
+        return toDto(gerente);
+    }
+
+    public DadoGerente atualizarGerente(String cpf,
+            DadoGerenteAtualizacao dado) {
+
+        Gerente gerente = gerenteRepository.findByCpf(cpf);
+
+        if (gerente == null) {
+            throw new RecursoNaoEncontradoException("Gerente não encontrado");
+        }
+
+        gerente.setNome(dado.getNome());
+        gerente.setEmail(dado.getEmail());
+        gerente.setTelefone(dado.getTelefone());
+        gerente.setDataAtualizacao(java.time.LocalDateTime.now());
+
+        gerente = gerenteRepository.save(gerente);
+
+        return toDto(gerente);
+    }
+
+    public void deletarGerente(String cpf) {
+
+        Gerente gerente = gerenteRepository.findByCpf(cpf);
+
+        if (gerente == null) {
+            throw new RecursoNaoEncontradoException("Gerente não encontrado");
+        }
+
+        gerenteRepository.delete(gerente);
     }
 }

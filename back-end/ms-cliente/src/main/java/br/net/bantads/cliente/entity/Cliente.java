@@ -21,6 +21,9 @@ public class Cliente implements Serializable {
 
     @Column(nullable = false, unique = true, length = 11)
     private String cpf;
+
+    @Column(nullable = false)
+    private String situacao;
     private String telefone;
     private BigDecimal salario;
     private String cep;
@@ -126,5 +129,13 @@ public class Cliente implements Serializable {
 
     public void setEstado(String estado) { 
         this.estado = estado; 
+    }
+    
+    public String getSituacao() {
+    return situacao;
+    }
+
+    public void setSituacao(String situacao) {
+    this.situacao = situacao;
     }
 }
