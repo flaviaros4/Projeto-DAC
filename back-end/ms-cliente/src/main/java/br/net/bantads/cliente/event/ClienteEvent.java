@@ -13,7 +13,7 @@ public class ClienteEvent {
 
     public ClienteEvent() {}
 
-    public ClienteEvent(String acao, String cpf, String nome, String email, BigDecimal salario) {
+    public ClienteEvent(String acao, String cpf, String nome, String email, BigDecimal salario, String motivo) {
         this.acao = acao;
         this.cpf = cpf;
         this.nome = nome;
@@ -61,7 +61,7 @@ public class ClienteEvent {
         this.salario = salario; 
     }
 
-    public String getMotivo(String motivo) {
+    public String getMotivo() {
         return motivo;
     }
 

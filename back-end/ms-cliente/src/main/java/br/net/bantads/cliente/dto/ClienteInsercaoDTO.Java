@@ -36,7 +36,7 @@ public class ClienteInsercaoDTO {
     @NotBlank(message = "A cidade é obrigatória")
     private String cidade;
 
-    @NotBlank(message - "O estado é obrigatório")
+    @NotBlank(message = "O estado é obrigatório")
     private String estado;
 
 

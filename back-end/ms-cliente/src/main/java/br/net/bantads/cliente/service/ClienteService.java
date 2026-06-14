@@ -4,9 +4,12 @@ import br.net.bantads.cliente.dto.ClienteDTO;
 import br.net.bantads.cliente.dto.ClienteInsercaoDTO;
 import br.net.bantads.cliente.entity.Cliente;
 import br.net.bantads.cliente.event.ClienteEvent;
+import br.net.bantads.cliente.messaging.producer.ClienteProducer;
 import br.net.bantads.cliente.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,10 @@ public class ClienteService {
     public ClienteDTO cadastrar(ClienteInsercaoDTO dto) {
         if (repository.findByCpf(dto.getCpf()) != null) {
             throw new IllegalArgumentException("CPF já cadastrado ou aguardando aprovação");
+        }
+
+        if (repository.findByEmail(dto.getEmail()) != null) {
+            throw new IllegalArgumentException("E-mail já cadastrado");
         }
 
         Cliente cliente = new Cliente();
@@ -40,24 +47,51 @@ public class ClienteService {
 
         cliente = repository.save(cliente);
 
-        ClienteEvent evento = new ClienteEvent("AUTOCADASTRO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
+        ClienteEvent evento = new ClienteEvent(
+                "AUTOCADASTRO",
+                cliente.getCpf(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getSalario(),
+                null
+        );
         producer.enviarEvento(evento);
 
         return converterParaDTO(cliente);
     }
 
     public List<ClienteDTO> listarTodos(String filtro) {
-        return repository.findAll().stream()
+        if ("para_aprovar".equalsIgnoreCase(filtro)) {
+            return repository.findBySituacao("PENDENTE").stream()
+                    .map(this::converterParaDTO)
+                    .collect(Collectors.toList());
+        }
+
+        if ("melhores_clientes".equalsIgnoreCase(filtro)) {
+            return repository.findBySituacao("APROVADO").stream()
+                    .sorted(Comparator.comparing(Cliente::getSalario).reversed())
+                    .limit(3)
+                    .map(this::converterParaDTO)
+                    .collect(Collectors.toList());
+        }
+
+        if ("adm_relatorio_clientes".equalsIgnoreCase(filtro)) {
+            return repository.findBySituacao("APROVADO").stream()
+                    .map(this::converterParaDTO)
+                    .collect(Collectors.toList());
+        }
+
+        return repository.findBySituacao("APROVADO").stream()
                 .map(this::converterParaDTO)
                 .collect(Collectors.toList());
     }
 
     public ClienteDTO buscarPorCpf(String cpf) {
         Cliente cliente = repository.findByCpf(cpf);
-        if ("para_aprovar".equalsIgnoreCase(filtro)) {
-            return repository.findBySituacao("PENDENTE").stream().map(this::converterParaDTO).collect(Collectors.toList());
+        if (cliente == null) {
+            throw new RuntimeException("Cliente não encontrado");
         }
-        return repository.findAll().stream().map(this::converterParaDTO).collect(Collectors.toList());
+        return converterParaDTO(cliente);
     }
 
     public ClienteDTO atualizarPerfil(String cpf, ClienteDTO dto) {
@@ -79,7 +113,14 @@ public class ClienteService {
 
         cliente = repository.save(cliente);
 
-        ClienteEvent evento = new ClienteEvent("ALTERACAO_PERFIL", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
+        ClienteEvent evento = new ClienteEvent(
+                "ALTERACAO_PERFIL",
+                cliente.getCpf(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getSalario(),
+                null
+        );
         producer.enviarEvento(evento);
 
         return converterParaDTO(cliente);
@@ -94,7 +135,14 @@ public class ClienteService {
         cliente.setSituacao("APROVADO");
         repository.save(cliente);
 
-        ClienteEvent evento = new ClienteEvent("APROVADO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), null);
+        ClienteEvent evento = new ClienteEvent(
+                "APROVADO",
+                cliente.getCpf(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getSalario(),
+                null
+        );
         producer.enviarEvento(evento);
     }
 
@@ -107,7 +155,14 @@ public class ClienteService {
         cliente.setSituacao("REJEITADO");
         repository.save(cliente);
 
-        ClienteEvent evento = new ClienteEvent("REJEITADO", cliente.getCpf(), cliente.getNome(), cliente.getEmail(), cliente.getSalario(), motivo);
+        ClienteEvent evento = new ClienteEvent(
+                "REJEITADO",
+                cliente.getCpf(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getSalario(),
+                motivo
+        );
         producer.enviarEvento(evento);
 
         repository.delete(cliente);
