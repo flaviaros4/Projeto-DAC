@@ -25,23 +25,28 @@ public class ContaService {
     private final ContaReadRepository contaReadRepository;
     private final TransacaoReadRepository transacaoReadRepository;
     private final TransacaoProducer transacaoProducer;
+    private final AutorizacaoContaService autorizacaoContaService;
 
     public ContaService(
             TransacaoWriteRepository transacaoWriteRepository,
             ContaWriteRepository contaWriteRepository,
             ContaReadRepository contaReadRepository,
             TransacaoReadRepository transacaoReadRepository,
-            TransacaoProducer transacaoProducer
+            TransacaoProducer transacaoProducer,
+            AutorizacaoContaService autorizacaoContaService
     ) {
         this.transacaoWriteRepository = transacaoWriteRepository;
         this.contaWriteRepository = contaWriteRepository;
         this.contaReadRepository = contaReadRepository;
         this.transacaoReadRepository = transacaoReadRepository;
         this.transacaoProducer = transacaoProducer;
+        this.autorizacaoContaService = autorizacaoContaService;
     }
 
+
     @Transactional
-    public DepositarSacarResponse cadastrarDeposito(BigDecimal valor, String numeroContaDestino) {
+    public DepositarSacarResponse cadastrarDeposito(BigDecimal valor, String numeroContaDestino, String emailToken) {
+        autorizacaoContaService.validarDonoConta(numeroContaDestino, emailToken);
 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Valor inválido");
@@ -92,7 +97,9 @@ public class ContaService {
 
 
     @Transactional
-    public DepositarSacarResponse cadastrarSaque(BigDecimal valor, String numeroContaOrigem){
+    public DepositarSacarResponse cadastrarSaque(BigDecimal valor, String numeroContaOrigem, String emailToken){
+        autorizacaoContaService.validarDonoConta(numeroContaOrigem, emailToken);
+
         if (valor.compareTo(BigDecimal.ZERO) <= 0){
             throw new RuntimeException("Valor inválido");
         }
@@ -130,8 +137,11 @@ public class ContaService {
         return new DepositarSacarResponse(numeroContaOrigem, dataHora, conta.getSaldo());
     }
 
+
     @Transactional
-    public TransferirResponse cadastrarTransferencia(BigDecimal valor, String numeroContaOrigem, String numeroContaDestino){
+    public TransferirResponse cadastrarTransferencia(BigDecimal valor, String numeroContaOrigem, String numeroContaDestino, String emailToken){
+        autorizacaoContaService.validarDonoConta(numeroContaOrigem, emailToken);
+
         if(valor.compareTo(BigDecimal.ZERO) <= 0){
             throw new RuntimeException("valor inválido");
         }
@@ -172,10 +182,12 @@ public class ContaService {
         return new TransferirResponse(contaOrigem.getNumero(), dataHora, contaDestino.getNumero(), contaOrigem.getSaldo(), valor);
     }
 
+
     public SaldoResponse saldo(String numeroContaOrigem){
         Conta contaOrigem = contaReadRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
         return new SaldoResponse(contaOrigem.getCliente(), numeroContaOrigem, contaOrigem.getSaldo());
     }
+
 
     public ExtratoResponse extrato(String numeroContaOrigem){
         Conta contaOrigem = contaReadRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));

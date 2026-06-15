@@ -6,13 +6,14 @@ import br.net.bantads.conta.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping
 public class ContaController {
 
-    @Autowired
-    private ContaWriteRepository contaWriteRepository;
+    //@Autowired
+    //private ContaWriteRepository contaWriteRepository;
 
     @Autowired
     private ContaService contaService;
@@ -20,20 +21,19 @@ public class ContaController {
 
 
     @PostMapping("contas/{numero}/depositar")
-    public ResponseEntity<DepositarSacarResponse> depositar(@PathVariable String numero, @RequestBody DepositarInfo  request){
+    public ResponseEntity<DepositarSacarResponse> depositar(@PathVariable String numero, @RequestBody DepositarInfo request, Authentication authentication){
         try{
-            DepositarSacarResponse depositarResponse = contaService.cadastrarDeposito(request.getValor(), numero);
+            DepositarSacarResponse depositarResponse = contaService.cadastrarDeposito(request.getValor(), numero, authentication.getName());
             return ResponseEntity.ok(depositarResponse);
         } catch (Exception e){
             return ResponseEntity.status(404).build();
         }
-
     }
 
     @PostMapping("contas/{numero}/sacar")
-    public ResponseEntity<DepositarSacarResponse> sacar(@PathVariable String numero, @RequestBody DepositarInfo request){
+    public ResponseEntity<DepositarSacarResponse> sacar(@PathVariable String numero, @RequestBody DepositarInfo request, Authentication authentication){
         try{
-            DepositarSacarResponse response = contaService.cadastrarSaque(request.getValor(), numero);
+            DepositarSacarResponse response = contaService.cadastrarSaque(request.getValor(), numero, authentication.getName());
             return ResponseEntity.ok(response);
         } catch (Exception e){
             return ResponseEntity.status(404).build();
@@ -41,9 +41,9 @@ public class ContaController {
     }
 
     @PostMapping("contas/{numero}/transferir")
-    public ResponseEntity<TransferirResponse> transferir(@PathVariable String numero, @RequestBody TransferirInfo request){
+    public ResponseEntity<TransferirResponse> transferir(@PathVariable String numero, @RequestBody TransferirInfo request, Authentication authentication){
         try{
-            TransferirResponse response = contaService.cadastrarTransferencia(request.getValor(), numero, request.getNumeroContaDestino());
+            TransferirResponse response = contaService.cadastrarTransferencia(request.getValor(), numero, request.getNumeroContaDestino(), authentication.getName());
             return ResponseEntity.ok(response);
         } catch (Exception e){
             return ResponseEntity.status(404).build();
