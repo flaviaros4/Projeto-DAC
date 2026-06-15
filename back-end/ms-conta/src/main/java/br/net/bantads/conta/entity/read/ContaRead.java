@@ -23,7 +23,7 @@ public class ContaRead {
     private BigDecimal limite;
 
     private String gerente;
-    
+
     private LocalDateTime criacao;
 
     @OneToMany(mappedBy = "contaOrigem")

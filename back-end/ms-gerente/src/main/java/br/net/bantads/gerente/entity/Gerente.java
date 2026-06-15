@@ -13,7 +13,10 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "gerentes")
+@Table(
+    schema = "gerente",
+    name = "gerentes"
+)
 
 public class Gerente {
 
