@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 
 const { verifyJWT } = require('./middlewares/auth');
-const { authProxy, gerenteProxy, clienteProxy } = require('./config/proxy');
+const { authProxy, gerenteProxy, clienteProxy, contaProxy } = require('./config/proxy');
 
 const authRouter = require('./routes/auth.routes');
 
@@ -19,9 +19,9 @@ app.use(helmet());
 app.use('/', authRouter); 
 app.use('/gerentes', verifyJWT, gerenteProxy);
 app.use('/clientes', verifyJWT, clienteProxy);
+app.use('/contas', verifyJWT, contaProxy);
 
 
-app.use(verifyJWT);
 
 app.get('/teste', verifyJWT, (req, res) => {
     res.json({

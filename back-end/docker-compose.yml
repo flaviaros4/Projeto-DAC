@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  mongo_db:
+  mongo_db: 
     image: mongo:latest
     container_name: mongo_auth
     ports:
@@ -29,8 +29,8 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-  ms_auth:
-    build:
+  ms_auth: 
+    build: 
       context: ./ms_auth
       dockerfile: Dockerfile
     container_name: ms_auth
@@ -45,8 +45,8 @@ services:
       - mongo_db
       - rabbitmq
 
-  ms_cliente:
-    build:
+  ms_cliente: 
+    build: 
       context: ./ms-cliente
       dockerfile: Dockerfile
     container_name: ms_cliente
@@ -62,33 +62,27 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-
-  ms_conta:
-    build:
+  
+  ms_conta: 
+    build: 
       context: ./ms-conta
       dockerfile: Dockerfile
     container_name: ms_conta
     ports:
       - "8083:8080"
     environment:
-
-      SPRING_DATASOURCE_WRITE_URL: jdbc:postgresql://postgres:5432/bantads
-      SPRING_DATASOURCE_WRITE_USERNAME: postgres
-      SPRING_DATASOURCE_WRITE_PASSWORD: postgres
-
-      SPRING_DATASOURCE_READ_URL: jdbc:postgresql://postgres:5432/bantads
-      SPRING_DATASOURCE_READ_USERNAME: postgres
-      SPRING_DATASOURCE_READ_PASSWORD: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bantads
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
 
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
-
     depends_on:
       - postgres
       - rabbitmq
 
-  ms_gerente:
-    build:
+  ms_gerente: 
+    build: 
       context: ./ms-gerente
       dockerfile: Dockerfile
     container_name: ms_gerente
@@ -104,7 +98,7 @@ services:
     depends_on:
       - postgres
       - rabbitmq
-
+  
   api_gateway:
     build:
       context: ./api-gateway
@@ -121,6 +115,7 @@ services:
       - ms_conta
       - ms_gerente
 
-volumes:
+volumes: 
   mongo_data:
   postgres_data:
+
