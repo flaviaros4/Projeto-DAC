@@ -14,21 +14,14 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(helmet());
-
-
-app.use('/', authRouter); 
-app.use('/gerentes', verifyJWT, gerenteProxy);
+app.use('/', authRouter);
+app.post('/clientes', clienteProxy);
 app.use('/clientes', verifyJWT, clienteProxy);
+app.use('/gerentes', verifyJWT, gerenteProxy);
 app.use('/contas', verifyJWT, contaProxy);
 
-
-
 app.get('/teste', verifyJWT, (req, res) => {
-    res.json({
-        message: 'Token válido',
-        userId: req.userId
-    });
+    res.json({ message: 'Token válido', userId: req.userId });
 });
-
 
 module.exports = app;

@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   mongo_db: 
     image: mongo:latest
     container_name: mongo_auth
+    hostname: mongoauth
     ports:
       - "27017:27017"
     volumes:
@@ -12,6 +11,7 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: postgres_bantads
+    hostname: postgres
     environment:
       POSTGRES_DB: bantads
       POSTGRES_USER: postgres
@@ -25,6 +25,7 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
+    hostname: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -34,11 +35,11 @@ services:
       context: ./ms_auth
       dockerfile: Dockerfile
     container_name: ms_auth
+    hostname: msauth
     ports:
       - "8081:8080"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo_db:27017/auth_db
-
+      SPRING_DATA_MONGODB_URI: mongodb://mongoauth:27017/auth_db
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
     depends_on:
@@ -50,13 +51,13 @@ services:
       context: ./ms-cliente
       dockerfile: Dockerfile
     container_name: ms_cliente
+    hostname: mscliente
     ports:
       - "8082:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bantads
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
     depends_on:
@@ -68,21 +69,18 @@ services:
       context: ./ms-conta
       dockerfile: Dockerfile
     container_name: ms_conta
+    hostname: msconta
     ports:
       - "8083:8080"
     environment:
-
       SPRING_DATASOURCE_WRITE_URL: jdbc:postgresql://postgres:5432/bantads
       SPRING_DATASOURCE_WRITE_USERNAME: postgres
       SPRING_DATASOURCE_WRITE_PASSWORD: postgres
-
       SPRING_DATASOURCE_READ_URL: jdbc:postgresql://postgres:5432/bantads
       SPRING_DATASOURCE_READ_USERNAME: postgres
       SPRING_DATASOURCE_READ_PASSWORD: postgres
-
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
-
     depends_on:
       - postgres
       - rabbitmq
@@ -92,13 +90,13 @@ services:
       context: ./ms-gerente
       dockerfile: Dockerfile
     container_name: ms_gerente
+    hostname: msgerente
     ports:
       - "8084:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bantads
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
     depends_on:
@@ -108,13 +106,14 @@ services:
   api_gateway:
     build:
       context: ./api-gateway
+    hostname: apigateway
     ports:
       - "3000:3000"
     environment:
-      AUTH_SERVICE: http://ms_auth:8080
-      CLIENTE_SERVICE: http://ms_cliente:8080
-      CONTA_SERVICE: http://ms_conta:8080
-      GERENTE_SERVICE: http://ms_gerente:8080
+      AUTH_SERVICE: http://msauth:8080
+      CLIENTE_SERVICE: http://mscliente:8080
+      CONTA_SERVICE: http://msconta:8080
+      GERENTE_SERVICE: http://msgerente:8080
     depends_on:
       - ms_auth
       - ms_cliente
@@ -124,4 +123,3 @@ services:
 volumes: 
   mongo_data:
   postgres_data:
-

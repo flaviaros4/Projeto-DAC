@@ -1,10 +1,7 @@
 package br.net.bantads.cliente.config;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -16,7 +13,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtService {
 
     private final String SECRET = "minha-chave-secreta-segura-para-assinar-tokens-jwt-bantads";
-    private final long expirationMs = 86400000; // 1 dia
+    private final long expirationMs = 86400000;
 
     public String generateToken(String email, String perfil, String nome) {
         return Jwts.builder()
@@ -31,17 +28,14 @@ public class JwtService {
 
     public boolean isTokenValid(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes())).build().parseClaimsJws(token);
+            Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .build()
+                .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
-
-    // Método para extrair as permissões (Roles) do token
-    public List<SimpleGrantedAuthority> getAuthorities(String token) {
-        String perfil = getPerfilFromToken(token);
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + perfil));
     }
 
     public String extractUsername(String token) {
@@ -49,13 +43,14 @@ public class JwtService {
     }
 
     public String getPerfilFromToken(String token) {
-
         return getClaims(token).get("perfil", String.class);
     }
 
     public Claims getClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes())).build().parseClaimsJws(token)
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
     }
-
 }

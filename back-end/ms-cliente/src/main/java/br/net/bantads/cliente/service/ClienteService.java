@@ -12,6 +12,7 @@ import br.net.bantads.cliente.dto.ClienteInsercaoDTO;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 
 @Service
@@ -185,4 +186,27 @@ public class ClienteService {
         dto.setSituacao(cliente.getSituacao());
         return dto;
     }
+
+    public void reboot() {
+    repository.deleteAll();
+
+    criarClienteAprovado("Catharyna",  "cli1@bantads.com.br", "12912861012", "41999990001", new BigDecimal("5000.00"), "80000000", "Rua A", "100", "", "Curitiba", "PR");
+    criarClienteAprovado("Cleuddônio", "cli2@bantads.com.br", "09506382000", "41999990002", new BigDecimal("8000.00"), "80000001", "Rua B", "101", "", "Curitiba", "PR");
+    criarClienteAprovado("Catianna",   "cli3@bantads.com.br", "85733854057", "41999990003", new BigDecimal("3000.00"), "80000002", "Rua C", "102", "", "Curitiba", "PR");
+    criarClienteAprovado("Cutardo",    "cli4@bantads.com.br", "58872160006", "41999990004", new BigDecimal("500.00"),  "80000003", "Rua D", "103", "", "Curitiba", "PR");
+    criarClienteAprovado("Coândrya",   "cli5@bantads.com.br", "76179646090", "41999990005", new BigDecimal("1500.00"), "80000004", "Rua E", "104", "", "Curitiba", "PR");
+}
+
+private void criarClienteAprovado(String nome, String email, String cpf, String telefone,
+                                   BigDecimal salario, String cep, String logradouro,
+                                   String numero, String complemento, String cidade, String estado) {
+    if (repository.findByCpf(cpf) != null) return;
+    Cliente c = new Cliente();
+    c.setNome(nome); c.setEmail(email); c.setCpf(cpf);
+    c.setTelefone(telefone); c.setSalario(salario);
+    c.setCep(cep); c.setLogradouro(logradouro); c.setNumero(numero);
+    c.setComplemento(complemento); c.setCidade(cidade); c.setEstado(estado);
+    c.setSituacao("APROVADO");
+    repository.save(c);
+}
 }

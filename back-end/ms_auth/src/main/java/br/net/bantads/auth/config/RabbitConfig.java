@@ -11,10 +11,16 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfig {
 
     public static final String FILA_GERENTE_CRIADO = "gerente.criado";
+    public static final String FILA_CLIENTE = "cliente";
 
     @Bean
     public Queue filaGerenteCriado() {
         return new Queue(FILA_GERENTE_CRIADO);
+    }
+
+    @Bean
+    public Queue filaCliente() {
+        return new Queue(FILA_CLIENTE);
     }
 
     @Bean
@@ -28,5 +34,4 @@ public class RabbitConfig {
         template.setMessageConverter(jackson2JsonMessageConverter());
         return template;
     }
-
 }
