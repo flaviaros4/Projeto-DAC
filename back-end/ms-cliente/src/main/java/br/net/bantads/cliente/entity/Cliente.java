@@ -5,7 +5,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "tb_cliente")
+@Table(
+    schema = "cliente",
+    name = "clientes"
+)
 public class Cliente implements Serializable {
     private static final long serialVersionUID = 1L;
 

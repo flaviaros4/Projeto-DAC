@@ -84,7 +84,7 @@ public class AuthService {
     // Administrador
     cadastrarUsuario("Adamântio", "adm1@bantads.com.br", "40501740066", Perfil.ADMIN, "tads");
     // Gerentes
-    cadastrarUsuario("Geniéveve", "ger1@bantads.com.br", "98574307084", Perfil.GERENTE, "tads");
+    cadastrarUsuario("Geniéve", "ger1@bantads.com.br", "98574307084", Perfil.GERENTE, "tads");
     cadastrarUsuario("Godophredo", "ger2@bantads.com.br", "64065268052", Perfil.GERENTE, "tads");
     cadastrarUsuario("Gyândula", "ger3@bantads.com.br", "23862179060", Perfil.GERENTE, "tads");
     // Clientes

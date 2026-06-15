@@ -6,7 +6,10 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transacoes")
+@Table(
+    schema = "conta_write",
+    name = "transacoes"
+)
 public class Transacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

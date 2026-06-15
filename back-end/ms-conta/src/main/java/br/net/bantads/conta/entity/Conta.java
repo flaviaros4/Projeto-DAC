@@ -7,7 +7,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "contas")
+@Table(
+    schema = "conta_write",
+    name = "contas"
+)
 public class Conta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +24,7 @@ public class Conta {
 
     private BigDecimal limite;
 
-    private int gerente;
+    private String gerente;
     
     private LocalDateTime criacao;
 
@@ -75,11 +78,11 @@ public class Conta {
         this.limite = limite;
     }
 
-    public int getGerente() {
+    public String getGerente() {
         return gerente;
     }
 
-    public void setGerente(int gerente) {
+    public void setGerente(String gerente) {
         this.gerente = gerente;
     }
 

@@ -40,31 +40,31 @@ public class SecurityConfig {
                         // Apenas GERENTE pode depositar
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/contas/*/depositar"
+                                "/contas/**/depositar"
                         ).hasRole("GERENTE")
 
                         // Apenas GERENTE pode sacar
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/contas/*/sacar"
+                                "/contas/**/sacar"
                         ).hasRole("GERENTE")
 
                         // Apenas GERENTE pode transferir
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/contas/*/transferir"
+                                "/contas/**/transferir"
                         ).hasRole("GERENTE")
 
                         // Qualquer autenticado pode ver saldo
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/contas/*/saldo"
+                                "/contas/**/saldo"
                         ).authenticated()
 
                         // Qualquer autenticado pode ver extrato
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/contas/*/extrato"
+                                "/contas/**/extrato"
                         ).authenticated()
 
                         .anyRequest().authenticated()
