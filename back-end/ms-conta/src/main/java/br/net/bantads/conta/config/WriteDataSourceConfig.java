@@ -45,10 +45,11 @@ public class WriteDataSourceConfig {
     ) {
         return builder
                 .dataSource(writeDataSource())
-                .packages("br.net.bantads.conta.entity")
+                .packages("br.net.bantads.conta.entity.write")
                 .persistenceUnit("write")
                 .build();
     }
+
 
     @Primary
     @Bean

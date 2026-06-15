@@ -5,7 +5,7 @@ COPY . /app
 #Copia o código-fonte para o diretório /app dentro do container
 WORKDIR /app 
 # Define o diretório de trabalho para os comandos seguintes
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Dfile.encoding=UTF-8
 # Executa o comando Maven para compilar o projeto e gerar o arquivo JAR, pulando os testes
 
 

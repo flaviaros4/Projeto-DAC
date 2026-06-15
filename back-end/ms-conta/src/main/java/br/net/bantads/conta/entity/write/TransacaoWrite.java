@@ -1,14 +1,14 @@
-package br.net.bantads.conta.entity;
+package br.net.bantads.conta.entity.write;
 
-import br.net.bantads.conta.entity.read.ContaRead;
+import br.net.bantads.conta.entity.Tipo;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transacoes", schema = "conta_read")
-public class Transacao {
+@Table(name = "transacoes", schema = "conta_write")
+public class TransacaoWrite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,13 +22,13 @@ public class Transacao {
 
     @ManyToOne
     @JoinColumn(name = "conta_origem_id")
-    private ContaRead contaOrigem;
+    private ContaWrite contaOrigem;
 
     @ManyToOne
     @JoinColumn(name = "conta_destino_id")
-    private ContaRead contaDestino;
+    private ContaWrite contaDestino;
 
-    public Transacao(){
+    public TransacaoWrite(){
 
     }
 
@@ -56,19 +56,19 @@ public class Transacao {
         this.tipo = tipo;
     }
 
-    public ContaRead getContaOrigem() {
+    public ContaWrite getContaOrigem() {
         return contaOrigem;
     }
 
-    public void setContaOrigem(ContaRead contaOrigem) {
+    public void setContaOrigem(ContaWrite contaOrigem) {
         this.contaOrigem = contaOrigem;
     }
 
-    public ContaRead getContaDestino() {
+    public ContaWrite getContaDestino() {
         return contaDestino;
     }
 
-    public void setContaDestino(ContaRead contaDestino) {
+    public void setContaDestino(ContaWrite contaDestino) {
         this.contaDestino = contaDestino;
     }
 

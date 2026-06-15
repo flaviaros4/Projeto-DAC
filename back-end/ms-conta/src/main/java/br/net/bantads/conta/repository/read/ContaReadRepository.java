@@ -1,10 +1,10 @@
 package br.net.bantads.conta.repository.read;
 
-import br.net.bantads.conta.entity.Conta;
+import br.net.bantads.conta.entity.read.ContaRead;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface ContaReadRepository extends JpaRepository<Conta, Long> {
-    Optional<Conta> findByNumero(String numero);
+public interface ContaReadRepository extends JpaRepository<ContaRead, Long> {
+    Optional<ContaRead> findByNumero(String numero);
 }

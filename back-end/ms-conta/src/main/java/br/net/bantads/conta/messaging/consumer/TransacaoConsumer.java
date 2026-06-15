@@ -1,9 +1,8 @@
 package br.net.bantads.conta.messaging.consumer;
 
 import br.net.bantads.conta.config.RabbitConfig;
-import br.net.bantads.conta.entity.Conta;
-import br.net.bantads.conta.entity.Tipo;
-import br.net.bantads.conta.entity.Transacao;
+import br.net.bantads.conta.entity.read.ContaRead;
+import br.net.bantads.conta.entity.read.TransacaoRead;
 import br.net.bantads.conta.event.TransacaoEvento;
 import br.net.bantads.conta.repository.read.ContaReadRepository;
 import br.net.bantads.conta.repository.read.TransacaoReadRepository;
@@ -27,57 +26,47 @@ public class TransacaoConsumer {
     @RabbitListener(queues = RabbitConfig.FILA_TRANSACOES)
     public void consumir(TransacaoEvento evento) {
 
-        Conta contaOrigem = contaReadRepository
+        ContaRead contaOrigem = contaReadRepository
                 .findByNumero(evento.getContaOrigem())
-                .orElse(null);
-
-        Conta contaDestino = contaReadRepository
-                .findByNumero(evento.getContaDestino())
                 .orElse(null);
 
         if (contaOrigem == null) {
             return;
         }
 
+        ContaRead contaDestino = null;
+        if (evento.getContaDestino() != null) {
+            contaDestino = contaReadRepository
+                    .findByNumero(evento.getContaDestino())
+                    .orElse(null);
+        }
+
         switch (evento.getTipo()) {
 
             case DEPOSITO -> {
-                contaOrigem.setSaldo(
-                        contaOrigem.getSaldo().add(evento.getValor())
-                );
-
+                contaOrigem.setSaldo(contaOrigem.getSaldo().add(evento.getValor()));
                 contaReadRepository.save(contaOrigem);
             }
 
             case SAQUE -> {
-                contaOrigem.setSaldo(
-                        contaOrigem.getSaldo().subtract(evento.getValor())
-                );
-
+                contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(evento.getValor()));
                 contaReadRepository.save(contaOrigem);
             }
 
             case TRANSFERENCIA -> {
-
                 if (contaDestino == null) {
                     return;
                 }
 
-                contaOrigem.setSaldo(
-                        contaOrigem.getSaldo().subtract(evento.getValor())
-                );
-
-                contaDestino.setSaldo(
-                        contaDestino.getSaldo().add(evento.getValor())
-                );
+                contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(evento.getValor()));
+                contaDestino.setSaldo(contaDestino.getSaldo().add(evento.getValor()));
 
                 contaReadRepository.save(contaOrigem);
                 contaReadRepository.save(contaDestino);
             }
         }
 
-        Transacao transacao = new Transacao();
-
+        TransacaoRead transacao = new TransacaoRead();
         transacao.setTipo(evento.getTipo());
         transacao.setValor(evento.getValor());
         transacao.setDataHora(evento.getDataHora());

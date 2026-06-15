@@ -41,7 +41,7 @@ public class ReadDataSourceConfig {
     ) {
         return builder
                 .dataSource(readDataSource())
-                .packages("br.net.bantads.conta.entity")
+                .packages("br.net.bantads.conta.entity.read")
                 .persistenceUnit("read")
                 .build();
     }

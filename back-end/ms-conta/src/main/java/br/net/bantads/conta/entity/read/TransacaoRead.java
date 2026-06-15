@@ -1,6 +1,6 @@
-package br.net.bantads.conta.entity;
+package br.net.bantads.conta.entity.read;
 
-import br.net.bantads.conta.entity.read.ContaRead;
+import br.net.bantads.conta.entity.Tipo;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transacoes", schema = "conta_read")
-public class Transacao {
+public class TransacaoRead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +28,7 @@ public class Transacao {
     @JoinColumn(name = "conta_destino_id")
     private ContaRead contaDestino;
 
-    public Transacao(){
+    public TransacaoRead(){
 
     }
 

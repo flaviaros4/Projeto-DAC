@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/ms-cliente/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ms-conta/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-conta/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ms-gerente/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ms_auth/src/main/java" charset="UTF-8" />
   </component>

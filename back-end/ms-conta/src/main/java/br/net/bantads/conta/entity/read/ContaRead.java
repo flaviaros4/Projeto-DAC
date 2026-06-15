@@ -1,5 +1,6 @@
-package br.net.bantads.conta.entity;
+package br.net.bantads.conta.entity.read;
 
+import br.net.bantads.conta.entity.read.TransacaoRead;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -7,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "contas")
-public class Conta {
+@Table(name = "contas", schema = "conta_read")
+public class ContaRead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,17 +22,17 @@ public class Conta {
 
     private BigDecimal limite;
 
-    private int gerente;
+    private String gerente;
     
     private LocalDateTime criacao;
 
     @OneToMany(mappedBy = "contaOrigem")
-    private List<Transacao> transacoesOrigem;
+    private List<TransacaoRead> transacoesOrigem;
 
     @OneToMany(mappedBy = "contaDestino")
-    private List<Transacao> transacoesDestino;
+    private List<TransacaoRead> transacoesDestino;
 
-    public Conta(){
+    public ContaRead(){
 
     }
 
@@ -75,11 +76,11 @@ public class Conta {
         this.limite = limite;
     }
 
-    public int getGerente() {
+    public String getGerente() {
         return gerente;
     }
 
-    public void setGerente(int gerente) {
+    public void setGerente(String gerente) {
         this.gerente = gerente;
     }
 
@@ -91,19 +92,19 @@ public class Conta {
         this.criacao = criacao;
     }
 
-    public List<Transacao> getTransacoesOrigem() {
+    public List<TransacaoRead> getTransacoesOrigem() {
         return transacoesOrigem;
     }
 
-    public void setTransacoesOrigem(List<Transacao> transacoesOrigem) {
+    public void setTransacoesOrigem(List<TransacaoRead> transacoesOrigem) {
         this.transacoesOrigem = transacoesOrigem;
     }
 
-    public List<Transacao> getTransacoesDestino() {
+    public List<TransacaoRead> getTransacoesDestino() {
         return transacoesDestino;
     }
 
-    public void setTransacoesDestino(List<Transacao> transacoesDestino) {
+    public void setTransacoesDestino(List<TransacaoRead> transacoesDestino) {
         this.transacoesDestino = transacoesDestino;
     }
 }

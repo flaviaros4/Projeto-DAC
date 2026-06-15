@@ -1,15 +1,17 @@
 package br.net.bantads.conta.service;
 
 import br.net.bantads.conta.dto.*;
-import br.net.bantads.conta.entity.Conta;
+import br.net.bantads.conta.entity.read.ContaRead;
+import br.net.bantads.conta.entity.write.ContaWrite;
 import br.net.bantads.conta.entity.Tipo;
-import br.net.bantads.conta.entity.Transacao;
+import br.net.bantads.conta.entity.read.TransacaoRead;
+import br.net.bantads.conta.entity.write.TransacaoWrite;
 import br.net.bantads.conta.event.TransacaoEvento;
-import br.net.bantads.conta.repository.write.ContaWriteRepository;
-import br.net.bantads.conta.repository.write.TransacaoWriteRepository;
+import br.net.bantads.conta.messaging.producer.TransacaoProducer;
 import br.net.bantads.conta.repository.read.ContaReadRepository;
 import br.net.bantads.conta.repository.read.TransacaoReadRepository;
-import br.net.bantads.conta.messaging.producer.TransacaoProducer;
+import br.net.bantads.conta.repository.write.ContaWriteRepository;
+import br.net.bantads.conta.repository.write.TransacaoWriteRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -43,81 +45,74 @@ public class ContaService {
         this.autorizacaoContaService = autorizacaoContaService;
     }
 
-
     @Transactional
-    public DepositarSacarResponse cadastrarDeposito(BigDecimal valor, String numeroContaDestino, String emailToken) {
-        autorizacaoContaService.validarDonoConta(numeroContaDestino, emailToken);
+    public DepositarSacarResponse cadastrarDeposito(
+            BigDecimal valor,
+            String numeroContaOrigem
+    ) {
 
         if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Valor inválido");
         }
 
-        Conta contaDestino = contaWriteRepository
-                .findByNumero(numeroContaDestino)
-                .orElseThrow(() ->
-                        new RuntimeException("Conta não encontrada")
-                );
+        ContaWrite contaOrigem = contaWriteRepository.findByNumero(numeroContaOrigem)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
         LocalDateTime dataHora = LocalDateTime.now();
 
-        contaDestino.setSaldo(
-                contaDestino.getSaldo().add(valor)
-        );
+        contaOrigem.setSaldo(contaOrigem.getSaldo().add(valor));
+        contaWriteRepository.save(contaOrigem);
 
-        contaWriteRepository.save(contaDestino);
-
-        Transacao transacao = new Transacao();
-
+        TransacaoWrite transacao = new TransacaoWrite();
         transacao.setDataHora(dataHora);
         transacao.setTipo(Tipo.DEPOSITO);
         transacao.setValor(valor);
-
-        transacao.setContaOrigem(contaDestino);
-
-        transacao.setContaDestino(contaDestino);
+        transacao.setContaOrigem(contaOrigem);
+        transacao.setContaDestino(null);
 
         transacaoWriteRepository.save(transacao);
 
         TransacaoEvento evento = new TransacaoEvento();
-
         evento.setTipo(Tipo.DEPOSITO);
-        evento.setContaOrigem(contaDestino.getNumero());
-        evento.setContaDestino(contaDestino.getNumero());
+        evento.setContaOrigem(contaOrigem.getNumero());
+        evento.setContaDestino(null);
         evento.setValor(valor);
         evento.setDataHora(dataHora);
 
         transacaoProducer.enviarEvento(evento);
 
         return new DepositarSacarResponse(
-                contaDestino.getNumero(),
+                contaOrigem.getNumero(),
                 dataHora,
-                contaDestino.getSaldo()
+                contaOrigem.getSaldo()
         );
     }
 
-
     @Transactional
-    public DepositarSacarResponse cadastrarSaque(BigDecimal valor, String numeroContaOrigem, String emailToken){
-        autorizacaoContaService.validarDonoConta(numeroContaOrigem, emailToken);
+    public DepositarSacarResponse cadastrarSaque(
+            BigDecimal valor,
+            String numeroContaOrigem
+    ) {
 
-        if (valor.compareTo(BigDecimal.ZERO) <= 0){
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new RuntimeException("Valor inválido");
         }
 
-        Conta conta = contaWriteRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
+        ContaWrite conta = contaWriteRepository.findByNumero(numeroContaOrigem)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-        if(valor.compareTo(conta.getSaldo()) > 0){
-            throw new RuntimeException("saldo insuficiente");
+        if (valor.compareTo(conta.getSaldo()) > 0) {
+            throw new RuntimeException("Saldo insuficiente");
         }
 
         conta.setSaldo(conta.getSaldo().subtract(valor));
-
         contaWriteRepository.save(conta);
 
         LocalDateTime dataHora = LocalDateTime.now();
-        Transacao saque = new Transacao();
-        saque.setContaDestino(conta);
+
+        TransacaoWrite saque = new TransacaoWrite();
         saque.setContaOrigem(conta);
+        saque.setContaDestino(null);
         saque.setTipo(Tipo.SAQUE);
         saque.setValor(valor);
         saque.setDataHora(dataHora);
@@ -125,79 +120,128 @@ public class ContaService {
         transacaoWriteRepository.save(saque);
 
         TransacaoEvento evento = new TransacaoEvento();
-
         evento.setTipo(Tipo.SAQUE);
         evento.setContaOrigem(conta.getNumero());
-        evento.setContaDestino(conta.getNumero());
+        evento.setContaDestino(null);
         evento.setValor(valor);
         evento.setDataHora(dataHora);
 
         transacaoProducer.enviarEvento(evento);
 
-        return new DepositarSacarResponse(numeroContaOrigem, dataHora, conta.getSaldo());
+        return new DepositarSacarResponse(
+                numeroContaOrigem,
+                dataHora,
+                conta.getSaldo()
+        );
     }
 
-
     @Transactional
-    public TransferirResponse cadastrarTransferencia(BigDecimal valor, String numeroContaOrigem, String numeroContaDestino, String emailToken){
-        autorizacaoContaService.validarDonoConta(numeroContaOrigem, emailToken);
+    public TransferirResponse cadastrarTransferencia(
+            BigDecimal valor,
+            String numeroContaOrigem,
+            String numeroContaDestino
+    ) {
 
-        if(valor.compareTo(BigDecimal.ZERO) <= 0){
-            throw new RuntimeException("valor inválido");
+        if (valor.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Valor inválido");
         }
 
-        Conta contaOrigem = contaWriteRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta de origem não encontrada"));
-        Conta contaDestino = contaWriteRepository.findByNumero(numeroContaDestino).orElseThrow(() -> new RuntimeException("conta de destino não encontrada"));
+        ContaWrite origen = contaWriteRepository.findByNumero(numeroContaOrigem)
+                .orElseThrow(() -> new RuntimeException("Conta origem não encontrada"));
 
-        if(valor.compareTo(contaOrigem.getSaldo()) > 0){
-            throw new RuntimeException("saldo insuficiente");
+        ContaWrite destino = contaWriteRepository.findByNumero(numeroContaDestino)
+                .orElseThrow(() -> new RuntimeException("Conta destino não encontrada"));
+
+        if (valor.compareTo(origen.getSaldo()) > 0) {
+            throw new RuntimeException("Saldo insuficiente");
         }
 
-        contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(valor));
-        contaDestino.setSaldo(contaDestino.getSaldo().add(valor));
+        origen.setSaldo(origen.getSaldo().subtract(valor));
+        destino.setSaldo(destino.getSaldo().add(valor));
 
-        contaWriteRepository.save(contaOrigem);
-        contaWriteRepository.save(contaDestino);
+        contaWriteRepository.save(origen);
+        contaWriteRepository.save(destino);
 
         LocalDateTime dataHora = LocalDateTime.now();
-        Transacao transferencia = new Transacao();
+
+        TransacaoWrite transferencia = new TransacaoWrite();
         transferencia.setDataHora(dataHora);
         transferencia.setValor(valor);
-        transferencia.setContaOrigem(contaOrigem);
-        transferencia.setContaDestino(contaDestino);
+        transferencia.setContaOrigem(origen);
+        transferencia.setContaDestino(destino);
         transferencia.setTipo(Tipo.TRANSFERENCIA);
 
         transacaoWriteRepository.save(transferencia);
 
         TransacaoEvento evento = new TransacaoEvento();
-
         evento.setTipo(Tipo.TRANSFERENCIA);
-        evento.setContaOrigem(contaOrigem.getNumero());
-        evento.setContaDestino(contaDestino.getNumero());
+        evento.setContaOrigem(origen.getNumero());
+        evento.setContaDestino(destino.getNumero());
         evento.setValor(valor);
         evento.setDataHora(dataHora);
 
         transacaoProducer.enviarEvento(evento);
 
-        return new TransferirResponse(contaOrigem.getNumero(), dataHora, contaDestino.getNumero(), contaOrigem.getSaldo(), valor);
+        return new TransferirResponse(
+                origen.getNumero(),
+                dataHora,
+                destino.getNumero(),
+                origen.getSaldo(),
+                valor
+        );
     }
 
+    public SaldoResponse saldo(String numeroConta) {
+        ContaRead conta = contaReadRepository.findByNumero(numeroConta)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-    public SaldoResponse saldo(String numeroContaOrigem){
-        Conta contaOrigem = contaReadRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
-        return new SaldoResponse(contaOrigem.getCliente(), numeroContaOrigem, contaOrigem.getSaldo());
+        return new SaldoResponse(
+                conta.getCliente(),
+                numeroConta,
+                conta.getSaldo()
+        );
     }
 
+    public ExtratoResponse extrato(String numeroConta) {
+        ContaRead conta = contaReadRepository.findByNumero(numeroConta)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-    public ExtratoResponse extrato(String numeroContaOrigem){
-        Conta contaOrigem = contaReadRepository.findByNumero(numeroContaOrigem).orElseThrow(() -> new RuntimeException("conta não encontrada"));
-        ArrayList<Transacao> transacoes = transacaoReadRepository.findByContaOrigem(contaOrigem);
+        ArrayList<TransacaoRead> origem = new ArrayList<>(transacaoReadRepository.findByContaOrigem(conta));
+        ArrayList<TransacaoRead> destino = new ArrayList<>(transacaoReadRepository.findByContaDestino(conta));
         ArrayList<Movimentacao> movimentacoes = new ArrayList<>();
 
-        for (Transacao t : transacoes){
-            movimentacoes.add(new Movimentacao(t.getDataHora(), t.getTipo(), t.getContaOrigem().getNumero(), t.getContaDestino().getNumero(), t.getValor()));
+        for (TransacaoRead t : origem) {
+            movimentacoes.add(
+                    new Movimentacao(
+                            t.getDataHora(),
+                            t.getTipo(),
+                            t.getContaOrigem() != null ? t.getContaOrigem().getNumero() : null,
+                            t.getContaDestino() != null ? t.getContaDestino().getNumero() : null,
+                            t.getValor()
+                    )
+            );
         }
 
-        return new ExtratoResponse(numeroContaOrigem, contaOrigem.getSaldo(), movimentacoes);
+        for (TransacaoRead t : destino) {
+            if (t.getTipo() == Tipo.TRANSFERENCIA) {
+                movimentacoes.add(
+                        new Movimentacao(
+                                t.getDataHora(),
+                                t.getTipo(),
+                                t.getContaOrigem() != null ? t.getContaOrigem().getNumero() : null,
+                                t.getContaDestino() != null ? t.getContaDestino().getNumero() : null,
+                                t.getValor()
+                        )
+                );
+            }
+        }
+
+        movimentacoes.sort((a, b) -> a.getData().compareTo(b.getData()));
+
+        return new ExtratoResponse(
+                numeroConta,
+                conta.getSaldo(),
+                movimentacoes
+        );
     }
 }

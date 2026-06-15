@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         name="cliente-service",
-        url="http://localhost:8082"
-        //url="http://ms_cliente:8080"
+        //url="http://localhost:8082"
+        url="http://ms_cliente:8080"
 )
 public interface ClienteClient {
 

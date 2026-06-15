@@ -3,15 +3,15 @@ package br.net.bantads.conta.service;
 
 import br.net.bantads.conta.client.ClienteClient;
 import br.net.bantads.conta.dto.ClienteDTO;
-import br.net.bantads.conta.entity.Conta;
+import br.net.bantads.conta.entity.write.ContaWrite;
 import br.net.bantads.conta.repository.write.ContaWriteRepository;
 
 import org.springframework.stereotype.Service;
 
 
-
 @Service
 public class AutorizacaoContaService {
+
     private final ContaWriteRepository contaRepository;
     private final ClienteClient clienteClient;
 
@@ -22,7 +22,6 @@ public class AutorizacaoContaService {
     ){
         this.contaRepository = contaRepository;
         this.clienteClient = clienteClient;
-
     }
 
 
@@ -30,15 +29,19 @@ public class AutorizacaoContaService {
             String numeroConta,
             String emailToken
     ){
-        Conta conta = contaRepository
-                        .findByNumero(numeroConta)
-                        .orElseThrow(
-                                () -> new RuntimeException(
-                                        "Conta não encontrada"
-                                )
-                        );
 
-        ClienteDTO cliente = clienteClient.buscarPorCpf(conta.getCliente());
+        ContaWrite conta = contaRepository
+                .findByNumero(numeroConta)
+                .orElseThrow(
+                        () -> new RuntimeException(
+                                "Conta não encontrada"
+                        )
+                );
+
+
+        ClienteDTO cliente =
+                clienteClient.buscarPorCpf(conta.getCliente());
+
 
         if(cliente == null){
 
@@ -47,13 +50,14 @@ public class AutorizacaoContaService {
             );
         }
 
+
         if(!cliente.getEmail().equals(emailToken)){
+
             throw new RuntimeException(
                     "Usuário não é dono da conta"
             );
         }
 
     }
-
 
 }

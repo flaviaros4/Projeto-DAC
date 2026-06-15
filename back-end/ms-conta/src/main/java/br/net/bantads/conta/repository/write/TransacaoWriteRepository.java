@@ -1,11 +1,11 @@
 package br.net.bantads.conta.repository.write;
 
-import br.net.bantads.conta.entity.Conta;
-import br.net.bantads.conta.entity.Transacao;
+import br.net.bantads.conta.entity.read.ContaRead;
+import br.net.bantads.conta.entity.write.TransacaoWrite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.ArrayList;
 
-public interface TransacaoWriteRepository extends JpaRepository <Transacao, Long> {
-    ArrayList<Transacao> findByContaOrigem(Conta contaOrigem);
+public interface TransacaoWriteRepository extends JpaRepository <TransacaoWrite, Long> {
+    ArrayList<TransacaoWrite> findByContaOrigem(ContaRead contaOrigem);
 }
