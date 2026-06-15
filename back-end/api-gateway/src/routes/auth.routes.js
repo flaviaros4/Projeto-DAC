@@ -2,29 +2,29 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 
+const axios = require('axios');
+
 router.post('/login', async (req, res) => {
 
-    if(req.body.email && req.body.senha) {
+    try {
 
-        const id = 1;
-
-        const token = jwt.sign(
-            { id },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: 300
-            }
+        const response = await axios.post(
+            `${process.env.AUTH_SERVICE}/login`,
+            req.body
         );
 
-        return res.json({
-            auth: true,
-            token: token
-        });
-    }
+        return res.json(response.data);
 
-    return res.status(400).json({
-        message: 'Email e senha são obrigatórios'
-    });
+    } catch (error) {
+
+        return res.status(
+            error.response?.status || 500
+        ).json(
+            error.response?.data || {
+                message: 'Erro no serviço de autenticação'
+            }
+        );
+    }
 });
 
 router.post('/logout', (req, res) => {

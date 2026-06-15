@@ -63,20 +63,26 @@ services:
       - postgres
       - rabbitmq
   
-  ms_conta: 
-    build: 
+  ms_conta:
+    build:
       context: ./ms-conta
       dockerfile: Dockerfile
     container_name: ms_conta
     ports:
       - "8083:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bantads
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
+
+      SPRING_DATASOURCE_WRITE_URL: jdbc:postgresql://postgres:5432/bantads
+      SPRING_DATASOURCE_WRITE_USERNAME: postgres
+      SPRING_DATASOURCE_WRITE_PASSWORD: postgres
+
+      SPRING_DATASOURCE_READ_URL: jdbc:postgresql://postgres:5432/bantads
+      SPRING_DATASOURCE_READ_USERNAME: postgres
+      SPRING_DATASOURCE_READ_PASSWORD: postgres
 
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+
     depends_on:
       - postgres
       - rabbitmq

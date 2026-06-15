@@ -39,6 +39,8 @@ public class ClienteInsercaoDTO {
     @NotBlank(message = "O estado é obrigatório")
     private String estado;
 
+    public ClienteInsercaoDTO() {
+    }
 
     public String getNome() { 
         return nome; 
