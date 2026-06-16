@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class TransacaoService {
-  private api = 'http://localhost:3000/transacoes';
+private api = 'http://localhost:3000/contas';
   constructor(private http: HttpClient) {}
 
   registrar(transacao: Partial<{tipo: string, clienteORigem: any, clienteDestino: any, valor: number, dataHora: string}>): Observable<any> {

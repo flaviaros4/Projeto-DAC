@@ -7,27 +7,21 @@ import { Gerente } from '../models/usuario.model';
 export class GerenteService {
 
   private apiGerentes = 'http://localhost:3000/gerentes';
-  private apiUsuarios = 'http://localhost:3000/usuarios';
+
 
   constructor(private http: HttpClient) {}
 
-  listarGerentes(): Observable<Gerente[]> {
-    return this.http.get<Gerente[]>(this.apiGerentes);
-  }
 
-  buscarPorId(id: number): Observable<Gerente> {
-    return this.http.get<Gerente>(`${this.apiGerentes}/${id}`);
-  }
+listarGerentes(): Observable<Gerente[]> {
+  return this.http.get<Gerente[]>(this.apiGerentes);
+}
 
-  listarUsuarios() {
-    return this.http.get<any[]>(this.apiUsuarios);
-  }
+buscarPorId(id: number): Observable<Gerente> {
+  return this.http.get<Gerente>(`${this.apiGerentes}/${id}`);
+}
 
-  deletarGerente(id: number) {
-    return this.http.delete(`${this.apiGerentes}/${id}`);
-  }
+deletarGerente(id: number) {
+  return this.http.delete(`${this.apiGerentes}/${id}`);
+}
 
-  deletarUsuario(id: number) {
-    return this.http.delete(`${this.apiUsuarios}/${id}`);
-  }
 }

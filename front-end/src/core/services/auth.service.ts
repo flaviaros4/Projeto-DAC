@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Cliente, Perfil, Usuario } from '../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 const LS_CHAVE = 'auth';
 
-type NovoUsuarioPayload = {
-  nome: string;
+type LoginPayload = {
   email: string;
   senha: string;
-  perfil: Usuario['perfil'];
-  usuarioId: number;
+};
+
+type LoginResponse = {
+  token: string;
 };
 
 @Injectable({
@@ -19,53 +18,49 @@ type NovoUsuarioPayload = {
 })
 export class AuthService {
 
-   constructor(private http: HttpClient) {}
+  private api = 'http://localhost:3000';
 
-   private api = 'http://localhost:3000/usuarios';
-
-   private isAuthenticated = new BehaviorSubject<boolean>(!!sessionStorage.getItem(LS_CHAVE));
-   isAuthenticated$ = this.isAuthenticated.asObservable();
-
- login(usuario: Usuario): Observable<Usuario | undefined> {
-  return this.http.get<Usuario[]>(this.api).pipe(
-    map((usuarios) => {
-      const usuarioEncontrado = usuarios.find(
-        (u) => u.email === usuario.email && u.senha === usuario.senha
-      );
-      if (usuarioEncontrado) {
-        sessionStorage.setItem(LS_CHAVE, JSON.stringify(usuarioEncontrado));
-        this.isAuthenticated.next(true);
-      }
-      return usuarioEncontrado;
-    })
+  private isAuthenticated = new BehaviorSubject<boolean>(
+    !!sessionStorage.getItem(LS_CHAVE)
   );
- 
-    
-}
 
- criarUsuario(usuario: NovoUsuarioPayload): Observable<NovoUsuarioPayload & { id: number }> {
-  return this.http.post<NovoUsuarioPayload & { id: number }>(this.api, usuario);
- }
+  isAuthenticated$ = this.isAuthenticated.asObservable();
 
- get usuarioLogado(): Usuario | null {
-  const authData =sessionStorage.getItem(LS_CHAVE);
-  if(authData) {
-    try {
-      return JSON.parse(authData) as Usuario;
-    } catch (error) {
-      return null;
-    }
+  constructor(private http: HttpClient) {}
+
+
+  login(payload: LoginPayload): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.api}/login`, payload).pipe(
+      tap((res) => {
+        sessionStorage.setItem(LS_CHAVE, res.token);
+        this.isAuthenticated.next(true);
+      })
+    );
   }
-  return null;
- }
 
- getUserProfile(): Perfil | null {
-  return this.usuarioLogado?.perfil || null;
- }
 
- logout(): void{
-  sessionStorage.removeItem(LS_CHAVE);
-  this.isAuthenticated.next(false);
- }
+  logout(): void {
+    sessionStorage.removeItem(LS_CHAVE);
+    this.isAuthenticated.next(false);
 
+    this.http.post(`${this.api}/logout`, {}).subscribe();
+  }
+
+
+  get token(): string | null {
+    return sessionStorage.getItem(LS_CHAVE);
+  }
+
+  
+  getUserProfile(): string | null {
+    const token = this.token;
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.perfil || null;
+  }
+
+  get isLoggedIn(): boolean {
+    return !!this.token;
+  }
 }

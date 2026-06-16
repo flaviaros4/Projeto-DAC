@@ -14,23 +14,22 @@ export class ContaService {
   constructor(private http: HttpClient) { }
 
   listarContas(): Observable<Conta[]> {
-    return this.http.get<Conta[]>(this.api);
-  }
+  return this.http.get<Conta[]>(this.api);
+}
 
-  getContaPorCliente(clienteId: number): Observable<Conta | undefined> {
-    return this.http.get<Conta[]>(this.api).pipe(
-      map(contas => contas.find(c => c.clienteId === clienteId))
-    );
-  }
+getContaPorCliente(clienteId: number): Observable<Conta | undefined> {
+  return this.http.get<Conta[]>(this.api).pipe(
+    map(contas => contas.find(c => c.clienteId === clienteId))
+  );
+}
 
-  criarConta(conta: Conta): Observable<Conta> {
-    return this.http.post<Conta>(this.api, conta);
-  }
+criarConta(conta: Conta): Observable<Conta> {
+  return this.http.post<Conta>(this.api, conta);
+}
 
-  atualizarSaldo(contaId: string, novoSaldo: number): Observable<Conta> {
-    return this.http.patch<Conta>(`${this.api}/${contaId}`, { saldo: novoSaldo });
-  }
-
+atualizarSaldo(contaId: string, novoSaldo: number): Observable<Conta> {
+  return this.http.patch<Conta>(`${this.api}/${contaId}`, { saldo: novoSaldo });
+}
   atualizarLimite(contaId: string, novoLimite: number): Observable<Conta> {
     return this.http.patch<Conta>(`${this.api}/${contaId}`, { limite: novoLimite });
   }

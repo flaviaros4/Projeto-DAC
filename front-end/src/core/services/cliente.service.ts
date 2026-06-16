@@ -13,27 +13,17 @@ export class ClienteService {
 
  cadastrar(cliente: Cliente): Observable<Cliente> {
 
-    const cpfNormalizado = this.normalizarCpf(cliente.cpf);
+  const cpfNormalizado = this.normalizarCpf(cliente.cpf);
 
-    if (cliente.salario <= 0) {
-      throw new Error('Salário deve ser positivo');
-    }
-
-    cliente.cpf = cpfNormalizado;
-    cliente.estado = 'PENDENTE';
-
-    return this.verificarCpf(cpfNormalizado).pipe(
-      map((clientesExistentes) => {
-
-        if (clientesExistentes.length > 0) {
-          throw new Error('CPF já cadastrado');
-        }
-
-        this.http.post<Cliente>(this.api, cliente).subscribe();
-        return cliente;
-      })
-    );
+  if (cliente.salario <= 0) {
+    throw new Error('Salário deve ser positivo');
   }
+
+  cliente.cpf = cpfNormalizado;
+  cliente.estado = 'PENDENTE';
+
+  return this.http.post<Cliente>(this.api, cliente);
+}
 
 
  verificarCpf(cpf: string): Observable<Cliente[]> {
@@ -45,12 +35,12 @@ export class ClienteService {
   }
 
 listarSolicitacoes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(`${this.api}?estado=PENDENTE`);
-  }
+  return this.http.get<Cliente[]>(`${this.api}?estado=PENDENTE`);
+}
 
-  listarClientes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(`${this.api}?estado=APROVADO`);
-  }
+listarClientes(): Observable<Cliente[]> {
+  return this.http.get<Cliente[]>(`${this.api}?estado=APROVADO`);
+}
 
   buscarPorId(id: number): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.api}/${id}`);

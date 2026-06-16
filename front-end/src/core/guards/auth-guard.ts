@@ -3,21 +3,26 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
+
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const usuarioLogado = authService.usuarioLogado;
-  let url = state.url;
+  const perfil = authService.getUserProfile();
+  const url = state.url;
 
-
-  if (!usuarioLogado) {
-    router.navigate(['/login'], { queryParams: { error: "Proibido acesso a " + url } });
+  if (!perfil) {
+    router.navigate(['/login'], {
+      queryParams: { error: `Acesso negado a ${url}` }
+    });
     return false;
   }
 
-  
-  if (route.data && route.data['perfil'] && route.data['perfil'].indexOf(usuarioLogado.perfil) === -1) {
-    router.navigate(['/login'], { queryParams: { error: "Proibido acesso a " + url } });
+  const perfisPermitidos = route.data?.['perfil'];
+
+  if (perfisPermitidos && !perfisPermitidos.includes(perfil)) {
+    router.navigate(['/login'], {
+      queryParams: { error: `Sem permissão para ${url}` }
+    });
     return false;
   }
 
