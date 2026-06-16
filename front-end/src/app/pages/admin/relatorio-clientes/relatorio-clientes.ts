@@ -1,27 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { ClienteService } from '../../../../core/services/cliente.service';
 import { ContaService } from '../../../../core/services/conta.service';
 import { GerenteService } from '../../../../core/services/gerente.service';
-import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 registerLocaleData(localePt);
-
-interface ClienteView {
-  nome: string;
-  email: string;
-  cpf: string;
-  salario: number;
-  numeroConta: string;
-  saldo: number;
-  limite: number;
-  gerente: {
-    nome: string;
-    cpf: string;
-  };
-}
 
 @Component({
   selector: 'app-relatorio-clientes',
@@ -31,9 +17,9 @@ interface ClienteView {
   styleUrl: './relatorio-clientes.css',
 })
 export class RelatorioClientes implements OnInit {
-
-  clientes: ClienteView[] = [];
+  clientes: any[] = [];
   isLoading = true;
+  erro = '';
 
   constructor(
     private clienteService: ClienteService,
@@ -46,52 +32,42 @@ export class RelatorioClientes implements OnInit {
     this.carregarDados();
   }
 
- carregarDados() {
-  forkJoin({
-    clientes: this.clienteService.listarClientes(),
-    contas: this.contaService.listarContas(),
-    gerentes: this.gerenteService.listarGerentes()
-  }).subscribe({
-    next: ({ clientes, contas, gerentes }) => {
+  carregarDados() {
 
-      console.log('=== CLIENTES ===', clientes);
-      console.log('=== CONTAS ===', contas);
-      console.log('=== GERENTES ===', gerentes);
+    forkJoin({
+      clientes: this.clienteService.listarRelatorio(),
+      contas: this.contaService.listarContas(),
+      gerentes: this.gerenteService.listarGerentes()
+    }).subscribe({
+      next: ({ clientes, contas, gerentes }) => {
+        this.clientes = clientes
+          .map((cliente: any) => {
+            const conta = contas.find((c: any) => c.cliente === cliente.cpf);
+            const gerente = conta
+              ? gerentes.find((g: any) => g.cpf === conta.gerente)
+              : null;
+            return {
+              ...cliente,
+              numeroConta: conta?.numero   || '-',
+              saldo:       conta?.saldo    ?? null,
+              limite:      conta?.limite   ?? null,
+              gerente: {
+                nome: gerente?.nome || '-',
+                cpf:  gerente?.cpf  || conta?.gerente || '-',
+              }
+            };
+          })
+          .sort((a: any, b: any) => a.nome.localeCompare(b.nome, 'pt-BR'));
 
-      this.clientes = clientes
-  .map(c => {
-    const conta = contas.find(ct => ct.clienteId === c.id);
-    const gerente = gerentes.find(g => g.id === conta?.gerenteId);
-
-    return {
-      nome: c.nome,
-      email: c.email,
-      cpf: c.cpf,
-      salario: c.salario,
-      numeroConta: String(conta?.numeroConta ?? '-'),
-      saldo: conta?.saldo ?? 0,
-      limite: conta?.limite ?? 0,
-      gerente: {
-        nome: gerente?.nome ?? 'N/A',
-        cpf: gerente?.cpf ?? 'N/A'
+        this.isLoading = false;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Erro ao carregar relatório:', err);
+        this.erro = 'Erro ao carregar relatório de clientes.';
+        this.isLoading = false;
+        this.cd.detectChanges();
       }
-    };
-  }).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
-      
-      console.log('=== RESULTADO FINAL (clientes) ===', this.clientes);
-
-      this.isLoading = false;
-      this.cd.detectChanges();
-    },
-
-    error: (err) => {
-      console.error('❌ ERRO NA REQUISIÇÃO:', err);
-      this.isLoading = false;
-    }
-  });
-
-
-}
-
-
+    });
+  }
 }

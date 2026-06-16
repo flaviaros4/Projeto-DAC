@@ -25,15 +25,33 @@ public class ClienteConsumer {
         String cpf   = (String) evento.get("cpf");
         String nome  = (String) evento.get("nome");
         String email = (String) evento.get("email");
+        String motivo = (String) evento.get("motivo");
 
-        if (!"APROVADO".equals(acao) || cpf == null || email == null) return;
-        if (usuarioRepository.findByCpf(cpf) != null) return;
-        if (usuarioRepository.findByEmail(email) != null) return;
+        if (cpf == null || email == null) return;
 
-        try {
-            authService.cadastrarUsuario(nome, email, cpf, Perfil.CLIENTE, null);
-        } catch (Exception e) {
-            System.err.println("Falha ao criar usuário CLIENTE: " + e.getMessage());
+        if ("APROVADO".equals(acao)) {
+            if (usuarioRepository.findByCpf(cpf) != null) return;
+            if (usuarioRepository.findByEmail(email) != null) return;
+
+            try {
+                String senhaGerada = authService.cadastrarUsuario(nome, email, cpf, Perfil.CLIENTE, null);
+                authService.enviarEmailAprovacao(email, nome, senhaGerada);
+            } catch (Exception e) {
+                System.err.println("Falha ao criar usuário CLIENTE: " + e.getMessage());
+                authService.enviarEmailFalhaAutocadastro(email, nome);
+            }
+        }
+
+        if ("REJEITADO".equals(acao)) {
+            try {
+                authService.enviarEmailRejeicao(email, nome, motivo != null ? motivo : "Não informado");
+            } catch (Exception e) {
+                System.err.println("Falha ao enviar e-mail de rejeição: " + e.getMessage());
+            }
+        }
+
+        if ("FALHA_AUTOCADASTRO".equals(acao)) {
+            authService.enviarEmailFalhaAutocadastro(email, nome);
         }
     }
 }

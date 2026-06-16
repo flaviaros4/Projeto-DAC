@@ -3,8 +3,12 @@ package br.net.bantads.conta.controller;
 import br.net.bantads.conta.dto.*;
 import br.net.bantads.conta.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping
@@ -24,7 +28,7 @@ public class ContaController {
         try {
             return ResponseEntity.ok(contaService.cadastrarDeposito(request.getValor(), numero));
         } catch (Exception e) {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(400).build();
         }
     }
 
@@ -33,7 +37,7 @@ public class ContaController {
         try {
             return ResponseEntity.ok(contaService.cadastrarSaque(request.getValor(), numero));
         } catch (Exception e) {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(400).build();
         }
     }
 
@@ -42,7 +46,7 @@ public class ContaController {
         try {
             return ResponseEntity.ok(contaService.cadastrarTransferencia(request.getValor(), numero, request.getNumeroContaDestino()));
         } catch (Exception e) {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(400).build();
         }
     }
 
@@ -56,9 +60,12 @@ public class ContaController {
     }
 
     @GetMapping("contas/{numero}/extrato")
-    public ResponseEntity<ExtratoResponse> extrato(@PathVariable String numero) {
+    public ResponseEntity<ExtratoResponse> extrato(
+            @PathVariable String numero,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim) {
         try {
-            return ResponseEntity.ok(contaService.extrato(numero));
+            return ResponseEntity.ok(contaService.extrato(numero, dataInicio, dataFim));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
@@ -95,7 +102,7 @@ public class ContaController {
     }
 
     @GetMapping("contas")
-    public ResponseEntity<java.util.List<ContaDTO>> buscarTodas() {
+    public ResponseEntity<List<ContaDTO>> buscarTodas() {
         try {
             return ResponseEntity.ok(contaService.buscarTodas());
         } catch (Exception e) {
@@ -107,6 +114,24 @@ public class ContaController {
     public ResponseEntity<ContaDTO> buscarPorNumero(@PathVariable String numero) {
         try {
             return ResponseEntity.ok(contaService.buscarPorNumero(numero));
+        } catch (Exception e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @GetMapping("contas/melhores-saldos")
+    public ResponseEntity<List<ContaDTO>> melhoresSaldos() {
+        try {
+            return ResponseEntity.ok(contaService.buscarMelhoresSaldos());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("contas/cliente/{cpf}")
+    public ResponseEntity<ContaDTO> buscarPorCliente(@PathVariable String cpf) {
+        try {
+            return ResponseEntity.ok(contaService.buscarPorCliente(cpf));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }

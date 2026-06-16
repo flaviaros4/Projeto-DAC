@@ -18,8 +18,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ContaService {
@@ -89,7 +92,7 @@ public class ContaService {
         salvarTxRead(LocalDateTime.of(2025,1,10,10,0), Tipo.SAQUE,        new BigDecimal("200"),  r2, null);
         salvarTxRead(LocalDateTime.of(2025,2,5,10,0),  Tipo.DEPOSITO,     new BigDecimal("7000"), r2, null);
         salvarTxRead(LocalDateTime.of(2025,5,5,10,0),  Tipo.DEPOSITO,     new BigDecimal("1000"), r3, null);
-        salvarTxRead(LocalDateTime.of(2025,6,6,10,0),  Tipo.SAQUE,        new BigDecimal("2000"), r3, null);
+        salvarTxRead(LocalDateTime.of(2025,5,6,10,0),  Tipo.SAQUE,        new BigDecimal("2000"), r3, null);
         salvarTxRead(LocalDateTime.of(2025,6,1,10,0),  Tipo.DEPOSITO,     new BigDecimal("150000"), r4, null);
         salvarTxRead(LocalDateTime.of(2025,7,1,10,0),  Tipo.DEPOSITO,     new BigDecimal("1500"), r5, null);
     }
@@ -155,7 +158,10 @@ public class ContaService {
         ContaWrite conta = contaWriteRepository.findByNumero(numeroContaOrigem)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-        if (valor.compareTo(conta.getSaldo()) > 0) throw new RuntimeException("Saldo insuficiente");
+        BigDecimal saldoDisponivel = conta.getSaldo().add(conta.getLimite());
+        if (valor.compareTo(saldoDisponivel) > 0) {
+            throw new RuntimeException("Saldo insuficiente. Saldo disponível (incluindo limite): " + saldoDisponivel.toPlainString());
+        }
 
         conta.setSaldo(conta.getSaldo().subtract(valor));
         contaWriteRepository.save(conta);
@@ -183,7 +189,10 @@ public class ContaService {
         ContaWrite destino = contaWriteRepository.findByNumero(numeroContaDestino)
                 .orElseThrow(() -> new RuntimeException("Conta destino não encontrada"));
 
-        if (valor.compareTo(origen.getSaldo()) > 0) throw new RuntimeException("Saldo insuficiente");
+        BigDecimal saldoDisponivel = origen.getSaldo().add(origen.getLimite());
+        if (valor.compareTo(saldoDisponivel) > 0) {
+            throw new RuntimeException("Saldo insuficiente para transferência");
+        }
 
         origen.setSaldo(origen.getSaldo().subtract(valor));
         destino.setSaldo(destino.getSaldo().add(valor));
@@ -211,28 +220,44 @@ public class ContaService {
         return new SaldoResponse(conta.getCliente(), numeroConta, conta.getSaldo());
     }
 
-    public ExtratoResponse extrato(String numeroConta) {
+    public ExtratoResponse extrato(String numeroConta, LocalDate dataInicio, LocalDate dataFim) {
         ContaRead conta = contaReadRepository.findByNumero(numeroConta)
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
 
-        ArrayList<TransacaoRead> origem = new ArrayList<>(transacaoReadRepository.findByContaOrigem(conta));
-        ArrayList<TransacaoRead> destino = new ArrayList<>(transacaoReadRepository.findByContaDestino(conta));
+        List<TransacaoRead> todasOrigem = transacaoReadRepository.findByContaOrigem(conta);
+        List<TransacaoRead> todasDestino = transacaoReadRepository.findByContaDestino(conta);
+
+        LocalDateTime inicio = dataInicio != null ? dataInicio.atStartOfDay() : LocalDateTime.MIN;
+        LocalDateTime fim    = dataFim    != null ? dataFim.atTime(23, 59, 59) : LocalDateTime.MAX;
+
         ArrayList<Movimentacao> movimentacoes = new ArrayList<>();
 
-        for (TransacaoRead t : origem) {
-            movimentacoes.add(new Movimentacao(t.getDataHora(), t.getTipo(),
-                    t.getContaOrigem() != null ? t.getContaOrigem().getNumero() : null,
-                    t.getContaDestino() != null ? t.getContaDestino().getNumero() : null, t.getValor()));
-        }
-        for (TransacaoRead t : destino) {
-            if (t.getTipo() == Tipo.TRANSFERENCIA) {
-                movimentacoes.add(new Movimentacao(t.getDataHora(), t.getTipo(),
+        for (TransacaoRead t : todasOrigem) {
+            if (!t.getDataHora().isBefore(inicio) && !t.getDataHora().isAfter(fim)) {
+                movimentacoes.add(new Movimentacao(
+                        t.getDataHora(), t.getTipo(),
                         t.getContaOrigem() != null ? t.getContaOrigem().getNumero() : null,
-                        t.getContaDestino() != null ? t.getContaDestino().getNumero() : null, t.getValor()));
+                        t.getContaDestino() != null ? t.getContaDestino().getNumero() : null,
+                        t.getValor()));
             }
         }
+        for (TransacaoRead t : todasDestino) {
+            if (t.getTipo() == Tipo.TRANSFERENCIA &&
+                !t.getDataHora().isBefore(inicio) && !t.getDataHora().isAfter(fim)) {
+                movimentacoes.add(new Movimentacao(
+                        t.getDataHora(), t.getTipo(),
+                        t.getContaOrigem() != null ? t.getContaOrigem().getNumero() : null,
+                        t.getContaDestino() != null ? t.getContaDestino().getNumero() : null,
+                        t.getValor()));
+            }
+        }
+
         movimentacoes.sort((a, b) -> a.getData().compareTo(b.getData()));
         return new ExtratoResponse(numeroConta, conta.getSaldo(), movimentacoes);
+    }
+
+    public ExtratoResponse extrato(String numeroConta) {
+        return extrato(numeroConta, null, null);
     }
 
     @Transactional
@@ -275,14 +300,10 @@ public class ContaService {
         contaProducer.enviarEvento(evento);
     }
 
-    public java.util.List<ContaDTO> buscarTodas() {
-        java.util.List<ContaRead> contasRead = contaReadRepository.findAll();
-        java.util.List<ContaDTO> dtos = new java.util.ArrayList<>();
-        for (ContaRead conta : contasRead) {
-            dtos.add(new ContaDTO(conta.getCliente(), conta.getNumero(),
-                    conta.getSaldo(), conta.getLimite(), conta.getGerente()));
-        }
-        return dtos;
+    public List<ContaDTO> buscarTodas() {
+        return contaReadRepository.findAll().stream()
+                .map(c -> new ContaDTO(c.getCliente(), c.getNumero(), c.getSaldo(), c.getLimite(), c.getGerente()))
+                .collect(Collectors.toList());
     }
 
     public ContaDTO buscarPorNumero(String numero) {
@@ -290,5 +311,20 @@ public class ContaService {
                 .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
         return new ContaDTO(conta.getCliente(), conta.getNumero(),
                 conta.getSaldo(), conta.getLimite(), conta.getGerente());
+    }
+
+    public ContaDTO buscarPorCliente(String cpf) {
+        ContaRead conta = contaReadRepository.findByCliente(cpf)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada para o cliente"));
+        return new ContaDTO(conta.getCliente(), conta.getNumero(),
+                conta.getSaldo(), conta.getLimite(), conta.getGerente());
+    }
+
+    public List<ContaDTO> buscarMelhoresSaldos() {
+        return contaReadRepository.findAll().stream()
+                .sorted((a, b) -> b.getSaldo().compareTo(a.getSaldo()))
+                .limit(3)
+                .map(c -> new ContaDTO(c.getCliente(), c.getNumero(), c.getSaldo(), c.getLimite(), c.getGerente()))
+                .collect(Collectors.toList());
     }
 }

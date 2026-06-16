@@ -1,11 +1,16 @@
 export interface Conta {
     id?: number;
-    clienteId: number;
-    numeroConta: number;
-    dataAbertura: Date;
+    cliente: string;       
+    numero: string;        
+    dataAbertura?: Date;
+    criacao?: Date;
     saldo: number;
     limite: number;
-    gerenteId: number;
+    gerente?: string;     
+
+    clienteId?: number;
+    numeroConta?: string;
+    gerenteId?: number;
 }
 
 export interface Transacao {

@@ -49,7 +49,7 @@ export class ConsultarClientes {
         this.contaService.listarContas().subscribe((contas) => {
           const clientesComConta = clientes
             .map((cliente) => {
-              const conta = contas.find((c) => c.clienteId === cliente.id);
+              const conta = contas.find((c) => c.cliente === cliente.cpf);
               return {
                 ...cliente,
                 saldo: conta ? conta.saldo : 0,

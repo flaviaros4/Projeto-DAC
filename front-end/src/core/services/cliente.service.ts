@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Cliente } from '../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { Cliente } from '../models/usuario.model';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -11,46 +12,80 @@ export class ClienteService {
 
   private api = 'http://localhost:3000/clientes';
 
- cadastrar(cliente: Cliente): Observable<Cliente> {
+  cadastrar(cliente: any): Observable<any> {
+    const cpfNormalizado = cliente.cpf.replace(/\D/g, '');
+    const cepNormalizado = (cliente.endereco?.cep || '').replace(/\D/g, '');
+    if (cliente.salario <= 0) {
+      throw new Error('Salário deve ser positivo');
+    }
 
-  const cpfNormalizado = this.normalizarCpf(cliente.cpf);
-
-  if (cliente.salario <= 0) {
-    throw new Error('Salário deve ser positivo');
+    const payload = {
+      nome:         cliente.nome,
+      email:        cliente.email,
+      cpf:          cpfNormalizado,
+      telefone:     cliente.telefone,
+      salario:      cliente.salario,
+      cep:          cepNormalizado,
+      logradouro:   cliente.endereco?.rua        || '',
+      numero:       cliente.endereco?.numero     || '',
+      complemento:  cliente.endereco?.complemento || '',
+      cidade:       cliente.endereco?.cidade     || '',
+      estado:       cliente.endereco?.estado     || '',
+      senha:        cliente.senha                || '',
+    };
+    return this.http.post<any>(this.api, payload);
   }
 
-  cliente.cpf = cpfNormalizado;
-  cliente.estado = 'PENDENTE';
-
-  return this.http.post<Cliente>(this.api, cliente);
-}
-
-
- verificarCpf(cpf: string): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(`${this.api}?cpf=${cpf}`);
+  verificarCpf(cpf: string): Observable<any> {
+    const cpfLimpo = cpf.replace(/\D/g, '');
+    return this.http.get<any>(`${this.api}/${cpfLimpo}`);
   }
 
-  private normalizarCpf(cpf: string): string {
-    return cpf.replace(/\D/g, '');
+  listarSolicitacoes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(`${this.api}?filtro=para_aprovar`);
   }
 
-listarSolicitacoes(): Observable<Cliente[]> {
-  return this.http.get<Cliente[]>(`${this.api}?estado=PENDENTE`);
-}
-
-listarClientes(): Observable<Cliente[]> {
-  return this.http.get<Cliente[]>(`${this.api}?estado=APROVADO`);
-}
-
-  buscarPorId(id: number): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.api}/${id}`);
+  listarClientes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(this.api);
   }
 
-  atualizarStatus(id: number, estado: 'APROVADO' | 'REJEITADO', motivoRejeicao?: string, dataRejeicao?: Date): Observable<Cliente> {
-    return this.http.patch<Cliente>(`${this.api}/${id}`, { estado, motivoRejeicao, dataRejeicao });
+  listarRelatorio(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}?filtro=adm_relatorio_clientes`);
   }
 
-  atualizar(id: number, cliente: Partial<Cliente>): Observable<Cliente> {
-  return this.http.put<Cliente>(`${this.api}/${id}`, cliente);
+
+  listarMelhoresClientes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}?filtro=melhores_clientes`);
+  }
+
+  buscarPorCpf(cpf: string): Observable<any> {
+    const cpfLimpo = cpf.replace(/\D/g, '');
+    return this.http.get<any>(`${this.api}/${cpfLimpo}`);
+  }
+
+
+  buscarPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${this.api}/${id}`);
+  }
+
+  atualizar(cpfOuId: string | number, cliente: any): Observable<any> {
+    return this.http.put<any>(`${this.api}/${cpfOuId}`, cliente);
+  }
+
+  aprovar(cpf: string): Observable<any> {
+    return this.http.post<any>(`${this.api}/${cpf}/aprovar`, {});
+  }
+
+  rejeitar(cpf: string, motivo: string): Observable<any> {
+    return this.http.post<any>(`${this.api}/${cpf}/rejeitar`, { motivo });
+  }
+
+
+  atualizarStatus(id: number, estado: 'APROVADO' | 'REJEITADO', motivoRejeicao?: string, dataRejeicao?: Date): Observable<any> {
+    if (estado === 'APROVADO') {
+      return this.http.post<any>(`${this.api}/${id}/aprovar`, {});
+    } else {
+      return this.http.post<any>(`${this.api}/${id}/rejeitar`, { motivo: motivoRejeicao });
+    }
   }
 }

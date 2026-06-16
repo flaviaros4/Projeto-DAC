@@ -20,17 +20,19 @@ public class GerenteConsumer {
 
     @RabbitListener(queues = RabbitConfig.FILA_GERENTE_CRIADO)
     public void consumir(GerenteCreatedEvent evento) {
-        if (evento.getCpf() == null || evento.getEmail() == null) {
+        if (evento.getCpf() == null || evento.getEmail() == null) return;
+
+        if ("ATUALIZACAO".equals(evento.getTipo())) {
+            try {
+                authService.atualizarSenha(evento.getCpf(), evento.getSenha());
+            } catch (Exception e) {
+                System.err.println("Falha ao atualizar senha do gerente: " + e.getMessage());
+            }
             return;
         }
 
-        if (usuarioRepository.findByCpf(evento.getCpf()) != null) {
-            return;
-        }
-
-        if (usuarioRepository.findByEmail(evento.getEmail()) != null) {
-            return;
-        }
+        if (usuarioRepository.findByCpf(evento.getCpf()) != null) return;
+        if (usuarioRepository.findByEmail(evento.getEmail()) != null) return;
 
         try {
             authService.cadastrarUsuario(evento.getNome(), evento.getEmail(), evento.getCpf(),
@@ -39,5 +41,4 @@ public class GerenteConsumer {
             System.err.println("Falha ao cadastrar usuário a partir do evento gerente.criado: " + e.getMessage());
         }
     }
-
 }

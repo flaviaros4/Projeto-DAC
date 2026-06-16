@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../../../../core/services/auth.service';
 import { ContaService } from '../../../../../core/services/conta.service';
-import { TransacaoService } from '../../../../../core/services/transacao.service';
 
 @Component({
   selector: 'app-modal-transferencia',
@@ -15,63 +15,79 @@ import { TransacaoService } from '../../../../../core/services/transacao.service
   template: `
     <h2 mat-dialog-title>Transferência</h2>
     <mat-dialog-content>
+      <p *ngIf="conta">
+        Saldo disponível: <strong>{{ (conta.saldo + conta.limite) | currency:'BRL' }}</strong>
+      </p>
       <mat-form-field appearance="outline" style="width:100%;">
-        <mat-label>Número da conta</mat-label>
-        <input matInput type="number" [(ngModel)]="contaDestinoNum"/>
+        <mat-label>Número da conta destino</mat-label>
+        <input matInput [(ngModel)]="contaDestino"/>
       </mat-form-field>
       <mat-form-field appearance="outline" style="width:100%;">
         <mat-label>Valor R$</mat-label>
         <input matInput type="number" [(ngModel)]="valor"/>
       </mat-form-field>
+      <p *ngIf="erro" style="color:red;">{{ erro }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button (click)="dialogRef.close()">Cancelar</button>
-      <button mat-raised-button color="primary" (click)="confirmar()">Transferir</button>
+      <button mat-raised-button color="primary" (click)="confirmar()" [disabled]="carregando">
+        {{ carregando ? 'Aguarde...' : 'Transferir' }}
+      </button>
     </mat-dialog-actions>
   `
 })
 export class ModalTransferencia implements OnInit {
   valor: number = 0;
-  contaDestinoNum: number | null = null;
-  contaOrigem: any;
+  contaDestino: string = '';
+  conta: any = null;
+  numeroConta: string = '';
+  carregando = false;
+  erro = '';
 
-  constructor(public dialogRef: MatDialogRef<ModalTransferencia>, private contaService: ContaService, private transacaoService: TransacaoService) {}
+  constructor(
+    public dialogRef: MatDialogRef<ModalTransferencia>,
+    private authService: AuthService,
+    private contaService: ContaService
+  ) {}
 
   ngOnInit(): void {
-    const auth = sessionStorage.getItem('auth');
-    if (auth) {
-      const user = JSON.parse(auth);
-      this.contaService.getContaPorCliente(Number(user.usuarioId)).subscribe(res => this.contaOrigem = res);
+    
+    const cpfSalvo = this.authService.getCpf();
+    if (cpfSalvo) {
+      
+      this.contaService.getContaPorCliente(cpfSalvo).subscribe({
+        next: (conta: any) => {
+          if (conta) {
+            this.conta = conta;
+            this.numeroConta = conta.numero || conta.numeroConta || '';
+          }
+        },
+        error: () => this.erro = 'Não foi possível carregar a conta.'
+      });
     }
   }
 
- confirmar(): void {
-  if (!this.contaDestinoNum || this.valor <= 0 || !this.contaOrigem) return;
-
-  this.contaService.listarContas().subscribe(contas => {
-    const destino = contas.find(c => c.numeroConta === this.contaDestinoNum);
-    
-    if (destino && destino.id !== undefined) {
-      const horaAtual = new Date();
-      const dataLocal = new Date(horaAtual.getTime() - (horaAtual.getTimezoneOffset() * 60000))
-                        .toISOString()
-                        .slice(0, -1);
-                        
-      this.dialogRef.close();
-
-      this.contaService.atualizarSaldo(this.contaOrigem.id, this.contaOrigem.saldo - this.valor).subscribe();
-      this.contaService.atualizarSaldo(destino.id.toString(), destino.saldo + this.valor).subscribe();
-      
-      this.transacaoService.registrar({
-        tipo: 'TRANSFERENCIA',
-        clienteORigem: this.contaOrigem.clienteId,
-        clienteDestino: destino.clienteId,
-        valor: Number(this.valor),
-        dataHora: dataLocal
-      }).subscribe();
-    } else {
-      alert('Conta de destino não encontrada.');
+  confirmar(): void {
+    if (!this.contaDestino.trim()) {
+      this.erro = 'Informe o número da conta destino.';
+      return;
     }
-  });
-}
+    if (this.valor <= 0) {
+      this.erro = 'Informe um valor maior que zero.';
+      return;
+    }
+    if (this.contaDestino === this.numeroConta) {
+      this.erro = 'Não é possível transferir para a própria conta.';
+      return;
+    }
+    this.carregando = true;
+    this.erro = '';
+    this.contaService.transferir(this.numeroConta, this.contaDestino, this.valor).subscribe({
+      next: () => this.dialogRef.close({ sucesso: true }),
+      error: (err) => {
+        this.erro = err?.error?.message || 'Erro ao realizar transferência. Verifique os dados.';
+        this.carregando = false;
+      }
+    });
+  }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,14 +68,19 @@ public class ClienteService {
 
     public List<ClienteDTO> listarTodos(String filtro) {
         if ("para_aprovar".equalsIgnoreCase(filtro))
-            return repository.findBySituacao("PENDENTE").stream().map(this::converterParaDTO).collect(Collectors.toList());
+            return repository.findBySituacao("PENDENTE").stream()
+                    .map(this::converterParaDTO).collect(Collectors.toList());
+
+        if ("adm_relatorio_clientes".equalsIgnoreCase(filtro))
+            return repository.findBySituacao("APROVADO").stream()
+                    .map(this::converterParaDTO).collect(Collectors.toList());
+
         if ("melhores_clientes".equalsIgnoreCase(filtro))
             return repository.findBySituacao("APROVADO").stream()
-                    .sorted(Comparator.comparing(Cliente::getSalario).reversed())
-                    .limit(3).map(this::converterParaDTO).collect(Collectors.toList());
-        if ("adm_relatorio_clientes".equalsIgnoreCase(filtro))
-            return repository.findBySituacao("APROVADO").stream().map(this::converterParaDTO).collect(Collectors.toList());
-        return repository.findBySituacao("APROVADO").stream().map(this::converterParaDTO).collect(Collectors.toList());
+                    .map(this::converterParaDTO).collect(Collectors.toList());
+
+        return repository.findBySituacao("APROVADO").stream()
+                .map(this::converterParaDTO).collect(Collectors.toList());
     }
 
     public ClienteDTO buscarPorCpf(String cpf) {

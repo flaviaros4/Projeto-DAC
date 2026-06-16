@@ -1,26 +1,18 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { forkJoin } from 'rxjs';
-
 import { GerenteService } from '../../../../core/services/gerente.service';
-import { ContaService } from '../../../../core/services/conta.service';
-
 import { ModalNovoGerente } from '../modais-admin/modal-novo-gerente/modal-novo-gerente';
-import { ModalEditarGerente } from "../modais-admin/modal-editar-gerente/modal-editar-gerente";
+import { ModalEditarGerente } from '../modais-admin/modal-editar-gerente/modal-editar-gerente';
 
 export interface Gerente {
-  id: number;
+  id?: number;
   cpf: string;
   nome: string;
   email: string;
   telefone: string;
-  perfil: string;
+  perfil?: string;
 }
-
-type GerenteView = Gerente & {
-  numeroClientes: number;
-};
 
 @Component({
   selector: 'app-gerenciar-gerentes',
@@ -30,8 +22,7 @@ type GerenteView = Gerente & {
   styleUrl: './gerenciar-gerentes.css',
 })
 export class GerenciarGerentes implements OnInit {
-
-  gerentes: GerenteView[] = [];
+  gerentes: Gerente[] = [];
   isLoading = true;
 
   mostrarModal = false;
@@ -46,7 +37,6 @@ export class GerenciarGerentes implements OnInit {
 
   constructor(
     private gerenteService: GerenteService,
-    private contaService: ContaService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -55,148 +45,62 @@ export class GerenciarGerentes implements OnInit {
   }
 
   carregarGerentes() {
-    forkJoin({
-      gerentes: this.gerenteService.listarGerentes(),
-      contas: this.contaService.listarContas()
-    }).subscribe({
-      next: ({ gerentes, contas }) => {
+    this.isLoading = true;
 
-        this.gerentes = gerentes.map(g => {
-          const contasDoGerente = contas.filter(c => c.gerenteId === g.id);
-
-          return {
-            ...g,
-            numeroClientes: contasDoGerente.length
-          };
-        }).sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
-
+    this.gerenteService.listarGerentes().subscribe({
+      next: (lista: any[]) => {
+        this.gerentes = (lista || []).sort((a, b) =>
+          (a.nome || '').localeCompare(b.nome || '', 'pt-BR')
+        );
         this.isLoading = false;
         this.cd.detectChanges();
       },
-
-      error: (err) => {
+      error: (err: any) => {
         console.error('Erro ao carregar gerentes:', err);
         this.isLoading = false;
+        this.cd.detectChanges();
       }
     });
   }
 
-  abrirModal() {
-    this.mostrarModal = true;
-  }
-
-  fecharModal() {
-    this.mostrarModal = false;
-  }
+  abrirModal() { this.mostrarModal = true; }
+  fecharModal() { this.mostrarModal = false; }
 
   abrirEditarGerentes(gerente: Gerente) {
     this.gerenteSelecionado = gerente;
     this.mostrarEditarGerente = true;
   }
-
-  fecharEditarGerentes() {
-    this.mostrarEditarGerente = false;
-  }
+  fecharEditarGerentes() { this.mostrarEditarGerente = false; }
 
   recarregarGerentes() {
-    setTimeout(() => {
-      this.carregarGerentes();
-    }, 0);
+    setTimeout(() => this.carregarGerentes(), 300);
   }
-  
+
   confirmarDelecao(gerente: Gerente) {
-    console.log('clicou');
     if (this.gerentes.length <= 1) {
-      this.mensagemErro = 'Não é possível deletar o único gerente';
+      this.mensagemErro = 'Não é possível remover o único gerente do banco.';
       this.mostrarErro = true;
       return;
     }
-
     this.gerenteParaDeletar = gerente;
     this.mostrarConfirmacao = true;
   }
 
+  deletarGerenteConfirmado() {
+    if (!this.gerenteParaDeletar) return;
+    const cpf = this.gerenteParaDeletar.cpf;
 
-
-
-
-
-deletarGerenteConfirmado() {
-  if (!this.gerenteParaDeletar) return;
-
-  const gerenteId = this.gerenteParaDeletar.id;
-
-  forkJoin({
-    gerentes: this.gerenteService.listarGerentes(),
-    contas: this.contaService.listarContas(),
-    usuarios: this.gerenteService.listarUsuarios()
-  }).subscribe(({ gerentes, contas, usuarios }) => {
-
-    const outrosGerentes = gerentes.filter(g => g.id !== gerenteId);
-
-    const ranking = outrosGerentes.map(g => {
-      const contasGerente = contas.filter(c => c.gerenteId === g.id);
-
-      const saldoPositivo = contasGerente.reduce(
-        (acc, c) => acc + (c.saldo > 0 ? c.saldo : 0),
-        0
-      );
-
-      return {
-        ...g,
-        numeroContas: contasGerente.length,
-        saldoPositivo
-      };
-    });
-
-    if (ranking.length === 0) {
-      this.mensagemErro = 'Erro ao redistribuir contas';
-      this.mostrarErro = true;
-      return;
-    }
-
-    ranking.sort((a, b) => {
-      if (a.numeroContas !== b.numeroContas) {
-        return a.numeroContas - b.numeroContas;
+    this.gerenteService.deletarGerente(cpf).subscribe({
+      next: () => {
+        this.mostrarConfirmacao = false;
+        this.gerenteParaDeletar = null;
+        this.carregarGerentes();
+      },
+      error: (err: any) => {
+        this.mensagemErro = err?.error?.message || 'Erro ao remover gerente.';
+        this.mostrarErro = true;
+        this.mostrarConfirmacao = false;
       }
-      return b.saldoPositivo - a.saldoPositivo;
     });
-
-    const novoGerenteId = ranking[0].id;
-
-    const contasParaAtualizar = contas.filter(c => c.gerenteId === gerenteId);
-
-    const updates = contasParaAtualizar.map(c =>
-      this.contaService.atualizarConta({
-        ...c,
-        gerenteId: novoGerenteId
-      })
-    );
-    
-
-    forkJoin(updates).subscribe(() => {
-
-      const usuario = usuarios.find(
-        u => u.usuarioId === gerenteId && u.perfil === 'GERENTE'
-      );
-
-      const deletarGerenteFinal = () => {
-        this.gerenteService.deletarGerente(gerenteId).subscribe(() => {
-          this.mostrarConfirmacao = false;
-          this.carregarGerentes();
-        });
-      };
-
-      if (usuario) {
-        this.gerenteService.deletarUsuario(usuario.id)
-          .subscribe(() => deletarGerenteFinal());
-      } else {
-        deletarGerenteFinal();
-      }
-
-    });
-
-  });
-}
-
+  }
 }

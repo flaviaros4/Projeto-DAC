@@ -32,20 +32,24 @@ export class Login implements OnInit {
   } 
   
  logar() {
-  this.authService.login(this.usuario).subscribe({
-    next: (usuario) => {
-      if (!usuario) {
+  const payload = { login: this.usuario.email, senha: this.usuario.senha ?? '' };
+  this.authService.login(payload).subscribe({
+    next: (res) => {
+      if (!res) {
         alert('Credenciais inválidas!');
         return;
       }
+  
+      const perfil = res.tipo || res.usuario?.perfil;
 
-
-      if (usuario.perfil === 'GERENTE') {
+      if (perfil === 'GERENTE') {
         this.router.navigate(['/home-gerente']);
-      } else if (usuario.perfil === 'CLIENTE') {
+      } else if (perfil === 'CLIENTE') {
         this.router.navigate(['/home-cliente']);
-      } else if (usuario.perfil === 'ADMIN') {
+      } else if (perfil === 'ADMIN') {
         this.router.navigate(['/home-admin']);
+      } else {
+        alert('Perfil não reconhecido: ' + perfil);
       }
     },
     error: (err) => {

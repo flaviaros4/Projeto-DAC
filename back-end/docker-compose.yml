@@ -81,9 +81,11 @@ services:
       SPRING_DATASOURCE_READ_PASSWORD: postgres
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      CLIENTE_SERVICE: http://mscliente:8080
     depends_on:
       - postgres
       - rabbitmq
+      - ms_cliente
 
   ms_gerente:
     build:
@@ -99,6 +101,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: postgres
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
+      CONTA_SERVICE: http://msconta:8080
     depends_on:
       - postgres
       - rabbitmq

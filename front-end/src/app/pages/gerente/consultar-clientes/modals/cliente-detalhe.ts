@@ -46,7 +46,7 @@ interface DetalheClienteDialogData {
         </div>
         <div class="campo">
         <span class="label"><b>Endereço: </b></span>
-        <span class="valor">{{cliente.endereco.rua}}, {{cliente.endereco.numero}}, {{cliente.endereco.bairro}}, {{cliente.endereco.cidade}} - {{cliente.endereco.estado}}</span>
+        <span class="valor">{{cliente.logradouro || cliente.endereco?.rua}}, {{cliente.numero || cliente.endereco?.numero}}, {{cliente.cidade || cliente.endereco?.cidade}} - {{cliente.estado || cliente.endereco?.estado}}</span>
         </div>
 
     
@@ -57,7 +57,7 @@ interface DetalheClienteDialogData {
 <h2>  Conta </h2>
       <div class="campo">
       <span class="label"><b>Número da Conta: </b></span>
-      <span class="valor">{{conta?.numeroConta}}</span>
+      <span class="valor">{{conta?.numero || conta?.numeroConta}}</span>
 
       </div>
 
@@ -130,19 +130,18 @@ interface DetalheClienteDialogData {
         border-radius: 8px;
         padding: 20px; 
         width: 100%;
-        h2 {
+      }
+      .dados-cliente h2, .dados-conta h2 {
           margin-top: 0;
           font-size: 1.25rem;
           font-weight: bold;
           color: #333;
           text-align: center;
-        }
-        p {
+      }
+      .dados-cliente p, .dados-conta p {
           margin: 5px 0;
           color: #555;
-        }
       }
-    }
       .campo {
   display: flex;
   flex-direction: column;

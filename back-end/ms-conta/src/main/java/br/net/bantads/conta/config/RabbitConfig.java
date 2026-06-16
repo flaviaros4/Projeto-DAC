@@ -8,8 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    public static final String FILA_TRANSACOES = "transacoes";
-    public static final String FILA_CONTAS_CUD = "contas.cud.queue";
+    public static final String FILA_TRANSACOES   = "transacoes";
+    public static final String FILA_CONTAS_CUD   = "contas.cud.queue";
+    public static final String FILA_DISTRIBUICAO = "gerente.distribuicao";
 
     @Bean
     public Queue filaTransacoes() {
@@ -19,6 +20,11 @@ public class RabbitConfig {
     @Bean
     public Queue filaContasCud() {
         return new Queue(FILA_CONTAS_CUD, true);
+    }
+
+    @Bean
+    public Queue filaDistribuicao() {
+        return new Queue(FILA_DISTRIBUICAO, true);
     }
 
     @Bean

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import br.net.bantads.gerente.config.RabbitConfig;
 import br.net.bantads.gerente.event.DistribuicaoEvento;
 
-
 @Service
 public class DistribuicaoProducer {
 
@@ -15,14 +14,15 @@ public class DistribuicaoProducer {
     private RabbitTemplate rabbitTemplate;
 
     public void enviar(String cpfGerente) {
-
-       DistribuicaoEvento evento =
-                new DistribuicaoEvento();
-
+        DistribuicaoEvento evento = new DistribuicaoEvento();
         evento.setCpfNovoGerente(cpfGerente);
+        rabbitTemplate.convertAndSend(RabbitConfig.FILA_DISTRIBUICAO, evento);
+    }
 
-        rabbitTemplate.convertAndSend(
-                RabbitConfig.FILA_DISTRIBUICAO,
-                evento);
+    public void enviar(String cpfGerente, String numeroConta) {
+        DistribuicaoEvento evento = new DistribuicaoEvento();
+        evento.setCpfNovoGerente(cpfGerente);
+        evento.setNumeroConta(numeroConta);
+        rabbitTemplate.convertAndSend(RabbitConfig.FILA_DISTRIBUICAO, evento);
     }
 }

@@ -1,8 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core'; 
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { forkJoin, switchMap, map } from 'rxjs';
+import { GerenteService } from '../../../../../core/services/gerente.service';
 
 @Component({
   selector: 'app-modal-novo-gerente',
@@ -22,114 +21,45 @@ export class ModalNovoGerente {
     telefone: '',
     email: '',
     senha: '',
-    perfil: 'GERENTE'
   };
 
-  constructor(private http: HttpClient) {}
+  carregando = false;
+  erro = '';
+
+  constructor(private gerenteService: GerenteService) {}
 
   fecharModal() {
     this.fechar.emit();
   }
 
-  finalizarFluxo() {
-    this.atualizado.emit(); 
-    this.fechar.emit();     
-  }
-
   salvar() {
+    if (!this.novoGerente.nome || !this.novoGerente.cpf || !this.novoGerente.email || !this.novoGerente.senha) {
+      this.erro = 'Preencha todos os campos obrigatórios.';
+      return;
+    }
 
-    const gerentePayload = {
+    this.carregando = true;
+    this.erro = '';
+
+    const payload = {
       nome: this.novoGerente.nome,
-      cpf: this.novoGerente.cpf,
+      cpf: this.novoGerente.cpf.replace(/\D/g, ''),
       telefone: this.novoGerente.telefone,
       email: this.novoGerente.email,
-      perfil: 'GERENTE'
+      senha: this.novoGerente.senha,
     };
 
-    this.http.post<any>('http://localhost:3000/gerentes', gerentePayload)
-      .pipe(
 
-        switchMap((gerenteCriado) => {
-
-          const usuarioPayload = {
-            nome: gerenteCriado.nome,
-            email: gerenteCriado.email,
-            senha: this.novoGerente.senha,
-            perfil: 'GERENTE',
-            usuarioId: gerenteCriado.id
-          };
-
-          return this.http.post('http://localhost:3000/usuarios', usuarioPayload)
-            .pipe(
-              switchMap(() =>
-                forkJoin({
-                  gerentes: this.http.get<any[]>('http://localhost:3000/gerentes'),
-                  contas: this.http.get<any[]>('http://localhost:3000/contas')
-                }).pipe(
-                  map(({ gerentes, contas }) => ({
-                    gerentes,
-                    contas,
-                    gerenteCriado
-                  }))
-                )
-              )
-            );
-        })
-
-      )
-      .subscribe(({ gerentes, contas, gerenteCriado }) => {
-
-        if (gerentes.length <= 1) {
-          this.finalizarFluxo();
-          return;
-        }
-
-        const gerentesFiltrados = gerentes.filter(g => g.id !== gerenteCriado.id);
-
-        const gerentesStats = gerentesFiltrados.map(g => {
-          const contasGerente = contas.filter(c => c.gerenteId === g.id);
-
-          return {
-            ...g,
-            numeroContas: contasGerente.length,
-            saldoPositivo: contasGerente.reduce(
-              (acc, c) => acc + (c.saldo > 0 ? c.saldo : 0),
-              0
-            )
-          };
-        });
-
-        gerentesStats.sort((a, b) => {
-          if (b.numeroContas !== a.numeroContas) {
-            return b.numeroContas - a.numeroContas;
-          }
-          return a.saldoPositivo - b.saldoPositivo;
-        });
-
-        const gerenteEscolhido = gerentesStats[0];
-
-        if (gerenteEscolhido.numeroContas <= 1 && gerentes.length === 2) {
-          this.finalizarFluxo();
-          return;
-        }
-
-        const contaParaTransferir = contas.find(
-          c => c.gerenteId === gerenteEscolhido.id
-        );
-
-        if (contaParaTransferir) {
-
-          this.http.patch(
-            `http://localhost:3000/contas/${contaParaTransferir.id}`,
-            { gerenteId: gerenteCriado.id }
-          ).subscribe(() => {
-            this.finalizarFluxo();  
-          });
-
-        } else {
-          this.finalizarFluxo();
-        }
-
-      });
+    this.gerenteService.inserir(payload).subscribe({
+      next: () => {
+        this.carregando = false;
+        this.atualizado.emit();
+        this.fechar.emit();
+      },
+      error: (err: any) => {
+        this.erro = err?.error?.message || 'Erro ao inserir gerente.';
+        this.carregando = false;
+      }
+    });
   }
 }

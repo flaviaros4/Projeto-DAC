@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ContaReadRepository extends JpaRepository<ContaRead, Long> {
     Optional<ContaRead> findByNumero(String numero);
+    Optional<ContaRead> findByCliente(String cliente);
 }

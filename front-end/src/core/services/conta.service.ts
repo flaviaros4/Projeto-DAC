@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Cliente } from '../models/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Conta } from '../models/conta.model';
@@ -14,27 +13,60 @@ export class ContaService {
   constructor(private http: HttpClient) { }
 
   listarContas(): Observable<Conta[]> {
-  return this.http.get<Conta[]>(this.api);
-}
-
-getContaPorCliente(clienteId: number): Observable<Conta | undefined> {
-  return this.http.get<Conta[]>(this.api).pipe(
-    map(contas => contas.find(c => c.clienteId === clienteId))
-  );
-}
-
-criarConta(conta: Conta): Observable<Conta> {
-  return this.http.post<Conta>(this.api, conta);
-}
-
-atualizarSaldo(contaId: string, novoSaldo: number): Observable<Conta> {
-  return this.http.patch<Conta>(`${this.api}/${contaId}`, { saldo: novoSaldo });
-}
-  atualizarLimite(contaId: string, novoLimite: number): Observable<Conta> {
-    return this.http.patch<Conta>(`${this.api}/${contaId}`, { limite: novoLimite });
+    return this.http.get<Conta[]>(this.api);
   }
 
-  atualizarConta(conta: any) {
-    return this.http.put(`${this.api}/${conta.id}`, conta);
+  buscarPorNumero(numero: string): Observable<Conta> {
+    return this.http.get<Conta>(`${this.api}/${numero}`);
+  }
+
+  getContaPorCliente(cpf: string): Observable<Conta | undefined> {
+    return this.http.get<Conta>(`${this.api}/cliente/${cpf}`);
+  }
+
+  depositar(numeroConta: string, valor: number): Observable<any> {
+    return this.http.post(`${this.api}/${numeroConta}/depositar`, { valor });
+  }
+
+  sacar(numeroConta: string, valor: number): Observable<any> {
+    return this.http.post(`${this.api}/${numeroConta}/sacar`, { valor });
+  }
+
+  transferir(numeroConta: string, numeroContaDestino: string, valor: number): Observable<any> {
+    return this.http.post(`${this.api}/${numeroConta}/transferir`, { valor, numeroContaDestino });
+  }
+
+  extrato(numeroConta: string, dataInicio?: string, dataFim?: string): Observable<any> {
+    let url = `${this.api}/${numeroConta}/extrato`;
+    const params: string[] = [];
+    if (dataInicio) params.push(`dataInicio=${dataInicio}`);
+    if (dataFim) params.push(`dataFim=${dataFim}`);
+    if (params.length) url += '?' + params.join('&');
+    return this.http.get<any>(url);
+  }
+
+  saldo(numeroConta: string): Observable<any> {
+    return this.http.get<any>(`${this.api}/${numeroConta}/saldo`);
+  }
+
+  melhoresSaldos(): Observable<Conta[]> {
+    return this.http.get<Conta[]>(`${this.api}/melhores-saldos`);
+  }
+
+  criarConta(conta: any): Observable<any> {
+    return this.http.post(this.api, conta);
+  }
+
+  atualizarConta(conta: any): Observable<any> {
+    return this.http.put(`${this.api}/${conta.numero ?? conta.numeroConta}`, conta);
+  }
+
+  // Mantido para compatibilidade com código que ainda usa id numérico
+  atualizarSaldo(numeroOuId: string | number, novoSaldo: number): Observable<any> {
+    return this.http.patch<any>(`${this.api}/${numeroOuId}`, { saldo: novoSaldo });
+  }
+
+  atualizarLimite(numero: string, novoLimite: number): Observable<any> {
+    return this.http.patch<any>(`${this.api}/${numero}`, { limite: novoLimite });
   }
 }

@@ -24,11 +24,19 @@ export interface Cliente extends Usuario {
     nome: string;
     cpf: string;
     telefone: string;
-    endereco: Endereco;
+    endereco: Endereco;        
     salario: number;
-    estado: "PENDENTE" | "APROVADO" | "REJEITADO";
+    situacao?: "PENDENTE" | "APROVADO" | "REJEITADO";
+    estado?: "PENDENTE" | "APROVADO" | "REJEITADO" | string;
     dataRejeicao?: Date;
     motivoRejeicao?: string;
+
+    logradouro?: string;
+    numero?: string;
+    complemento?: string;
+    cidade?: string;
+    cep?: string;
+    bairro?: string;
 };
 
 export interface Gerente extends Usuario {

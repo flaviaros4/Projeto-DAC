@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { GerenteService } from '../../../../../core/services/gerente.service';
 
 @Component({
   selector: 'app-modal-editar-gerente',
@@ -20,11 +19,11 @@ export class ModalEditarGerente implements OnInit {
   nome: string = '';
   email: string = '';
   senha: string = '';
+  carregando = false;
+  erro = '';
+  sucesso = false;
 
-  private apiGerentes = 'http://localhost:3000/gerentes';
-  private apiUsuarios = 'http://localhost:3000/usuarios';
-
-  constructor(private http: HttpClient) {}
+  constructor(private gerenteService: GerenteService) {}
 
   ngOnInit() {
     this.nome = this.gerente.nome;
@@ -36,44 +35,38 @@ export class ModalEditarGerente implements OnInit {
   }
 
   salvar() {
-    const gerenteAtualizado = {
-      ...this.gerente,
-      nome: this.nome || this.gerente.nome,
-      email: this.email || this.gerente.email
+    if (!this.nome || !this.email) {
+      this.erro = 'Nome e e-mail são obrigatórios.';
+      return;
+    }
+
+    this.carregando = true;
+    this.erro = '';
+
+    const payload: any = {
+      nome: this.nome,
+      email: this.email,
     };
 
-    this.http.get<any[]>(this.apiUsuarios).subscribe(usuarios => {
+    if (this.senha) {
+      payload.senha = this.senha;
+    }
 
-      const usuario = usuarios.find(
-        u => u.usuarioId === this.gerente.id && u.perfil === 'GERENTE'
-      );
+    const cpf = this.gerente.cpf || this.gerente.id;
 
-      let usuarioAtualizado: any = null;
-
-      if (usuario) {
-        usuarioAtualizado = {
-          ...usuario,
-          nome: this.nome || usuario.nome,
-          email: this.email || usuario.email,
-          senha: this.senha || usuario.senha
-        };
+    this.gerenteService.atualizar(cpf, payload).subscribe({
+      next: () => {
+        this.sucesso = true;
+        this.carregando = false;
+        setTimeout(() => {
+          this.atualizado.emit();
+          this.fecharModal();
+        }, 800);
+      },
+      error: (err: any) => {
+        this.erro = err?.error?.message || 'Erro ao atualizar gerente.';
+        this.carregando = false;
       }
-
-      const requests = [
-        this.http.put(`${this.apiGerentes}/${this.gerente.id}`, gerenteAtualizado)
-      ];
-
-      if (usuarioAtualizado) {
-        requests.push(
-          this.http.put(`${this.apiUsuarios}/${usuario.id}`, usuarioAtualizado)
-        );
-      }
-
-      forkJoin(requests).subscribe(() => {
-        this.atualizado.emit();
-        this.fecharModal();
-      });
-
     });
   }
 }

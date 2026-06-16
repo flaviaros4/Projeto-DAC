@@ -4,6 +4,7 @@ public class DistribuicaoEvento {
 
     private String cpfNovoGerente;
     private String cpfGerenteOrigem;
+    private String numeroConta;
 
     public String getCpfNovoGerente() {
         return cpfNovoGerente;
@@ -21,5 +22,11 @@ public class DistribuicaoEvento {
         this.cpfGerenteOrigem = cpfGerenteOrigem;
     }
 
- 
+    public String getNumeroConta() {
+        return numeroConta;
+    }
+
+    public void setNumeroConta(String numeroConta) {
+        this.numeroConta = numeroConta;
+    }
 }
