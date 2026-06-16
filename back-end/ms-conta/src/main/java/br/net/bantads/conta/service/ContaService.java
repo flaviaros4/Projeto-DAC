@@ -7,6 +7,8 @@ import br.net.bantads.conta.entity.Tipo;
 import br.net.bantads.conta.entity.read.TransacaoRead;
 import br.net.bantads.conta.entity.write.TransacaoWrite;
 import br.net.bantads.conta.event.TransacaoEvento;
+import br.net.bantads.conta.event.ContaCudEvento;
+import br.net.bantads.conta.messaging.producer.ContaProducer;
 import br.net.bantads.conta.messaging.producer.TransacaoProducer;
 import br.net.bantads.conta.repository.read.ContaReadRepository;
 import br.net.bantads.conta.repository.read.TransacaoReadRepository;
@@ -28,6 +30,7 @@ public class ContaService {
     private final TransacaoReadRepository transacaoReadRepository;
     private final TransacaoProducer transacaoProducer;
     private final AutorizacaoContaService autorizacaoContaService;
+    private final ContaProducer contaProducer;
 
     public ContaService(
             TransacaoWriteRepository transacaoWriteRepository,
@@ -35,7 +38,8 @@ public class ContaService {
             ContaReadRepository contaReadRepository,
             TransacaoReadRepository transacaoReadRepository,
             TransacaoProducer transacaoProducer,
-            AutorizacaoContaService autorizacaoContaService
+            AutorizacaoContaService autorizacaoContaService,
+            ContaProducer contaProducer
     ) {
         this.transacaoWriteRepository = transacaoWriteRepository;
         this.contaWriteRepository = contaWriteRepository;
@@ -43,6 +47,9 @@ public class ContaService {
         this.transacaoReadRepository = transacaoReadRepository;
         this.transacaoProducer = transacaoProducer;
         this.autorizacaoContaService = autorizacaoContaService;
+        this.contaProducer = contaProducer;
+
+
     }
 
     @Transactional
@@ -242,6 +249,99 @@ public class ContaService {
                 numeroConta,
                 conta.getSaldo(),
                 movimentacoes
+        );
+    }
+
+
+    @Transactional
+    public void criarConta(ContaDTO dto) {
+        if (contaWriteRepository.findByNumero(dto.getNumero()).isPresent()) {
+            throw new RuntimeException("Número de conta já existente");
+        }
+
+        ContaWrite conta = new ContaWrite();
+        conta.setCliente(dto.getCliente()); // CPF
+        conta.setNumero(dto.getNumero());
+        conta.setSaldo(dto.getSaldo() != null ? dto.getSaldo() : BigDecimal.ZERO);
+        conta.setLimite(dto.getLimite() != null ? dto.getLimite() : BigDecimal.ZERO);
+        conta.setGerente(dto.getGerente());
+        conta.setCriacao(LocalDateTime.now());
+
+        contaWriteRepository.save(conta);
+
+        ContaCudEvento evento = new ContaCudEvento(
+                ContaCudEvento.Acao.CRIAR,
+                conta.getCliente(),
+                conta.getNumero(),
+                conta.getSaldo(),
+                conta.getLimite(),
+                conta.getGerente()
+        );
+        contaProducer.enviarEvento(evento);
+    }
+
+    @Transactional
+    public void atualizarConta(String numero, ContaDTO dto) {
+        ContaWrite conta = contaWriteRepository.findByNumero(numero)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        conta.setCliente(dto.getCliente());
+        conta.setLimite(dto.getLimite());
+        conta.setGerente(dto.getGerente());
+
+        contaWriteRepository.save(conta);
+
+        ContaCudEvento evento = new ContaCudEvento(
+                ContaCudEvento.Acao.ATUALIZAR,
+                conta.getCliente(),
+                conta.getNumero(),
+                conta.getSaldo(),
+                conta.getLimite(),
+                conta.getGerente()
+        );
+        contaProducer.enviarEvento(evento);
+    }
+
+    @Transactional
+    public void deletarConta(String numero) {
+        ContaWrite conta = contaWriteRepository.findByNumero(numero)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        contaWriteRepository.delete(conta);
+
+        ContaCudEvento evento = new ContaCudEvento();
+        evento.setAcao(ContaCudEvento.Acao.DELETAR);
+        evento.setNumero(numero);
+
+        contaProducer.enviarEvento(evento);
+    }
+
+    public java.util.List<ContaDTO> buscarTodas() {
+        java.util.List<ContaRead> contasRead = contaReadRepository.findAll();
+        java.util.List<ContaDTO> dtos = new java.util.ArrayList<>();
+
+        for (ContaRead conta : contasRead) {
+            dtos.add(new ContaDTO(
+                    conta.getCliente(),
+                    conta.getNumero(),
+                    conta.getSaldo(),
+                    conta.getLimite(),
+                    conta.getGerente()
+            ));
+        }
+        return dtos;
+    }
+
+    public ContaDTO buscarPorNumero(String numero) {
+        ContaRead conta = contaReadRepository.findByNumero(numero)
+                .orElseThrow(() -> new RuntimeException("Conta não encontrada"));
+
+        return new ContaDTO(
+                conta.getCliente(),
+                conta.getNumero(),
+                conta.getSaldo(),
+                conta.getLimite(),
+                conta.getGerente()
         );
     }
 }

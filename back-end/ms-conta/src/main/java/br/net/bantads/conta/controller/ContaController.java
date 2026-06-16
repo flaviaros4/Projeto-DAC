@@ -63,4 +63,54 @@ public class ContaController {
             return ResponseEntity.status(404).build();
         }
     }
+
+    @PostMapping("contas")
+    public ResponseEntity<Void> criar(@RequestBody ContaDTO request) {
+        try {
+            contaService.criarConta(request);
+            return ResponseEntity.status(201).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(400).build();
+        }
+    }
+
+    @PutMapping("contas/{numero}")
+    public ResponseEntity<Void> atualizar(@PathVariable String numero, @RequestBody ContaDTO request) {
+        try {
+            contaService.atualizarConta(numero, request);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @DeleteMapping("contas/{numero}")
+    public ResponseEntity<Void> deletar(@PathVariable String numero) {
+        try {
+            contaService.deletarConta(numero);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
+
+    @GetMapping("contas")
+    public ResponseEntity<java.util.List<ContaDTO>> buscarTodas() {
+        try {
+            java.util.List<ContaDTO> contas = contaService.buscarTodas();
+            return ResponseEntity.ok(contas);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("contas/{numero}")
+    public ResponseEntity<ContaDTO> buscarPorNumero(@PathVariable String numero) {
+        try {
+            ContaDTO conta = contaService.buscarPorNumero(numero);
+            return ResponseEntity.ok(conta);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).build();
+        }
+    }
 }

@@ -67,6 +67,21 @@ public class SecurityConfig {
                                 "/contas/*/extrato"
                         ).authenticated()
 
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/contas"
+                        ).hasAnyRole("CLIENTE", "GERENTE")
+
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/contas/*"
+                        ).hasAnyRole("CLIENTE", "GERENTE")
+
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/contas/*"
+                        ).hasAnyRole("CLIENTE", "GERENTE")
+
                         .anyRequest().authenticated()
                 )
 
