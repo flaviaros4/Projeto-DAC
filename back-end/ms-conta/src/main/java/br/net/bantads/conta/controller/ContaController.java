@@ -5,7 +5,6 @@ import br.net.bantads.conta.service.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping
@@ -14,52 +13,53 @@ public class ContaController {
     @Autowired
     private ContaService contaService;
 
+    @GetMapping("reboot")
+    public ResponseEntity<Void> reboot() {
+        contaService.reboot();
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("contas/{numero}/depositar")
-    public ResponseEntity<DepositarSacarResponse> depositar(@PathVariable String numero, @RequestBody DepositarInfo request){
-        try{
-            DepositarSacarResponse depositarResponse = contaService.cadastrarDeposito(request.getValor(), numero);
-            return ResponseEntity.ok(depositarResponse);
-        } catch (Exception e){
+    public ResponseEntity<DepositarSacarResponse> depositar(@PathVariable String numero, @RequestBody DepositarInfo request) {
+        try {
+            return ResponseEntity.ok(contaService.cadastrarDeposito(request.getValor(), numero));
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }
 
     @PostMapping("contas/{numero}/sacar")
-    public ResponseEntity<DepositarSacarResponse> sacar(@PathVariable String numero, @RequestBody DepositarInfo request){
-        try{
-            DepositarSacarResponse response = contaService.cadastrarSaque(request.getValor(), numero);
-            return ResponseEntity.ok(response);
-        } catch (Exception e){
+    public ResponseEntity<DepositarSacarResponse> sacar(@PathVariable String numero, @RequestBody DepositarInfo request) {
+        try {
+            return ResponseEntity.ok(contaService.cadastrarSaque(request.getValor(), numero));
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }
 
     @PostMapping("contas/{numero}/transferir")
-    public ResponseEntity<TransferirResponse> transferir(@PathVariable String numero, @RequestBody TransferirInfo request){
-        try{
-            TransferirResponse response = contaService.cadastrarTransferencia(request.getValor(), numero, request.getNumeroContaDestino());
-            return ResponseEntity.ok(response);
-        } catch (Exception e){
+    public ResponseEntity<TransferirResponse> transferir(@PathVariable String numero, @RequestBody TransferirInfo request) {
+        try {
+            return ResponseEntity.ok(contaService.cadastrarTransferencia(request.getValor(), numero, request.getNumeroContaDestino()));
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }
 
     @GetMapping("contas/{numero}/saldo")
-    public ResponseEntity<SaldoResponse> saldo(@PathVariable String numero){
-        try{
-            SaldoResponse response = contaService.saldo(numero);
-            return ResponseEntity.ok(response);
+    public ResponseEntity<SaldoResponse> saldo(@PathVariable String numero) {
+        try {
+            return ResponseEntity.ok(contaService.saldo(numero));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new SaldoResponse("ERROR", numero, null));
         }
     }
 
     @GetMapping("contas/{numero}/extrato")
-    public ResponseEntity<ExtratoResponse> extrato(@PathVariable String numero){
-        try{
-            ExtratoResponse response = contaService.extrato(numero);
-            return ResponseEntity.ok(response);
-        }catch (Exception e){
+    public ResponseEntity<ExtratoResponse> extrato(@PathVariable String numero) {
+        try {
+            return ResponseEntity.ok(contaService.extrato(numero));
+        } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }
     }
@@ -97,8 +97,7 @@ public class ContaController {
     @GetMapping("contas")
     public ResponseEntity<java.util.List<ContaDTO>> buscarTodas() {
         try {
-            java.util.List<ContaDTO> contas = contaService.buscarTodas();
-            return ResponseEntity.ok(contas);
+            return ResponseEntity.ok(contaService.buscarTodas());
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }
@@ -107,8 +106,7 @@ public class ContaController {
     @GetMapping("contas/{numero}")
     public ResponseEntity<ContaDTO> buscarPorNumero(@PathVariable String numero) {
         try {
-            ContaDTO conta = contaService.buscarPorNumero(numero);
-            return ResponseEntity.ok(conta);
+            return ResponseEntity.ok(contaService.buscarPorNumero(numero));
         } catch (Exception e) {
             return ResponseEntity.status(404).build();
         }

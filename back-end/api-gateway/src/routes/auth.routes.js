@@ -9,11 +9,10 @@ router.post('/login', async (req, res) => {
       req.body,
       { headers: { 'Content-Type': 'application/json' } }
     );
-
     return res.json(response.data);
   } catch (error) {
     return res.status(error.response?.status || 500).json(
-      error.response?.data || { message: 'Erro no auth service' }
+      error.response?.data || { message: 'Erro no serviço de autenticação' }
     );
   }
 });

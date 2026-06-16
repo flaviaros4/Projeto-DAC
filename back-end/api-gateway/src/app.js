@@ -4,14 +4,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 
 const { verifyJWT } = require('./middlewares/auth');
-
-const {
-  authProxy,
-  gerenteProxy,
-  clienteProxy,
-  contaProxy
-} = require('./config/proxy');
-
+const { authProxy, gerenteProxy, clienteProxy, contaProxy } = require('./config/proxy');
 const authRouter = require('./routes/auth.routes');
 
 const app = express();
@@ -20,10 +13,7 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(helmet());
-
-
 app.use('/', authRouter);
-
 
 app.post('/clientes', clienteProxy);
 
@@ -31,13 +21,8 @@ app.use('/clientes', verifyJWT, clienteProxy);
 app.use('/gerentes', verifyJWT, gerenteProxy);
 app.use('/contas', verifyJWT, contaProxy);
 
-
 app.get('/teste', verifyJWT, (req, res) => {
-  res.json({
-    message: 'Token válido',
-    userId: req.userId,
-    perfil: req.perfil
-  });
+  res.json({ message: 'Token válido', userId: req.userId, perfil: req.perfil });
 });
 
 module.exports = app;
